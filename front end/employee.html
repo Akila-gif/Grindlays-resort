@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+     <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <link rel="stylesheet" href="jsFiles/resource/bootstrap-5.3.1-dist/css/bootstrap.min.css" />
+          <script src="jsFiles/resource/bootstrap-5.3.1-dist/js/bootstrap.bundle.min.js"></script>
+          <link rel="stylesheet" href="jsFiles/resource/fontawesome-free-6.4.2-web/css/all.css" />
+          <script src="jsFiles/resource/fontawesome-free-6.4.2-web/js/all.min.js"></script>
+          <script src="jsFiles/resource/js/jquery-3.7.1.js"></script>
+          <script src="jsFiles/resource/js/toastr.js"></script>
+          <script src="jsFiles/resource/js/objectCompair.js"></script>
+          <script src="jsFiles/resource/js/agecalculate.js"></script>
+          <script src="jsFiles/resource/js/notification.js"></script>
+          <script src="jsFiles/resource/js/serviceRequest.js"></script>
+          <link href="jsFiles/resource/js/DataTables/datatables.min.css" rel="stylesheet" />
+          <script src="jsFiles/resource/js/DataTables/datatables.min.js"></script>
+
+          <!--     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>-->
+          <link rel="stylesheet" href="cssFile/animated/animate.css" />
+
+          <link rel="stylesheet" href="cssFile/employee.css" />
+          <link rel="stylesheet" href="cssFile/toastr.css" />
+
+          <title>Employee</title>
+     </head>
+
+     <body style="overflow: scroll">
+          <div class="d-flex justify-content-around bg-black">
+               <h1 class="text-center p-4 bg-black text-light fs-1">Employee Table</h1>
+          </div>
+
+          <!--     form modal-->
+          <div class="modal modal-xl " id="employeeForm" aria-labelledby="employeeForm" tabindex="-1">
+               <div class="modal-dialog">
+                    <div class="modal-content">
+                         <div class="modal-header">
+                              <h1>Employee <i class="fa-solid fa-user-plus"></i></h1>
+                              <button type="button" class="btn-close" id="employeeFormClose"></button>
+                         </div>
+                         <div class="modal-body">
+                              <form action="" class="form-control" id="inputForm">
+                                   <div class="row m-2">
+                                        <div class="col-md-4">
+                                             <div class="input-group mb-3">
+                                                  <span class=""></span>
+                                                  <div class="form-floating">
+                                                       <select class="form-select" name="designation_id" id="designationFormSelect">
+                                                            <option selected value="" disabled>Open this select Designation</option>
+                                                       </select>
+                                                       <label for="DesignationFormSelect">Designation</label>
+                                                  </div>
+                                                  <button
+                                                       disabled
+                                                       class="input-group-text"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-placement="top"
+                                                       data-bs-custom-class="custom-tooltip"
+                                                       data-bs-title="Please select your Designation."
+                                                  >
+                                                       <i class="fas fa-info-circle"></i>
+                                                  </button>
+                                                  <div class="text-danger input-group fst-italic hide" id="DesignationTxtError" style="font-size: 12px">
+                                                       please select your designation!
+                                                  </div>
+                                             </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                             <div class="input-group mb-3">
+                                                  <span class="input-group-text"></span>
+                                                  <div class="form-floating">
+                                                       <input type="text" class="form-control" id="FullNameTxt" placeholder="Full name" name="full_name" />
+                                                       <label for="FullNameTxt">Full name</label>
+                                                  </div>
+                                                  <button
+                                                       disabled
+                                                       class="input-group-text"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-placement="top"
+                                                       data-bs-custom-class="custom-tooltip"
+                                                       data-bs-title="Enter your full name as first."
+                                                  >
+                                                       <i class="fas fa-info-circle"></i>
+                                                  </button>
+                                                  <div class="text-danger input-group fst-italic hide" id="FullNameTxtError" style="font-size: 12px">
+                                                       please enter valid full name!
+                                                  </div>
+                                             </div>
+                                        </div>
+                                   </div>
+                                   <div class="row m-2">
+                                        <div class="col-md-2 mt-lg-3">
+                                             <div class="input-group mb-3">
+                                                  <span></span>
+                                                  <div class="form-check">
+                                                       <input class="form-check-input" type="checkbox" value="" id="residentCheck" name="citizenship"/>
+                                                       <label class="form-check-label" for="residentCheck"> Resident </label>
+                                                  </div>
+                                                  <button
+                                                       disabled
+                                                       style="display: none"
+                                                       class="input-group-text"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-placement="top"
+                                                       data-bs-custom-class="custom-tooltip"
+                                                       data-bs-title="Enter your full name as first."
+                                                  >
+                                                       <i class="fas fa-info-circle"></i>
+                                                  </button>
+                                                  <div class="text-danger input-group fst-italic hide" id="residentCheckTxtError" style="font-size: 12px">
+                                                       please enter resident!
+                                                  </div>
+                                             </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-3">
+                                             <div class="input-group mb-3">
+                                                  <span class=""></span>
+                                                  <div class="form-floating">
+                                                       <input list="countryDatalistOptions" class="form-control" id="countryDtlTxt" placeholder="Country" name="countruy"/>
+                                                       <datalist id="countryDatalistOptions">
+                                                            <option value="+94">Srilanka </option>
+                                                            <option value="+91">India </option>
+                                                            <option value="+1">USA </option>
+                                                            <option value="+44">UK </option>
+                                                            <option value="+86">China </option>
+                                                       </datalist>
+
+                                                       <label for="countryTxt">Country</label>
+                                                  </div>
+                                                  <button
+                                                       disabled
+                                                       class="input-group-text"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-placement="top"
+                                                       data-bs-custom-class="custom-tooltip"
+                                                       data-bs-title="Please select your Country."
+                                                  >
+                                                       <i class="fas fa-info-circle"></i>
+                                                       <span class="btn btn-primary disabled" id="addNewCountry">
+                                                            <i class="fa-solid fa-plus"></i>
+                                                       </span>
+                                                  </button>
+                                                  <div class="text-danger input-group fst-italic hide" id="countryDtlTxtError" style="font-size: 12px">
+                                                       If you are not resident please select enter your country!
+                                                  </div>
+                                             </div>
+                                        </div>
+                                        <div class="col-md-3 mt-lg-3 px-lg-4">
+                                             <div class="input-group">
+                                                  <span></span>
+                                                  <div class="">
+                                                       <input class="form-check-input" type="radio" value="Male" name="gender" id="genderMaleRadioBtn" value="male" />
+                                                       <label class="form-check-label" for="genderMaleRadioBtn"> Male </label>
+                                                       <input class="form-check-input" type="radio" value="female" name="gender" id="genderFemaleRadioBtn" value="female" />
+                                                       <label class="form-check-label" for="genderFemaleRadioBtn"> female </label>
+                                                  </div>
+                                                  <button
+                                                       disabled
+                                                       style="display: none"
+                                                       class="input-group-text"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-placement="top"
+                                                       data-bs-custom-class="custom-tooltip"
+                                                       data-bs-title="Enter your full name as first."
+                                                  >
+                                                       <i class="fas fa-info-circle"></i>
+                                                  </button>
+                                                  <div class="text-danger input-group fst-italic hide" id="FullNameTxtError" style="font-size: 12px">
+                                                       please select gender!
+                                                  </div>
+                                             </div>
+                                        </div>
+                                        <div class="col-md-3 col-lg-3">
+                                             <div class="input-group mb-3">
+                                                  <span class="input-group-text"></span>
+                                                  <div class="form-floating">
+                                                       <input
+                                                            type="date"
+                                                            class="form-control"
+                                                            id="dateOfBirth"
+                                                            placeholder="Date of birth"
+                                                            name="date_of_birth"
+                                                       />
+                                                       <label for="dateOfBirth">Date of birth</label>
+                                                  </div>
+                                                  <button
+                                                       disabled
+                                                       class="input-group-text"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-placement="top"
+                                                       data-bs-custom-class="custom-tooltip"
+                                                       data-bs-title="Enter your univercity leaving date"
+                                                  >
+                                                       <i class="fas fa-info-circle"></i>
+                                                  </button>
+                                                  <div class="text-danger input-group fst-italic hide" id="dateOfBirthError" style="font-size: 12px">
+                                                       please enter Date of Birth
+                                                  </div>
+                                             </div>
+                                        </div>
+                                   </div>
+                                   <div class="row m-2 pb-4">
+                                        <div class="col-md-4">
+                                             <div class="input-group mb-3">
+                                                  <span class="input-group-text"><i class="fa-solid fa-mobile"></i></span>
+                                                  <div class="form-floating">
+                                                       <input type="text" class="form-control" id="nicTxt" placeholder="nic Number" name="nic" />
+                                                       <label for="nicTxt">Nic</label>
+                                                  </div>
+                                                  <button
+                                                       disabled
+                                                       class="input-group-text"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-placement="top"
+                                                       data-bs-custom-class="custom-tooltip"
+                                                       data-bs-title="Enter your nic number as currently you use"
+                                                  >
+                                                       <i class="fas fa-info-circle"></i>
+                                                  </button>
+                                                  <div class="text-danger input-group fst-italic hide Error" id="nicTxtError" style="font-size: 12px">
+                                                       please enter valid nic number!
+                                                  </div>
+                                             </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                             <div class="input-group mb-3">
+                                                  <span class="input-group-text"><i class="fa-solid fa-phone-volume"></i></span>
+                                                  <div class="form-floating">
+                                                       <input type="text" class="form-control" id="passportTxt" placeholder="Passport" name="passport" />
+                                                       <label for="passportTxt">Passport</label>
+                                                  </div>
+                                                  <button
+                                                       disabled
+                                                       class="input-group-text"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-placement="top"
+                                                       data-bs-custom-class="custom-tooltip"
+                                                       data-bs-title="Enter your Passport you use"
+                                                  >
+                                                       <i class="fas fa-info-circle"></i>
+                                                  </button>
+                                                  <div class="text-danger input-group fst-italic hide Error" id="passportTxtError" style="font-size: 12px">
+                                                       please enter your Passport number!
+                                                  </div>
+                                             </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                             <div class="input-group mb-3">
+                                                  <span class="input-group-text"><i class="fa-solid fa-people-group"></i></span>
+                                                  <div class="form-floating">
+                                                       <input type="text" class="form-control" id="mobileNumberTxt" placeholder="Mobile" name="mobile" />
+                                                       <label for="mobileNumberTxt">Mobile</label>
+                                                  </div>
+                                                  <button
+                                                       disabled
+                                                       class="input-group-text"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-placement="top"
+                                                       data-bs-custom-class="custom-tooltip"
+                                                       data-bs-title="Enter your National identicard number"
+                                                  >
+                                                       <i class="fas fa-info-circle"></i>
+                                                  </button>
+                                                  <div class="text-danger input-group fst-italic hide" id="mobileNumberTxtError" style="font-size: 12px">
+                                                       please enter your mobile!
+                                                  </div>
+                                             </div>
+                                        </div>
+                                   </div>
+                                   <div class="row m-2 pb-4">
+                                        <div class="col-md-4">
+                                             <div class="input-group mb-3">
+                                                  <span class="input-group-text"><i class="fa-solid fa-people-group"></i></span>
+                                                  <div class="form-floating">
+                                                       <input type="email" class="form-control" id="emailTxt" placeholder="email" name="email" />
+                                                       <label for="emailTxt">email</label>
+                                                  </div>
+                                                  <button
+                                                       disabled
+                                                       class="input-group-text"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-placement="top"
+                                                       data-bs-custom-class="custom-tooltip"
+                                                       data-bs-title="Enter your National identicard number"
+                                                  >
+                                                       <i class="fas fa-info-circle"></i>
+                                                  </button>
+                                                  <div class="text-danger input-group fst-italic hide" id="emailTxtError" style="font-size: 12px">
+                                                       please eneter your email!
+                                                  </div>
+                                             </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                             <div class="input-group mb-3">
+                                                  <span class=""></span>
+                                                  <div class="form-floating">
+                                                       <select class="form-select" name="civil_status" id="civilStatusFormSelect">
+                                                            <option value="" disabled selected>Open this select Designation</option>
+                                                            <option value="Marid">Marid</option>
+                                                            <option value="unmaried">unmaried</option>
+                                                            <option value="single">single</option>
+                                                       </select>
+                                                       <label for="civilStatusFormSelect">Designation</label>
+                                                  </div>
+                                                  <button
+                                                       disabled
+                                                       class="input-group-text"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-placement="top"
+                                                       data-bs-custom-class="custom-tooltip"
+                                                       data-bs-title="Please select your Designation."
+                                                  >
+                                                       <i class="fas fa-info-circle"></i>
+                                                  </button>
+                                                  <div class="text-danger input-group fst-italic hide" id="civilStatusFormSelectTxtError" style="font-size: 12px">
+                                                       please select your civil status!
+                                                  </div>
+                                             </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                             <div class="input-group mb-3">
+                                                  <span class=""></span>
+                                                  <div class="form-floating">
+                                                       <select class="form-select" name="workingstatus_id" id="workingStatusFormSelect">
+                                                            <option selected value="" disabled>selecte your working status</option>
+                                                       </select>
+                                                       <label for="workingStatusFormSelect">working status</label>
+                                                  </div>
+                                                  <button
+                                                       disabled
+                                                       class="input-group-text"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-placement="top"
+                                                       data-bs-custom-class="custom-tooltip"
+                                                       data-bs-title="Please select your working staus."
+                                                  >
+                                                       <i class="fas fa-info-circle"></i>
+                                                  </button>
+                                                  <div class="text-danger input-group fst-italic hide" id="workingStatusFormSelectTxtError" style="font-size: 12px">
+                                                       please select your working states!
+                                                  </div>
+                                             </div>
+                                        </div>
+                                   </div>
+                                   <div class="row m-2 pb-4">
+                                        <div class="col-md-4">
+                                             <div class="input-group mb-3">
+                                                  <span class="input-group-text"></span>
+                                                  <div class="form-floating">
+                                                       <input
+                                                            type="date"
+                                                            class="form-control"
+                                                            id="dateOfRecruitment"
+                                                            placeholder="Date of Recruitment"
+                                                            name="date_of_birth"
+                                                       />
+                                                       <label for="dateOfBirth">Recruitment Date</label>
+                                                  </div>
+                                                  <button
+                                                       disabled
+                                                       class="input-group-text"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-placement="top"
+                                                       data-bs-custom-class="custom-tooltip"
+                                                       data-bs-title="Enter your univercity leaving date"
+                                                  >
+                                                       <i class="fas fa-info-circle"></i>
+                                                  </button>
+                                                  <div class="text-danger input-group fst-italic hide" id="dateOfRecruitmentError" style="font-size: 12px">
+                                                       please enter Date of recruitment
+                                                  </div>
+                                             </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                             <div class="input-group mb-3">
+                                                  <span class="input-group-text"><i class="fa-solid fa-phone-volume"></i></span>
+                                                  <div class="form-floating">
+                                                       <input type="text" class="form-control" id="epfNumberTxt" placeholder="EPF Number" name="epf_number" />
+                                                       <label for="epfNumberTxt">EPF Number</label>
+                                                  </div>
+                                                  <button
+                                                       disabled
+                                                       class="input-group-text"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-placement="top"
+                                                       data-bs-custom-class="custom-tooltip"
+                                                       data-bs-title="Enter your Passport you use"
+                                                  >
+                                                       <i class="fas fa-info-circle"></i>
+                                                  </button>
+                                                  <div class="text-danger input-group fst-italic hide Error" id="epfNumberTxtError" style="font-size: 12px">
+                                                       please enter your EPF Number!
+                                                  </div>
+                                             </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                             <div class="input-group mb-3">
+                                                  <span class="input-group-text"><i class="fa-solid fa-people-group"></i></span>
+                                                  <div class="form-floating">
+                                                       <input type="text" class="form-control" id="etfNumberTxt" placeholder="ETF Number" name="etf_number" />
+                                                       <label for="etfNumberTxt">ETF Number</label>
+                                                  </div>
+                                                  <button
+                                                       disabled
+                                                       class="input-group-text"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-placement="top"
+                                                       data-bs-custom-class="custom-tooltip"
+                                                       data-bs-title="Enter your National identicard number"
+                                                  >
+                                                       <i class="fas fa-info-circle"></i>
+                                                  </button>
+                                                  <div class="text-danger input-group fst-italic hide" id="etfNumberTxtError" style="font-size: 12px">
+                                                       please enter your ETF Number!
+                                                  </div>
+                                             </div>
+                                        </div>
+                                   </div>
+                                   <div class="row m-2 pb-4">
+                                        <div class="col-md-6">
+                                             <div class="input-group mb-3">
+                                                  <span class=""></span>
+                                                  <div class="form-floating">
+                                                       <textarea
+                                                            class="form-control"
+                                                            placeholder="Address"
+                                                            id="addressTxt"
+                                                            style="height: 100px"
+                                                            name="address"
+                                                       ></textarea>
+                                                       <label for="addressTxt">Address</label>
+                                                  </div>
+                                                  <button
+                                                       disabled
+                                                       class="input-group-text"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-placement="top"
+                                                       data-bs-custom-class="custom-tooltip"
+                                                       data-bs-title="Please select your working staus."
+                                                  >
+                                                       <i class="fas fa-info-circle"></i>
+                                                  </button>
+                                                  <div class="text-danger input-group fst-italic hide" id="addressTxtError" style="font-size: 12px">
+                                                       please Enter your Address!
+                                                  </div>
+                                             </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                             <div class="input-group mb-3">
+                                                  <span class=""></span>
+                                                  <div class="form-floating">
+                                                       <textarea
+                                                            class="form-control"
+                                                            placeholder="Note"
+                                                            id="noteTxt"
+                                                            style="height: 100px"
+                                                            name="note"
+                                                       ></textarea>
+                                                       <label for="noteTxt">Note</label>
+                                                  </div>
+                                                  <button
+                                                       disabled
+                                                       class="input-group-text"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-placement="top"
+                                                       data-bs-custom-class="custom-tooltip"
+                                                       data-bs-title="Please select your working staus."
+                                                  >
+                                                       <i class="fas fa-info-circle"></i>
+                                                  </button>
+                                                  <div class="text-danger input-group fst-italic hide" id="noteTxtError" style="font-size: 12px">
+                                                       please enter your note!
+                                                  </div>
+                                             </div>
+                                        </div>
+                                   </div>
+                              </form>
+                              <br /><br />
+                              <button class="btn btn-primary mx-3" id="ValidationButton">Add</button>
+                              <button class="btn btn-primary mx-3" id="UpdateButton">Update button</button>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="modal fade" id="CountryForm" aria-hidden="true" data-bs-backdrop="static" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+               <div class="modal-dialog ">
+                    <div class="modal-content">
+                         <div class="modal-header">
+                              <h1 class="modal-title fs-5" id="CountryLabel2">Add new Country</h1>
+                         </div>
+                         <div class="modal-body">
+                              <form action="" class="form-control" id="countryInputForm">     
+                                   <div class="row pb-4">
+                                        <div class="col-md-12">
+                                             <div class="input-group">
+                                                  <span class="input-group-text"><i class="fa-solid fa-people-group"></i></span>
+                                                  <div class="form-floating">
+                                                       <input type="text" class="form-control" id="countryNameTxt" placeholder="Country" name="countryName" />
+                                                       <label for="countryNameTxt">Country</label>
+                                                  </div>
+                                                  <button
+                                                       disabled
+                                                       class="input-group-text"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-placement="top"
+                                                       data-bs-custom-class="custom-tooltip"
+                                                       data-bs-title="Enter your National identicard number"
+                                                  >
+                                                       <i class="fas fa-info-circle"></i>
+                                                  </button>
+                                                  <div class="text-danger input-group fst-italic hide" id="countryNameTxtError" style="font-size: 12px">
+                                                       plese eneter your Country
+                                                  </div>
+                                             </div>
+                                        </div>
+                                   </div>
+                                   <div class="row pb-12">
+                                        <div class="col-md-12">
+                                             <div class="input-group mb-3">
+                                                  <span class="input-group-text"><i class="fa-solid fa-people-group" id="fffff">fdfsfs</i></span>
+                                                  <div class="form-floating">
+                                                       <input type="text" class="form-control" id="countryCodeTxt" placeholder="Country code" name="countryCode" />
+                                                       <label for="countryCodeTxt">Country code</label>
+                                                  </div>
+                                                  <button
+                                                       disabled
+                                                       class="input-group-text"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-custom-class="custom-tooltip"
+                                                       data-bs-title="Enter your National identicard number"
+                                                  >
+                                                       <i class="fas fa-info-circle"></i>
+                                                  </button>
+                                                  <div class="text-danger input-group fst-italic hide" id="countryCodeTxtError" style="font-size: 12px">
+                                                       plese eneter your CountryCode
+                                                  </div>
+                                             </div>
+                                        </div>
+                                   </div>
+                              </form>
+                         </div>
+                         <div class="modal-footer">
+                              <button class="btn btn-primary mx-3" id="countryAddButton">Add</button>
+                              <button class="btn btn-primary" id="backtoPrimary">Back to first</button>
+                         </div>
+                    </div>
+               </div>
+          </div>
+
+          <!--     employee table-->
+          <div class="container-fluid d-flex justify-content-end">
+               <button class="btn btn-primary mx-5 mt-3 px-4" data-bs-target="#employeeForm" data-bs-toggle="modal">
+                    <i class="fa-solid fa-user-plus" style="color: #ffffff"></i>
+               </button>
+          </div>
+          <div class="container-fluid mt-4 table-responsive px-lg-5 animate__animated animate__fadeInDown">
+               <table class="table table-dark table-striped my-4 mt-lg-5" id="EmployeeView">
+                    <thead class="mt-3">
+                         <tr>
+                              <th>#</th>
+                              <th>Employee id</th>
+                              <th>Full Name</th>
+                              <th>NIC</th>
+                              <th>Passport</th>
+                              <th>Recident</th>
+                              <th>Mobile</th>
+                              <th>Age</th>
+                              <th>Designation</th>
+                              <th>Status</th>
+                              <th>Modify</th>
+                         </tr>
+                    </thead>
+                    <tbody></tbody>
+               </table>
+          </div>
+
+          <!--     Employee Details modle-->
+          <div class="modal modal-xl fade" id="EmployeeDetails">
+               <div class="modal-dialog">
+                    <div class="modal-content">
+                         <div class="modal-header">
+                              <h1><i class="fa-solid fa-user"></i></h1>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" id="employeeDetailsClose"></button>
+                         </div>
+                         <div class="modal-body">
+                              <div class="d-flex justify-content-center">
+                                   <div id="EmployeeDetailsList">
+                                        <div class="row mt-3">
+                                             <div class="col-lg-3">
+                                                  <h5>Title</h5>
+                                             </div>\
+                                        </div>
+                                        <div class="row mt-3">
+                                             <div class="col-lg-3">
+                                                  <h5>First name</h5>
+                                             </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                             <div class="col-lg-3">
+                                                  <h5>Last Name</h5>
+                                             </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                             <div class="col-lg-3">
+                                                  <h5>Full Name</h5>
+                                             </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                             <div class="col-lg-3">
+                                                  <h5>Last Name</h5>
+                                             </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                             <div class="col-lg-3">
+                                                  <h5>State</h5>
+                                             </div>
+                                        </div>
+                                   </div>
+                              </div>
+                              <div class="d-flex justify-content-end">
+                                   <div>
+                                        <div class="row">
+                                             <div class="col-lg-3 mx-4">
+                                                  <button class="btn btn-primary px-5"><i class="fa-solid fa-print"></i>Print</button>
+                                             </div>
+                                             <div class="col-lg-2 mx-3">
+                                                  <button class="btn btn-primary px-5"><i class="fa-solid fa-pen"></i>Edit</button>
+                                             </div>
+                                        </div>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <script src="jsFiles/resource/js/employeeCommonfunction.js"></script>
+          <script src="jsFiles/resource/js/employee.js"></script>
+          <script src="jsFiles/resource/js/validationCommonfunction.js"></script>
+          <script src="jsFiles/resource/js/formObjectCreateCommonFunction.js"></script>
+          <script src="jsFiles/resource/js/dropDuwnCreateCommonFunction.js"></script>
+          <script src="jsFiles/resource/js/formClear.js"></script>
+          <script src="jsFiles/resource/js/formFill.js"></script>
+          <script src="jsFiles/resource/js/errorDisplay.js"></script>
+     </body>
+</html>

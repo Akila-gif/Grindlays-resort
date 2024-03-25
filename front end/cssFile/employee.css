@@ -1,0 +1,28 @@
+body::-webkit-scrollbar {
+    display: none;
+}
+
+.valid{
+     border: 1px solid green;
+ }
+
+.in-valid{
+    border: 1px solid red;
+}
+.hide{
+    visibility: hidden;
+}
+
+/* Add this CSS to your stylesheet */
+.dark-dropdown .dropdown-menu {
+    background-color: rgba(red, green, blue, 0); /* Background color for the dropdown menu */
+    color: #fff; /* Text color for the dropdown menu */
+}
+
+.dark-dropdown .dropdown-menu .dropdown-item {
+    color: #fff; /* Text color for dropdown items */
+}
+
+.dark-dropdown .dropdown-menu .dropdown-item:hover {
+    background-color: #555; /* Background color for hovered dropdown items */
+}   

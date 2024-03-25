@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Document</title>
+</head>
+<body>
+     <input list="datalistOptions" class="form-control" id="floatingInput" placeholder="Country">
+     <datalist id="datalistOptions">
+         <option value="San Francisco">
+         <option value="New York">
+         <option value="Seattle">
+         <option value="Los Angeles">
+         <option value="Chicago">
+     </datalist>
+     <label for="datalistOptions">Country</label>
+     <br>
+     <br>
+     <br>
+     <button disabled id="afaf">adding Button</button>
+     
+     <script>
+         document.getElementById('floatingInput').addEventListener('keyup', function(event) {
+             var inputText = event.target.value.toLowerCase();
+             var datalistOptions = document.getElementById('datalistOptions').getElementsByTagName('option');
+             var matchFound = false;
+             for (var i = 0; i < datalistOptions.length; i++) {
+                    var optionValue = datalistOptions[i].value;
+                    console.log(inputText.replace(/\s+/g,'').trim());
+                 if (optionValue.toLowerCase().replace(/\s+/g,'').trim().includes(inputText.replace(/\s+/g,'').trim())) {
+                     matchFound = true;
+                     break;
+                 }
+             }
+             if (matchFound) {
+                 // Trigger your event here
+                 afaf.disabled = true;
+             } else {
+               afaf.disabled = false;
+             }
+         });
+     </script>
+</body>
+</html>

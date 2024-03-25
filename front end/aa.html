@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<script >
+    function calculateAge(birthDate) {
+        // Parse the birth date string into a Date object
+        var birthDateObj = new Date(birthDate);
+        // Get the current date
+        var currentDate = new Date();
+
+        // Calculate the difference in milliseconds between the two dates
+        var difference = currentDate - birthDateObj;
+        console.log(difference)
+        // Convert the difference from milliseconds to years
+        var age = Math.floor(difference / (1000 * 60 * 60 * 24 * 365.25));
+
+        return age;
+    }
+
+    // Example usage:
+    var birthDate = "1998-02-1";
+    var age = calculateAge(birthDate);
+    console.log("Age:", age);
+</script>
+</body>
+</html>

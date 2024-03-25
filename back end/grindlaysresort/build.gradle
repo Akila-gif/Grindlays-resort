@@ -1,0 +1,48 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.2.2'
+	id 'io.spring.dependency-management' version '1.1.4'
+}
+
+group = 'com.'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '17'
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	//map class and mysql table
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	//use to mail server
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	//security maintaness
+	//implementation 'org.springframework.boot:spring-boot-starter-security'
+	//html template engine
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	//for back end validation
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	//web features REST
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	//server-side Java template engine
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	// to stablish connection between java and mysql server
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.apache.httpcomponents.client5:httpclient5'
+	implementation 'org.springframework.boot:spring-boot-starter-data-rest:2.6.7'
+
+	implementation group: 'org.json', name: 'json', version: '20240303'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

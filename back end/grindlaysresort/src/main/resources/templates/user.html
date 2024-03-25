@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="jsFiles/resource/bootstrap-5.3.1-dist/css/bootstrap.min.css">
+    <script src="jsFiles/resource/bootstrap-5.3.1-dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="jsFiles/resource/fontawesome-free-6.4.2-web/css/all.css">
+    <script src="jsFiles/resource/fontawesome-free-6.4.2-web/js/all.min.js"></script>
+    <script src="jsFiles/resource/js/jquery-3.7.1.js"></script>
+    <script src="jsFiles/resource/js/toastr.js"></script>
+    <script src="jsFiles/resource/js/objectCompair.js"></script>
+    <script src="jsFiles/resource/js/notification.js"></script>
+    <script src="jsFiles/resource/js/serviceRequest.js"></script>
+    <link href="jsFiles/resource/js/DataTables/datatables.min.css" rel="stylesheet">
+    <script src="jsFiles/resource/js/DataTables/datatables.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <link rel="stylesheet" href="cssFile/employee.css">
+    <link rel="stylesheet" href="cssFile/toastr.css">
+    <title>User</title>
+</head>
+
+<body>
+
+<div class="d-flex justify-content-around bg-black ">
+    <div></div>
+    <h1 class="text-center p-5 bg-black text-light fs-1">User Table</h1>
+    <div class="p-5 ">
+        <button class="btn btn-primary" data-bs-target="#employeeForm" data-bs-toggle="modal">
+            <i class="fa-solid fa-user-plus" style="color: #ffffff;"></i>
+        </button>
+    </div>
+</div>
+
+
+<!--     form modal-->
+<div class="modal modal-xl fade " id="employeeForm">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1>User <i class="fa-solid fa-user-plus"></i></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        id="employeeFormClose"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" class="form-control" id="inputForm">
+                    <div class="row m-2 pb-4">
+                        <div class="col-sm-2">
+                            <div class="input-group mb-3">
+                                <span class=""></span>
+                                <div class="form-floating">
+                                    <select class="form-select" name="designation_iddesignation" id="EmployeeTitleSelect">
+                                        <option selected value="">Select Employee</option>
+                                    </select>
+                                    <label for="EmployeeTitleSelect">Employee</label>
+                                </div>
+                                <button class="input-group-text" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Enter your First name as first.">
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div class="text-danger input-group fst-italic hide" id="TitleTxtError"
+                                     style="font-size: 12px;">
+                                    please select your title!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"></span>
+                                <div class="form-floating">
+                                    <input type="text" class="form-control " id="UsernNameTxt"
+                                           placeholder="First name" name="firt_name">
+                                    <label for="UsernNameTxt">User name</label>
+                                </div>
+                                <button class="input-group-text" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Enter your First name as first.">
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div class="text-danger input-group fst-italic hide" id="UsernNameTxtTxtError"
+                                     style="font-size: 12px;">
+                                    please select your valid Username!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"></span>
+                                <div class="form-floating">
+                                    <input type="password" class="form-control" id="PasswordPwd"
+                                           placeholder="Last Name" name="last_name">
+                                    <label for="PasswordPwd">Password</label>
+                                </div>
+                                <button class="input-group-text" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="This field for enter your Last name">
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div class="text-danger input-group fst-italic hide" id="PasswordPwdTxtError"
+                                     style="font-size: 12px;">
+                                    please enter Valid password
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-2 pb-4">
+                        <div class="col-12">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"></span>
+                                <div class="form-floating">
+                                    <input type="password" class="form-control" id="RePasswordPwd"
+                                           placeholder="Full Name" name="full_name">
+                                    <label for="RePasswordPwd">Re-Password</label>
+                                </div>
+                                <button class="input-group-text" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Enter your full name and give as that include as NIC">
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div class="text-danger input-group fst-italic hide" id="RePasswordPwdTxtError"
+                                     style="font-size: 12px;">
+                                    Password Does not Match
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-2 pb-4">
+                        <div class="col-md-3">
+                            <div class="input-group mb-3">
+                                <span class=""></span>
+                                <div class="form-floating">
+                                    <select class="form-select" name="designation_iddesignation" id="RoleSelect">
+                                        <option selected value="">Select Role</option>
+                                    </select>
+                                    <label for="RoleSelect">Employee</label>
+                                </div>
+                                <button class="input-group-text" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Enter your First name as first.">
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div class="text-danger input-group fst-italic hide" id="RoleSelectTxtError"
+                                     style="font-size: 12px;">
+                                    please select Your Role
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" style="display: none">
+                                    <i class="fa-solid fa-phone-volume"></i>
+                                </span>
+                                <div class="form-check ">
+                                    <input class="form-check-input" name="active_state" type="checkbox" value="" id="ActivityCheck">
+                                    <label class="form-check-label" for="ActivityCheck">
+                                        Default checkbox
+                                    </label>
+                                </div>
+                                <button class="input-group-text" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Enter your Land phone number as currently you use">
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div class="text-danger input-group fst-italic hide Error"
+                                     id="ActivityCheckTxtError" style="font-size: 12px;">
+                                    please enter your land phone number
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <br><br>
+                <button class="btn btn-primary mx-3" id="ValidationButton">Validation button</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--     employee table-->
+<div class="container-fluid mt-4 table-responsive px-lg-5">
+    <table class="table table-dark table-striped  my-4 mt-lg-5" id="UserView">
+        <thead class="mt-3">
+        <tr>
+            <th>#</th>
+            <th>User Name</th>
+            <th>User Name</th>
+            <th>Email</th>
+            <th>status</th>
+            <th>Added date time</th>
+            <th>Status</th>
+            <th>Modify</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<!--     Employee Details modle-->
+<div class="modal modal-xl fade" id="EmployeeDetails">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1><i class="fa-solid fa-user"></i></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        id="employeeDetailsClose"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex justify-content-center">
+                    <div id="EmployeeDetailsList">
+                        <div class="row mt-3">
+                            <div class="col-lg-3">
+                                <h5>Title</h5>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-lg-3">
+                                <h5>First name</h5>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-lg-3">
+                                <h5>Last Name</h5>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-lg-3">
+                                <h5>Full Name</h5>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-lg-3">
+                                <h5>Last Name</h5>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-lg-3">
+                                <h5>State</h5>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <div>
+                        <div class="row">
+                            <div class="col-lg-3 mx-4">
+                                <button class="btn btn-primary px-5"><i
+                                        class="fa-solid fa-print"></i>Print</button>
+                            </div>
+                            <div class="col-lg-2 mx-3">
+                                <button class="btn btn-primary px-5"><i
+                                        class="fa-solid fa-pen"></i>Edit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="jsFiles/resource/js/employeeCommonfunction.js"></script>
+<script src="jsFiles/resource/js/user.js"></script>
+<script src="jsFiles/resource/js/validationCommonfunction.js"></script>
+<script src="jsFiles/resource/js/formObjectCreateCommonFunction.js"></script>
+<script src="jsFiles/resource/js/dropDuwnCreateCommonFunction.js"></script>
+<script src="jsFiles/resource/js/formClear.js"></script>
+<script src="jsFiles/resource/js/formFill.js"></script>
+<script>
+    window.addEventListener('load', () => {
+        employeeFormClose.addEventListener('click', (e) => {
+            window.location.reload(true);
+        })
+    });
+</script>
+</body>
+
+</html>
