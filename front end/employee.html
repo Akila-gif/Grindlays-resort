@@ -352,7 +352,7 @@
                                                             class="form-control"
                                                             id="dateOfRecruitment"
                                                             placeholder="Date of Recruitment"
-                                                            name="date_of_birth"
+                                                            name="date_of_recruitment"
                                                        />
                                                        <label for="dateOfBirth">Recruitment Date</label>
                                                   </div>
@@ -412,6 +412,52 @@
                                                   </button>
                                                   <div class="text-danger input-group fst-italic hide" id="etfNumberTxtError" style="font-size: 12px">
                                                        please enter your ETF Number!
+                                                  </div>
+                                             </div>
+                                        </div>
+                                   </div>
+                                   <div class="row m-2 pb-4">
+                                        <div class="col-md-6">
+                                             <div class="input-group mb-3">
+                                                  <span class="input-group-text"></span>
+                                                  <div class="form-floating">
+                                                       <input type="file" class="form-control form-control-lg" id="empImageTxt" placeholder="Upload image" name="emp_image" />
+                                                       <label for="empImageTxt">Upload image</label>
+                                                  </div>
+                                                  <button
+                                                       disabled
+                                                       class="input-group-text"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-placement="top"
+                                                       data-bs-custom-class="custom-tooltip"
+                                                       data-bs-title="Enter your Passport you use"
+                                                  >
+                                                       <i class="fas fa-info-circle"></i>
+                                                  </button>
+                                                  <div class="text-danger input-group fst-italic hide Error" id="empImageTxtError" style="font-size: 12px">
+                                                       please add your image!
+                                                  </div>
+                                             </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                             <div class="input-group mb-3">
+                                                  <span class="input-group-text"><i class="fa-solid fa-people-group"></i></span>
+                                                  <div class="form-floating">
+                                                       <input type="text" class="form-control" id="basicSalaryTxt" placeholder="Basic salary" name="basicsalary" />
+                                                       <label for="basicSalaryTxt">Basic Salary</label>
+                                                  </div>
+                                                  <button
+                                                       disabled
+                                                       class="input-group-text"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-placement="top"
+                                                       data-bs-custom-class="custom-tooltip"
+                                                       data-bs-title="Enter your National identicard number"
+                                                  >
+                                                       <i class="fas fa-info-circle"></i>
+                                                  </button>
+                                                  <div class="text-danger input-group fst-italic hide" id="basicSalaryTxtError" style="font-size: 12px">
+                                                       please enter Employee Basic salary!
                                                   </div>
                                              </div>
                                         </div>

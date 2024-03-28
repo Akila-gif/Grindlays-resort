@@ -76,8 +76,8 @@ public class EmployeeControlelr {
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping()
-    public Employee updateEmployee(@RequestParam("id") int id){
+    @DeleteMapping(path = "{id}")
+    public Employee deleteEmployee(@PathVariable("id") int id){
         Optional<Employee> empForUpdate = employeeDao.findById(id);
         HashMap<String, String> errorSet = new HashMap<>();
 
