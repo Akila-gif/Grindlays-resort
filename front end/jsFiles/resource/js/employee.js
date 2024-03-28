@@ -91,12 +91,16 @@ const DeleteFunctionName = (element, index, tableBody) => {
     if (deleteConform) {
         const deleteServerResponse = 'OK';
         if (deleteServerResponse === 'OK') {
-            tableBody.children[index].children[9].innerHTML = '<p class="text-danger "><i class="fa-solid fa-circle"></i> Delete</p>';
-            console.log(element.idemployee);
-            HTTPRequestService("DELETE",'http://localhost:8080/empoloyees/'+element.idemployee);
-            window.alert("Delete Successfull...");
+            let deleteResponse = HTTPRequestService("DELETE",'http://localhost:8080/employees/'+element.id);
+            if (199<deleteResponse.status && deleteResponse.status<300) {
+                tableBody.children[index].children[9].innerHTML = '<p class="text-danger "><i class="fa-solid fa-circle"></i> Delete</p>';
+                console.log(element.id);
+                window.alert("Delete Successfull...");
+            } else {
+                window.alert("Delete not compleate error "+deleteResponse.message);
+            }
         } else {
-            window.alert("Delete not compleate error : " + deleteServerResponse);
+            window.alert("Delete not compleate error ");
         }
     }
 }
@@ -256,6 +260,14 @@ noteTxt.addEventListener('keyup',()=>{
     validationResult = validationFunction(valdationFeildList, valdationDetailsListt, inputForm, noteTxt);
 });
 
+empImageTxt.addEventListener('keyup',()=>{
+    validationResult = validationFunction(valdationFeildList, valdationDetailsListt, inputForm, empImageTxt);
+});
+
+basicSalaryTxt.addEventListener('keyup',()=>{
+    validationResult = validationFunction(valdationFeildList, valdationDetailsListt, inputForm, basicSalaryTxt);
+});
+
 //country form event
 countryNameTxt.addEventListener('keyup',()=>{
     validationResult = validationFunction(countryValdationFeildList, countryValdationDetailsListt, countryInputForm, countryNameTxt);
@@ -291,6 +303,8 @@ const valdationFeildList = [
     { id: 'dateOfRecruitment', type: 'date', validationStategy: 'function', requird: true },
     { id: 'epfNumberTxt', type: 'text', validationStategy: 'regexp', requird: true },
     { id: 'etfNumberTxt', type: 'text', validationStategy: 'regexp', requird: true },
+    { id: 'empImageTxt', type: 'text', validationStategy: 'regexp', requird: false },
+    { id: 'basicSalaryTxt', type: 'text', validationStategy: 'regexp', requird: true },
     { id: 'addressTxt', type: 'text', validationStategy: 'nothing', requird: false },
     { id: 'noteTxt', type: 'text', validationStategy: 'nothing', requird: false },
 ];
@@ -307,6 +321,7 @@ const valdationDetailsListt = {
     'dateOfRecruitment': { pattern: null, functions: birthDayvalidation },
     'epfNumberTxt': { pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$' },
     'etfNumberTxt': { pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$' },
+    'basicSalaryTxt': { pattern: '^([0-9]{1,}|[0-9]{1,}.[0-9]{2})$' },
 };
 
 const defaulTextError = {
@@ -324,7 +339,9 @@ const defaulTextError = {
     'civilStatusFormSelect': { pattern: "please select your civil status!"},
     'workingStatusFormSelect': { pattern: "please select your working states!"},
     'addressTxt': { pattern: "please Enter your Address!"},
-    'noteTxt': { pattern: "please enter your note!"}
+    'noteTxt': { pattern: "please enter your note!"},
+    'empImageTxt': { pattern: "please Enter image!"},
+    'basicSalaryTxt': { pattern: "please enter your basic salary!"},
 };
 
 const comparisonStaregy = {
