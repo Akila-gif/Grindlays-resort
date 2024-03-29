@@ -417,11 +417,11 @@
                                         </div>
                                    </div>
                                    <div class="row m-2 pb-4">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                              <div class="input-group mb-3">
                                                   <span class="input-group-text"></span>
                                                   <div class="form-floating">
-                                                       <input type="file" class="form-control form-control-lg" id="empImageTxt" placeholder="Upload image" name="emp_image" />
+                                                       <input type="file" class="form-control form-control" id="empImageTxt" placeholder="Upload image" name="emp_image" />
                                                        <label for="empImageTxt">Upload image</label>
                                                   </div>
                                                   <button
@@ -439,7 +439,7 @@
                                                   </div>
                                              </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                              <div class="input-group mb-3">
                                                   <span class="input-group-text"><i class="fa-solid fa-people-group"></i></span>
                                                   <div class="form-floating">
@@ -458,6 +458,30 @@
                                                   </button>
                                                   <div class="text-danger input-group fst-italic hide" id="basicSalaryTxtError" style="font-size: 12px">
                                                        please enter Employee Basic salary!
+                                                  </div>
+                                             </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                             <div class="input-group mb-3">
+                                                  <span class=""></span>
+                                                  <div class="form-floating">
+                                                       <select class="form-select" name="employee_category" id="employeeCategoryFormSelect">
+                                                            <option selected value="" disabled>selecte your employee category</option>
+                                                       </select>
+                                                       <label for="employeeCategoryFormSelect">Employee Category</label>
+                                                  </div>
+                                                  <button
+                                                       disabled
+                                                       class="input-group-text"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-placement="top"
+                                                       data-bs-custom-class="custom-tooltip"
+                                                       data-bs-title="Please select your working staus."
+                                                  >
+                                                       <i class="fas fa-info-circle"></i>
+                                                  </button>
+                                                  <div class="text-danger input-group fst-italic hide" id="employeeCategoryFormSelectTxtError" style="font-size: 12px">
+                                                       please select your working states!
                                                   </div>
                                              </div>
                                         </div>
