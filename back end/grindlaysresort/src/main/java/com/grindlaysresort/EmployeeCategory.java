@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Category {
+public class EmployeeCategory {
 
     @Id
     @Column(name = "id",unique = true)

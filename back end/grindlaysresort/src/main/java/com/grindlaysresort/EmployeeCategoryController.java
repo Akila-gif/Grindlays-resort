@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(name = "/categories")
-public class CategoryController {
+@RequestMapping("categories")
+public class EmployeeCategoryController {
 
     @Autowired
-    private CategoryDao categoryDao;
+    private EmployeeCategoryDaoDao employeeCategoryDaoDao;
 
     @GetMapping
-    public List<Category> getAll(){
-        return categoryDao.findAll();
+    public List<EmployeeCategory> getAll(){
+        return employeeCategoryDaoDao.findAll();
     }
 }

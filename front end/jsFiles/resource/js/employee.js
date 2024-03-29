@@ -5,6 +5,7 @@ window.addEventListener("load", () => {
     refreshEmployeetable(HTTPRequestService("GET",'http://localhost:8080/employees'));
     DesignationDropDownCreate(HTTPRequestService("GET",'http://localhost:8080/designations'));
     EmployeeStatusDropDown(HTTPRequestService("GET",'http://localhost:8080/empstatus'));
+    EmployeeCategoryDropDown(HTTPRequestService("GET",'http://localhost:8080/categories'));
 
 }); 
 
@@ -37,12 +38,15 @@ refreshEmployeetable = (dataList) => {
         searchInputDiv.classList.add('form-control');
     });
 }
-
+// Shoud pass as parameters (datalist,Id,nameof the field that display as the innre html)
 const DesignationDropDownCreate = (designation) =>{
     dropDownCreate(designation,designationFormSelect,'designation_name');
 }
 const EmployeeStatusDropDown = (StatusDataList) =>{
     dropDownCreate(StatusDataList,workingStatusFormSelect,'status');
+}
+const EmployeeCategoryDropDown = (CategoriesDataList) =>{
+    dropDownCreate(CategoriesDataList,employeeCategoryFormSelect,'category_name');
 }
 
 
@@ -268,6 +272,10 @@ basicSalaryTxt.addEventListener('keyup',()=>{
     validationResult = validationFunction(valdationFeildList, valdationDetailsListt, inputForm, basicSalaryTxt);
 });
 
+employeeCategoryFormSelect.addEventListener('change',()=>{
+    validationFunction(valdationFeildList, valdationDetailsListt, inputForm, employeeCategoryFormSelect);
+});
+
 //country form event
 countryNameTxt.addEventListener('keyup',()=>{
     validationResult = validationFunction(countryValdationFeildList, countryValdationDetailsListt, countryInputForm, countryNameTxt);
@@ -305,6 +313,7 @@ const valdationFeildList = [
     { id: 'etfNumberTxt', type: 'text', validationStategy: 'regexp', requird: true },
     { id: 'empImageTxt', type: 'text', validationStategy: 'regexp', requird: false },
     { id: 'basicSalaryTxt', type: 'text', validationStategy: 'regexp', requird: true },
+    { id: 'employeeCategoryFormSelect', type: 'dropdown', validationStategy: 'selected', requird: true },
     { id: 'addressTxt', type: 'text', validationStategy: 'nothing', requird: false },
     { id: 'noteTxt', type: 'text', validationStategy: 'nothing', requird: false },
 ];
@@ -342,6 +351,7 @@ const defaulTextError = {
     'noteTxt': { pattern: "please enter your note!"},
     'empImageTxt': { pattern: "please Enter image!"},
     'basicSalaryTxt': { pattern: "please enter your basic salary!"},
+    'employeeCategoryFormSelect': { pattern: "please select your working Category!"},
 };
 
 const comparisonStaregy = {

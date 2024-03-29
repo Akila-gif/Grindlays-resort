@@ -91,5 +91,9 @@ public class Employee {
     @JoinColumn(name = "designation_id", referencedColumnName = "id")
     Designation designation_id;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    EmployeeCategory employeeCategory;
+
 
 }
