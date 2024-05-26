@@ -20,7 +20,12 @@ const fillRowDataIntoTable = (Tableid,datalist,displayProperty,editFunction,dele
                trElement.appendChild(td);
           }
           if (dataelement.dataType=='function') {
-               td.innerHTML = dataelement.propertyName(element);
+                let retunInnerElemnt = dataelement.propertyName(element);
+                if (typeof(retunInnerElemnt)!="object"){                    
+                    td.innerHTML = retunInnerElemnt;
+                } else{
+                    td.appendChild(retunInnerElemnt);
+                }
                trElement.appendChild(td);
           }
      });

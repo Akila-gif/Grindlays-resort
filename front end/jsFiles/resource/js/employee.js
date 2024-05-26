@@ -88,7 +88,7 @@ const EditfunctionName = (element, index) => {
 const DeleteFunctionName = (element, index, tableBody) => {
 
     let deleteConform = window.confirm("Are you sure ?\n"
-        + "first Name " + element.firt_name
+        + "Employee number " + element.employeeid
         + "\nFull Name " + element.full_name
         + "\nNIC " + element.nic_number
     );

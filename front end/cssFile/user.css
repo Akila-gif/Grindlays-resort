@@ -1,0 +1,40 @@
+body {
+   }
+   .main {
+     margin: 0 auto;
+     display: flex;
+   }
+   
+   .container {
+     text-align: center;
+     float: left;
+     width:200px;
+     display: inline-block;
+     .list-1 {
+       ul {
+         height: 100%;
+       } 
+     }
+   }
+   
+   .container-2 {
+     text-align: center;
+     cursor: pointer;
+   }
+   
+   .container-3 {
+     text-align: center;
+     float: right;
+     box-sizing: border-box;
+     display: inline-block;
+     padding-right:100px ;
+   }
+   .selected {
+       background-color:rgb(168, 168, 168);
+   }
+   li {
+     cursor: pointer;
+     padding: 2px;
+     margin: 2px;
+     list-style: none;
+   }

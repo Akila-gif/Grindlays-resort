@@ -31,6 +31,9 @@ public class EmployeeControlelr {
         return  employeeDao.findAll(Default_Sort);
     }
 
+    @GetMapping("/getemployeewithoutaccount")
+    public List<Employee> getEmployeeNotHaveUserAccount(){return  employeeDao.findEmployeeNotHaveUserAccount();}
+
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public Employee addNewEmployee(@RequestBody Employee employee){
@@ -45,6 +48,18 @@ public class EmployeeControlelr {
             JSONObject jsonObject = new JSONObject(errorSet);
             String orgJsonData = jsonObject.toString();
             throw new ConflictException(orgJsonData);
+        }
+    }
+
+    @GetMapping("/getemployeebyemployeeid")
+    public Employee getEmployeeByEmployeeId(@RequestParam("id") String employeeId){
+        Employee employeee = employeeDao.findEmployeeByEmployeeid(employeeId);
+        if(employeee==null){
+            HashMap<String,String> employeeNotFoundError = new HashMap<>();
+            employeeNotFoundError.put("employeee","Employee Not found");
+            throw new ObjectNotFoundException(employeeNotFoundError);
+        }else {
+            return employeee;
         }
     }
 
@@ -83,6 +98,7 @@ public class EmployeeControlelr {
 
         if (empForUpdate.isPresent()){
                 Employee employee = empForUpdate.get();
+                System.out.println(employee);
                 employee.setDelete_date(LocalDateTime.now());
                 Optional<WorkingStatus> removeWorkingStatus = workingStatusDao.findById(2);
                 if (removeWorkingStatus.isPresent()){
