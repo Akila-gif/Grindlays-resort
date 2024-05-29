@@ -69,7 +69,6 @@ public class EmployeeControlelr {
         Optional<Employee> empForUpdate = employeeDao.findById(id);
         HashMap<String, String> errorSet = new HashMap<>();
         employee.setId(id);
-        System.out.println(employee);
         //fdsfsfdsf
         if (empForUpdate.isPresent()){
             errorSet = validationError(empForUpdate.get());

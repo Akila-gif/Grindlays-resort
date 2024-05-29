@@ -53,6 +53,21 @@ $("#move_right").click(function () {
     $(".list2").prepend($(".list1 .selected").removeClass("selected"));
 });
 
+//Modal close confermation
+userFormClose.addEventListener('click', (e) => {
+    if (confirm("Are you sure ?")){
+        formCloser();
+    }
+});
+const formCloser = ()=>{
+    $('#userForm').modal('hide');
+    //formClear(valdationFeildList,inputForm,defaulTextError);
+    inputForm.classList.remove('try-validated');
+    console.log("Confirmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
+    refreshUserTable(HTTPRequestService("GET",'http://localhost:8080/user/withoutpassword'));
+}
+
+
 /* table related Function */
 
 const EditfunctionName = (element, index) => {

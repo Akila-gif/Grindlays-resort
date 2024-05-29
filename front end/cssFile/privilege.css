@@ -1,0 +1,7 @@
+.module-checks div {
+     display: block;
+     margin-bottom: 50px; /* Adjust as needed for spacing */
+}
+.btn-lg{
+     min-width: 200px;
+}
