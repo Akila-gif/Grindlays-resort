@@ -69,4 +69,8 @@ public class User {
     public User(Integer id) {
         this.id = id;
     }
+
+    public boolean getStatus() {
+        return this.status;
+    }
 }
