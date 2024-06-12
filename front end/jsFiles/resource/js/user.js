@@ -1,25 +1,23 @@
 var employee = new Object();
+var user = new Object();
+var EmployeeWithOutUserAccoutFoundStatus = false;
+
+
 window.addEventListener("load", () => {
-
-    refreshEmployeetable(HTTPRequestService("GET",'http://localhost:8080/empoloyees/userwithoutaccout'));
-    EmployeedropDownCreate(HTTPRequestService("GET",'http://localhost:8080/empoloyees/userwithoutaccout'));
-    EmployeeStatusDropDown(HTTPRequestService("GET",'http://localhost:8080/empstatus'));
-
+    refreshUserTable(HTTPRequestService("GET",'http://localhost:8080/user/withoutpassword'));
+    NoUserAccountEmployeedropDownCreate(HTTPRequestService("GET",'http://localhost:8080/employees/getemployeewithoutaccount'));
+    RoleTransferObject(HTTPRequestService("GET",'http://localhost:8080/roles'));
 });
 
-refreshEmployeetable = (dataList) => {
-
+refreshUserTable = (dataList) => {
     const displayProperty = [
-        { dataType: 'int', propertyName: "firt_name" },
-        { dataType: 'text', propertyName: "last_name" },
-        { dataType: 'text', propertyName: "password" },
-        { dataType: 'text', propertyName: "email" },
-        { dataType: 'text', propertyName: statusDefineFunction },
-        { dataType: 'text', propertyName: "addeddatetime" },
-        { dataType: 'text', propertyName: "photopath" },
+        { dataType: 'function', propertyName: empIdFunction },
+        { dataType: 'function', propertyName: fullNameFunction },
+        { dataType: 'text', propertyName: "username" },
+        { dataType: 'function', propertyName: userStatusDefineFunction },
+        { dataType: 'function', propertyName: roleFunction },
+        { dataType: 'text', propertyName: "addeddate" },
     ];
-
-
     // fillDataIntoTable(tableod,datalist,editfunctionName,DeleteFunctionName,MoreFunctionName,button visibility);
     fillDataIntoTable(UserView, dataList, displayProperty, EditfunctionName, DeleteFunctionName, MoreFunctionName, true);
     //fillDataIntoTable02(EmployeeView,employees,displayProperty,EditfunctionName,DeleteFunctionName,MoreFunctionName);
@@ -35,26 +33,42 @@ refreshEmployeetable = (dataList) => {
     });
 }
 
-const EmployeedropDownCreate = (employeelist) =>{
-    dropDownCrete(employeelist,EmployeeTitleSelect,'firt_name');
+const NoUserAccountEmployeedropDownCreate = (employeelist) =>{
+    dataListCreate(employeelist,userDatalistOptions,'full_name','employeeid');
 }
-const EmployeeStatusDropDown = (StatusDataList) =>{
-    dropDownCrete(StatusDataList,StatusFormSelect,'name');
+
+const RoleTransferObject = (roleList) =>{
+    //roleTranferListDefine(dataList,checkedRole,uncleckedRole);
+    roleTranferListDefine(roleList,null,roleUncheckedList);
+}
+// list transfer controller
+
+$("body").on("click", "li", function () {
+    $(this).toggleClass("selected");
+});
+$("#move_left").click(function () {
+    $(".list1").append($(".list2 .selected").removeClass("selected"));
+});
+$("#move_right").click(function () {
+    $(".list2").prepend($(".list1 .selected").removeClass("selected"));
+});
+
+//Modal close confermation
+userFormClose.addEventListener('click', (e) => {
+    if (confirm("Are you sure ?")){
+        formCloser();
+    }
+});
+const formCloser = ()=>{
+    $('#userForm').modal('hide');
+    //formClear(valdationFeildList,inputForm,defaulTextError);
+    inputForm.classList.remove('try-validated');
+    console.log("Confirmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
+    refreshUserTable(HTTPRequestService("GET",'http://localhost:8080/user/withoutpassword'));
 }
 
 
 /* table related Function */
-const employeestatusFunction = (element) => {
-    if (element.employeestatus_id.name === 'Add')
-        return ('<p class="text-success"><i class="fa-solid fa-circle"></i> Add</p>');
-    if (element.employeestatus_id.name === 'Resign')
-        return ('<p class="text-warning"><i class="fa-solid fa-circle"></i> Resign</p>');
-    if (element.employeestatus_id.name === 'Delete')
-        return ('<p class="text-danger "><i class="fa-solid fa-circle"></i> Delete</p>');
-}
-const statusDefineFunction = (element)=>{
-    return ('<p><i className="fa-solid fa-circle"></i>' + statusDefineFunction.status + '</p>');
-}
 
 const EditfunctionName = (element, index) => {
     console.log(element, index);
@@ -63,17 +77,23 @@ const EditfunctionName = (element, index) => {
 const DeleteFunctionName = (element, index, tableBody) => {
     console.log(element);
     let deleteConform = window.confirm("Are you sure ?\n"
-        + "first Name " + element.firt_name
-        + "\nFull Name " + element.full_name
-        + "\nNIC " + element.nic_number
+        + "user name " + element.username
+        + "\nFull Name " + element.employee_id.full_name
+        + "\nEmployee Number " + element.employee_id.employeeid
     );
     if (deleteConform) {
         const deleteServerResponse = 'OK';
         if (deleteServerResponse === 'OK') {
-            tableBody.children[index].children[9].innerHTML = '<p class="text-danger "><i class="fa-solid fa-circle"></i> Delete</p>';
-            window.alert("Delete Successfull...");
+            let deleteResponse = HTTPRequestService("DELETE",'http://localhost:8080/user?id='+element.id);
+            if (199<deleteResponse.status && deleteResponse.status<300) {
+                tableBody.children[index].children[4].innerHTML = '<p class="text-danger "><i class="fa-solid fa-circle"></i> Delete</p>';
+                console.log(element.id);
+                window.alert("Delete Successfull...");
+            } else {
+                window.alert("Delete not compleate error "+deleteResponse.message);
+            }
         } else {
-            window.alert("Delete not compleate error : " + deleteServerResponse);
+            window.alert("Delete not compleate error ");
         }
     }
 }
@@ -82,107 +102,160 @@ const MoreFunctionName = (element, index) => {
     console.log(element, index);
 }
 
-/* form validation related Function */
+const empIdFunction = (element, index) =>   {
+    return ('<p>'+element.employee_id.employeeid+'</p>')
+};
 
+const fullNameFunction = (element, index) =>   {
+    return ('<p>'+element.employee_id.full_name+'</p>')
+};
+
+const userStatusDefineFunction = (element) => {
+    if (element.status)
+        return ('<p class="text-success"><i class="fa-solid fa-circle"></i> Add</p>');
+    else
+        return ('<p class="text-danger"><i class="fa-solid fa-circle"></i> Delete</p>');
+}
+
+const roleFunction = (element, index) => {
+    let divEle = document.createElement('div');
+    divEle.setAttribute("style", "height: 75px; overflow-y: scroll;");
+    element.roleList.forEach(role => {
+        let liRoleElement = document.createElement('li');
+        liRoleElement.innerHTML = role.name;
+        divEle.appendChild(liRoleElement);
+    });
+    return (divEle)
+};
+
+
+/* form validation related Function */
 
 ValidationButton.addEventListener('click', () => {
     /* have 4 parameters the 4th one is inputID the defalt value is set as feildID=null . if you need a validat specify input you should enter FeildID */
     //return true of false result of validation
-    validationResult = validationFunction(valdationFeildList, valdationDetailsListt, inputForm);
+
+    validationResult = validationFunction(valdationFeildList, valdationDetailsList, inputForm);
 
     /*
         affer all thing are validate the this function is execure
         and return employee Object
      */
     if(validationResult) {
-        EmployeeObject = formObjectCreate(valdationFeildList,employee);
-        lastEmpNumber = HTTPRequestService("GET",'http://localhost:8082/empoloyees/maxemono');
-        EmployeeObject['emp_number'] = "0000"+JSON.stringify(lastEmpNumber+1);
-        console.log(HTTPRequestService("POST",'http://localhost:8082/empoloyees',JSON.stringify(EmployeeObject)));
-        window.alert("Add Successfully ")
+        UserObject = formObjectCreate(valdationFeildList,user);
+        UserObject.employee_id = employee;
+        let roleList = new Array();
+        Array.from(rolecheckedList.children).forEach((liChildElement) => {
+            //console.log(liChildElement);
+            //console.log(HTTPRequestService("GET",'http://localhost:8080/roles/findroleusingid?id='+liChildElement.value).data);
+            roleList.push(HTTPRequestService("GET",'http://localhost:8080/roles/findroleusingid?id='+liChildElement.value).data)
+        });
+        UserObject['roleList'] = roleList;
+        if(confirm("Do you Want to add "+UserObject.username+"?")){
+            let addedResponse = HTTPRequestService("POST",'http://localhost:8080/user',JSON.stringify(UserObject));
+            if(199<addedResponse.status && addedResponse.status<300)window.alert("Add Successfully"+addedResponse.status);
+            else if(399<addedResponse.status && addedResponse.status<500) DynamicvalidationFunctioion(addedResponse.errorMessage,valdationFeildList,inputForm);
+            else window.alert("Add Failure "+addedResponse.status);
+        }
+        //EmployeeObject = formObjectCreate(valdationFeildList,employee);
     }
 });
 
+
 /* Event Calling Functions */
-TitleFormSelect.addEventListener('change',()=>{
-    validationFunction(valdationFeildList, valdationDetailsListt, inputForm,TitleFormSelect);
+
+userDtlTxt.addEventListener('keyup',(event)=>{
+    dataListMatchingCheck(event,addNewEmployee);
+    
+    // below function eka user karala thiyenne hari create employee respose eka awama eka name eka aragena set karanna 
+    let responseEmployeeById = HTTPRequestService("GET",'http://localhost:8080/employees/getemployeebyemployeeid?id='+userDtlTxt.value);
+    if (responseEmployeeById.status===200) {
+        nameParaTxt.style.display = 'block';
+        nameParaTxt.innerHTML = responseEmployeeById.data.full_name;
+        employee = responseEmployeeById.data;
+        EmployeeWithOutUserAccoutFoundStatus = true;
+        validationFunction(valdationFeildList, valdationDetailsList, inputForm,userDtlTxt);
+
+    } else {
+        nameParaTxt.style.display = 'none';
+        nameParaTxt.innerHTML = "";
+        EmployeeWithOutUserAccoutFoundStatus = false;
+        validationFunction(valdationFeildList, valdationDetailsList, inputForm,userDtlTxt);
+    }
+});
+usernameTxt.addEventListener('keyup', ()=>{
+    validationFunction(valdationFeildList, valdationDetailsList, inputForm,usernameTxt);
 });
 
-FirstNameTxt.addEventListener('keyup',()=>{
-    validationFunction(valdationFeildList, valdationDetailsListt, inputForm,FirstNameTxt);
+PasswordPwd.addEventListener('keyup', ()=>{
+    validationFunction(valdationFeildList, valdationDetailsList, inputForm,PasswordPwd);
+    validationFunction(valdationFeildList, valdationDetailsList, inputForm,RePasswordPwd);
 });
 
-LastNameTxt.addEventListener('keyup',()=>{
-    validationFunction(valdationFeildList, valdationDetailsListt, inputForm,LastNameTxt);
+RePasswordPwd.addEventListener('keyup', ()=>{
+    validationFunction(valdationFeildList, valdationDetailsList, inputForm,RePasswordPwd);
 });
 
-FullNameTxt.addEventListener('keyup',()=>{
-    validationFunction(valdationFeildList, valdationDetailsListt, inputForm,FullNameTxt);
-});
-
-MobileTxt.addEventListener('keyup',()=>{
-    validationFunction(valdationFeildList, valdationDetailsListt, inputForm,MobileTxt);
-});
-
-landphoneTxt.addEventListener('keyup',()=>{
-    validationFunction(valdationFeildList, valdationDetailsListt, inputForm,landphoneTxt);
-});
-
-NicTxt.addEventListener('keyup',()=>{
-    validationFunction(valdationFeildList, valdationDetailsListt, inputForm,NicTxt);
-});
-
-EmailTxt.addEventListener('keyup',()=>{
-    validationFunction(valdationFeildList, valdationDetailsListt, inputForm,EmailTxt);
-});
-
-BirthdayDate.addEventListener('change',()=>{
-    validationResult = validationFunction(valdationFeildList, valdationDetailsListt, inputForm,BirthdayDate);
-});
-
-UnivercityTxt.addEventListener('keyup',()=>{
-    validationResult = validationFunction(valdationFeildList, valdationDetailsListt, inputForm,UnivercityTxt);
-});
-
-UnivercityEndDate.addEventListener('change',()=>{
-    validationResult = validationFunction(valdationFeildList, valdationDetailsListt, inputForm,UnivercityEndDate);
-});
-StatusFormSelect.addEventListener('change',()=>{
-    validationFunction(valdationFeildList, valdationDetailsListt, inputForm,StatusFormSelect);
+employeeStatusSelect.addEventListener('change', ()=>{
+    validationFunction(valdationFeildList, valdationDetailsList, inputForm,employeeStatusSelect);
 });
 
 
 /* validation functions for input feild */
-const MoreFunctionNames = (pattern,required,inputFeild)=>{
-    console.log(pattern,required,inputFeild);
+const employeeSelectionsFunction = (pattern,required,inputFeild)=>{
+    return EmployeeWithOutUserAccoutFoundStatus;
 };
-const birthDayvalidation = (pattern,required,inputFeild)=>{
-    return true;
+
+const PasswordFunctionNames = (pattern,required,inputFeild)=>{
+    regObject = new RegExp(pattern);
+    PasswordValidation = inputFeild.value != "" && regObject.test(inputFeild.value);
+    return PasswordValidation;
 }
+let PasswordValidation = false;
+
 const RepasswordFunctionNames = (pattern,required,inputFeild)=>{
-    return true;
+    return PasswordPwd.value==inputFeild.value && inputFeild.value != "" && PasswordValidation;
 }
 
 
 /* form validation data */
 const valdationFeildList = [
-    { id: 'EmployeeTitleSelect', type: 'dropdown', validationStategy: 'selected', requird: true },
-    { id: 'UsernNameTxt', type: 'text', validationStategy: 'regexp', requird: true },
-    { id: 'PasswordPwd', type: 'text', validationStategy: 'regexp', requird: true },
-    { id: 'RePasswordPwd', type: 'text', validationStategy: 'regexp', requird: true },
-    { id: 'RoleSelect', type: 'dropdown', validationStategy: 'regexp', requird: true },
-    { id: 'ActivityCheckTxtError', type: 'checkbox', validationStategy: 'regexp', requird: false },
+    { id: 'userDtlTxt', type: 'datalist', validationStategy: 'function', requird: true },
+    { id: 'usernameTxt', type: 'text', validationStategy: 'regexp', requird: true },
+    { id: 'PasswordPwd', type: 'text', validationStategy: 'function', requird: true },
+    { id: 'RePasswordPwd', type: 'text', validationStategy: 'function', requird: true },
+    { id: 'employeeStatusSelect', type: 'dropdown', validationStategy: 'selected', requird: true,static: true },
+    { id: 'noteTxt', type: 'text', validationStategy: 'nothing', requird: false},
 ];
 
-const valdationDetailsListt = {
-    'UsernNameTxt': { pattern: '^[A-Z][A-z]{2,}$' },
-    'PasswordPwd': { pattern: '^[A-Z][A-z]{2,}$' },
+const valdationDetailsList = {
+    'userDtlTxt': { pattern: '^[A-Z][A-z]{2,}$', functions: employeeSelectionsFunction},
+    'usernameTxt': { pattern: '^[A-Z][A-z]{2,}$' },
+    'PasswordPwd': { pattern: '^[A-Z][A-z]{2,}$',functions: PasswordFunctionNames },
     'RePasswordPwd': { pattern: /^[A-Za-z'-]+(?:\s+[A-Za-z'-]+)+$/,functions: RepasswordFunctionNames },
-    'MobileTxt': { pattern: '^[0][7][1,2,4,5,6,7,8][0-9]{7}$', functions: MoreFunctionNames },
-    'landphoneTxt': { pattern: '^[0][1,2,3,4,5,6,7,8][1,2,4,5,6,7,8][0-9]{7}$', functions: MoreFunctionNames },
-    'NicTxt': { pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$', functions: MoreFunctionNames },
-    'EmailTxt': { pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, functions: birthDayvalidation },
-    'BirthdayDate': { pattern: '^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-]+)(\.[a-zA-Z]{2,5}){1,2}$', functions: birthDayvalidation },
-    'UnivercityTxt': { pattern: '^[A-Z][A-z]{2,}$', functions: birthDayvalidation },
-    'UnivercityEndDate': { pattern: '^[A-Z][A-z]{2,}$', functions: birthDayvalidation }
 };
+
+const dataListMatchingCheck = (event,targetButton) =>{
+    var inputText = event.target.value.toLowerCase();
+    var datalistOptions = document.getElementById('userDatalistOptions').getElementsByTagName('option');
+    var matchFound = false;
+    for (var i = 0; i < datalistOptions.length; i++) {
+           var optionValue = datalistOptions[i].innerText;
+        if (optionValue.toLowerCase().replace(/\s+/g,'').trim().includes(inputText.replace(/\s+/g,'').trim())) {
+            matchFound = true;
+            break;
+        }
+    }
+    for (var i = 0; i < datalistOptions.length; i++) {
+           var optionValue = datalistOptions[i].value;
+        if (optionValue.toLowerCase().replace(/\s+/g,'').trim().includes(inputText.replace(/\s+/g,'').trim())) {
+            matchFound = true;
+            break;
+        }
+    }
+    if (matchFound) {
+        targetButton.classList.add('disabled');
+    } else {
+        targetButton.classList.remove('disabled');
+    }
+}

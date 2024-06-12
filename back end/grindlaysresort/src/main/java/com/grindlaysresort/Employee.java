@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.UniqueElements;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -31,7 +32,6 @@ public class Employee {
     String full_name;
 
     @Column(name = "employeeid",unique = true)
-    @NotNull
     String employeeid;
 
     @Column(name = "citizenship")
@@ -67,7 +67,6 @@ public class Employee {
     LocalDate date_of_birth;
 
     @Column(name = "add_date")
-    @NotNull(message = "Add date should not be null")
     LocalDateTime add_date;
 
     @Column(name = "civil_status")
@@ -91,5 +90,28 @@ public class Employee {
     @JoinColumn(name = "designation_id", referencedColumnName = "id")
     Designation designation_id;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    EmployeeCategory category_id;
+
+    @ManyToOne
+    @JoinColumn(name = "country_id", referencedColumnName = "id")
+    Country country_id;
+
+    @Column(name = "date_of_recruitment")
+    @NotNull
+    LocalDate date_of_recruitment;
+
+    @Column(name = "epf_number")
+    @NotNull
+    String epf_number;
+
+    @Column(name = "etf_number")
+    @NotNull
+    String etf_number;
+
+    @Column(name = "basicsalary")
+    @NotNull
+    BigDecimal basicsalary;
 
 }

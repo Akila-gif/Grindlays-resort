@@ -2,6 +2,8 @@ package com.grindlaysresort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 
 public interface EmployeeDao extends JpaRepository<Employee,Integer> {
 
@@ -16,4 +18,7 @@ public interface EmployeeDao extends JpaRepository<Employee,Integer> {
         Employee findEmployeeByMobile(String mobile);
         Employee findEmployeeByEmail(String email);
         Employee findEmployeeByEmployeeid(String employeeid);
+
+        @Query(value = "SELECT * FROM employee where id not in (SELECT employee_id FROM user);",nativeQuery = true)
+        List<Employee> findEmployeeNotHaveUserAccount();
 }

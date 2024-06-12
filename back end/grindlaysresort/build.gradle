@@ -21,7 +21,7 @@ dependencies {
 	//use to mail server
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	//security maintaness
-	//implementation 'org.springframework.boot:spring-boot-starter-security'
+	//implementation 'org.springframework.boot:spring-boot-starter-security:3.2.2'
 	//html template engine
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	//for back end validation

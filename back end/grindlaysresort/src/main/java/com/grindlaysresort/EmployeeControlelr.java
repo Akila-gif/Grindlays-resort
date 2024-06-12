@@ -31,16 +31,20 @@ public class EmployeeControlelr {
         return  employeeDao.findAll(Default_Sort);
     }
 
+    @GetMapping("/getemployeewithoutaccount")
+    public List<Employee> getEmployeeNotHaveUserAccount(){return  employeeDao.findEmployeeNotHaveUserAccount();}
+
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public Employee addNewEmployee(@RequestBody Employee employee){
-
+        System.out.println(employee.getCategory_id());
         employee.setEmployeeid(employeeDao.nextEmployeeID());
         HashMap<String, String> errorSet = validationError(employee);
 
         if (errorSet.isEmpty()){
             employee.setAdd_date(LocalDateTime.now());
-            return employeeDao.save(employee);
+            //return employeeDao.save(employee);
+            return employee;
         }else {
             JSONObject jsonObject = new JSONObject(errorSet);
             String orgJsonData = jsonObject.toString();
@@ -48,19 +52,32 @@ public class EmployeeControlelr {
         }
     }
 
+    @GetMapping("/getemployeebyemployeeid")
+    public Employee getEmployeeByEmployeeId(@RequestParam("id") String employeeId){
+        Employee employeee = employeeDao.findEmployeeByEmployeeid(employeeId);
+        if(employeee==null){
+            HashMap<String,String> employeeNotFoundError = new HashMap<>();
+            employeeNotFoundError.put("employeee","Employee Not found");
+            throw new ObjectNotFoundException(employeeNotFoundError);
+        }else {
+            return employeee;
+        }
+    }
+
     @ResponseStatus(HttpStatus.ACCEPTED)
-    @PutMapping()
-    public Employee updateEmployee(@RequestParam("id") int id,@RequestBody Employee employee){
+    @PutMapping("/{id}")
+    public Employee updateEmployee(@PathVariable("id") int id,@RequestBody Employee employee){
         Optional<Employee> empForUpdate = employeeDao.findById(id);
         HashMap<String, String> errorSet = new HashMap<>();
         employee.setId(id);
-        System.out.println(employee);
         //fdsfsfdsf
         if (empForUpdate.isPresent()){
-            errorSet = validationError(empForUpdate.get());
+            employee.setEmployeeid(empForUpdate.get().getEmployeeid());
+            errorSet = validationError(employee);
 
             if (errorSet.isEmpty()){
                 employee.setEdit_date(LocalDateTime.now());
+                employee.setAdd_date(empForUpdate.get().add_date);
                 return employeeDao.save(employee);
             }else {
                 JSONObject jsonObject = new JSONObject(errorSet);
@@ -83,6 +100,7 @@ public class EmployeeControlelr {
 
         if (empForUpdate.isPresent()){
                 Employee employee = empForUpdate.get();
+                System.out.println(employee);
                 employee.setDelete_date(LocalDateTime.now());
                 Optional<WorkingStatus> removeWorkingStatus = workingStatusDao.findById(2);
                 if (removeWorkingStatus.isPresent()){

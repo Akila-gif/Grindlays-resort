@@ -1,15 +1,16 @@
 var employee = new Object();
-const country = new Object();
-userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/Employee?user=admin').data;
-
+var country = new Object();
 window.addEventListener("load", () => {
-    employeeFormPrivilageHandeling(userPrivilage);
-    refreshEmployeetable(HTTPRequestService("GET",'http://localhost:8080/employees'),userPrivilage);
+
+    refreshEmployeetable(HTTPRequestService("GET",'http://localhost:8080/employees'));
     DesignationDropDownCreate(HTTPRequestService("GET",'http://localhost:8080/designations'));
     EmployeeStatusDropDown(HTTPRequestService("GET",'http://localhost:8080/empstatus'));
     EmployeeCategoryDropDown(HTTPRequestService("GET",'http://localhost:8080/categories'));
+
 }); 
+
 refreshEmployeetable = (dataList) => {
+
     //displaying data list for employee table
     const displayProperty = [
         { dataType: 'text', propertyName: "employeeid" },
@@ -19,10 +20,10 @@ refreshEmployeetable = (dataList) => {
         { dataType: 'function', propertyName: citizenshipFunction },
         { dataType: 'text', propertyName: "mobile" },
         { dataType: 'function', propertyName: employeeAgeCalculate },
-        { dataType: 'function', propertyName: designationFunction },
         { dataType: 'function', propertyName: employeestatusFunction },
     ];
-    fillDataIntoTable(EmployeeView, dataList, displayProperty, EditfunctionName, DeleteFunctionName, MoreFunctionName,deleteStatusFunction, true,userPrivilage);
+
+    fillDataIntoTable(EmployeeView, dataList, displayProperty, EditfunctionName, DeleteFunctionName, MoreFunctionName, true);
     // fillDataIntoTable(tableod,datalist,editfunctionName,DeleteFunctionName,MoreFunctionName,button visibility);
     //fillDataIntoTable02(EmployeeView,employees,displayProperty,EditfunctionName,DeleteFunctionName,MoreFunctionName);
     //fillDataIntoTable03(EmployeeView,employees,displayProperty,EditfunctionName,DeleteFunctionName,MoreFunctionName);
@@ -36,17 +37,6 @@ refreshEmployeetable = (dataList) => {
         searchInputDiv.classList.add('form-control');
     });
 }
-//form Privilage handeling 
-const employeeFormPrivilageHandeling = (userPrivilage) =>{
-    if(userPrivilage.insert){
-        $("#formOpenButton").css("visibility","visible");
-    }
-}
-$("#formOpenButton").click(() => {
-    workingStatusFormSelect.selectedIndex = 1;
-    workingStatusFormSelect.disabled = true;
-});
-
 // Shoud pass as parameters (datalist,Id,nameof the field that display as the innre html)
 const DesignationDropDownCreate = (designation) =>{
     dropDownCreate(designation,designationFormSelect,'designation_name');
@@ -78,27 +68,20 @@ const employeeAgeCalculate = (element) => {
 }
 const employeestatusFunction = (element) => {
     if (element.workingstatus_id.status === 'Add')
-        return ('<p class="text-success"><i class="fa-solid fa-circle"></i> Add</p>');
+        return ('<p class="text-success"><i class="fa-solid fa-circle"></i> Checkin</p>');
     if (element.workingstatus_id.status === 'Resign')
-        return ('<p class="text-warning"><i class="fa-solid fa-circle"></i> Resign</p>');
+        return ('<p class="text-warning"><i class="fa-solid fa-circle"></i> Checked out</p>');
     if (element.workingstatus_id.status === 'Remove')
-        return ('<p class="text-danger "><i class="fa-solid fa-circle"></i> Delete</p>');
+        return ('<p class="text-danger "><i class="fa-solid fa-circle"></i> Checked out</p>');
 }
 const designationFunction = (element)=>{
     return ('<p>' + element.designation_id.designation_name + '</p>');
 }
 
 const EditfunctionName = (element, index) => {
-    $('#employeeForm').modal('show');
-    element.country_id = element.country_id.countryCode;
-    console.log(    element);
-    window['oldEmployee'] = element;
     FormFill(element,valdationFeildList);
-}
-
-const deleteStatusFunction = (element) => {
-    if (element.workingstatus_id.status=="Add") return true;
-    else return false;
+    $('#employeeForm').modal('show');
+    window['oldEmployee'] = element;
 }
 
 const DeleteFunctionName = (element, index, tableBody) => {
@@ -113,8 +96,9 @@ const DeleteFunctionName = (element, index, tableBody) => {
         if (deleteServerResponse === 'OK') {
             let deleteResponse = HTTPRequestService("DELETE",'http://localhost:8080/employees/'+element.id);
             if (199<deleteResponse.status && deleteResponse.status<300) {
+                tableBody.children[index].children[9].innerHTML = '<p class="text-danger "><i class="fa-solid fa-circle"></i> Delete</p>';
+                console.log(element.id);
                 window.alert("Delete Successfull...");
-                refreshEmployeetable(HTTPRequestService("GET",'http://localhost:8080/employees'));
             } else {
                 window.alert("Delete not compleate error "+deleteResponse.message);
             }
@@ -171,13 +155,9 @@ UpdateButton.addEventListener('click',()=>{
             }
         });
         if(confirm("Do you Want update "+window['oldEmployee'].firt_name+"?"+empdtl)){
-            console.log(window['oldEmployee']);
-            serverResponseData = HTTPRequestService("PUT",'http://localhost:8080/employees/'+window['oldEmployee'].id,JSON.stringify(EmployeeObject));
-            if(199<serverResponseData.status && serverResponseData.status<300){
-                formCloser();
-                alertFunction("Update Successfully","More.......","success",displayUpdateEmpDetail(EmployeeObject,changes));
-            }else if(399<serverResponseData.status && serverResponseData.status<500) alertFunction("Update Successfully","More.......","error",displayUpdateEmpDetail(EmployeeObject,changes));
-            else window.alert("Add Failure "+addedResponse.status);
+            HTTPRequestService("PUT",'http://localhost:8082/empoloyees/'+window['oldEmployee'].idemployee,JSON.stringify(EmployeeObject));
+            formCloser();
+            alertFunction("Update Successfully","More.......","success",displayUpdateEmpDetail(EmployeeObject,changes));
         }else {
             formCloser();
             alertFunction("Discarded update","More.......","warning");
@@ -232,14 +212,11 @@ FullNameTxt.addEventListener('keyup',()=>{
 residentCheck.addEventListener('change',(event)=>{
     countryEnableFunction(event,countryDtlTxt);
     validationFunction(valdationFeildList, valdationDetailsListt, inputForm, residentCheck);
-    validationFunction(valdationFeildList, valdationDetailsListt, inputForm, countryDtlTxt);
-    validationResult = validationFunction(valdationFeildList, valdationDetailsListt, inputForm, passportTxt);
 });
 
 countryDtlTxt.addEventListener('keyup',(event)=>{
     dataListMatchingCheck(event,addNewCountry)
     validationFunction(valdationFeildList, valdationDetailsListt, inputForm, countryDtlTxt);
-    validationFunction(valdationFeildList, valdationDetailsListt, inputForm, residentCheck);
 });
 
 genderMaleRadioBtn.addEventListener('change',()=>{
@@ -270,11 +247,6 @@ emailTxt.addEventListener('keyup',()=>{
     validationResult = validationFunction(valdationFeildList, valdationDetailsListt, inputForm, emailTxt);
 });
 
-dateOfRecruitment.addEventListener('change',()=>{
-    validationFunction(valdationFeildList, valdationDetailsListt, inputForm, dateOfRecruitment);
-});
-
-
 civilStatusFormSelect.addEventListener('change',()=>{
     validationResult = validationFunction(valdationFeildList, valdationDetailsListt, inputForm, civilStatusFormSelect);
 });
@@ -299,20 +271,8 @@ basicSalaryTxt.addEventListener('keyup',()=>{
     validationResult = validationFunction(valdationFeildList, valdationDetailsListt, inputForm, basicSalaryTxt);
 });
 
-etfNumberTxt.addEventListener('keyup',()=>{
-    validationResult = validationFunction(valdationFeildList, valdationDetailsListt, inputForm, etfNumberTxt);
-});
-
-epfNumberTxt.addEventListener('keyup',()=>{
-    validationResult = validationFunction(valdationFeildList, valdationDetailsListt, inputForm, epfNumberTxt);
-});
-
 employeeCategoryFormSelect.addEventListener('change',()=>{
     validationFunction(valdationFeildList, valdationDetailsListt, inputForm, employeeCategoryFormSelect);
-});
-
-dateOfBirth.addEventListener('change',()=>{
-    validationFunction(valdationFeildList, valdationDetailsListt, inputForm, dateOfBirth);
 });
 
 //country form event
@@ -330,47 +290,7 @@ const MoreFunctionNames = (pattern,required,inputFeild)=>{
     return true;    
 };
 const birthDayvalidation = (pattern,required,inputFeild)=>{
-    var currentDate = new Date();
-
-    // Create a date object for 2024-06-11
-    var comparisonDate = new Date(inputFeild.value);
-
-    // Calculate the year difference
-    var yearDifference = currentDate.getFullYear() - comparisonDate.getFullYear();
-
-    // Adjust if the current date is before the comparison date in the current year
-    var isCurrentDateBeforeComparisonDate = (
-        currentDate.getMonth() < comparisonDate.getMonth() ||
-        (currentDate.getMonth() === comparisonDate.getMonth() && currentDate.getDate() < comparisonDate.getDate())
-    );
-
-    if (isCurrentDateBeforeComparisonDate) yearDifference--;
-
-    // Check if the year difference is more than 18 years
-    return yearDifference > 18
-}
-
-const ResidentFunctionNames = (pattern,required,inputFeild) => {
-    return !countryDtlTxt.value == ""
-}
-const RecruitmentDateFunctio = (pattern,required,inputFeild) => {
-    return (inputFeild.value !="" && new Date(inputFeild.value) <= new Date());
-}
-
-const PassportFunction = (pattern,required,inputFeild) => {
-    if (!residentCheck.checked) return inputFeild.value != "";   
-    else return true;
-}
-
-const CountryFunction = (pattern,required,inputFeild) => {
-    if(residentCheck.checked) return true;
-    else {
-        regObject = new RegExp(pattern)
-        return regObject.test(inputFeild.value);
-        // code validatione ekata mekath danna pulwualna  
-        //var pattern = new RegExp("^\\+\\d{1,3}$");
-        // there are two types of regex a one is literal and REGEXP Constructor
-    }
+    return true;
 }
 /* main form validation data */
 const valdationFeildList = [
@@ -390,25 +310,25 @@ const valdationFeildList = [
     { id: 'dateOfRecruitment', type: 'date', validationStategy: 'function', requird: true },
     { id: 'epfNumberTxt', type: 'text', validationStategy: 'regexp', requird: true },
     { id: 'etfNumberTxt', type: 'text', validationStategy: 'regexp', requird: true },
-    { id: 'empImageTxt', type: 'img', validationStategy: 'regexp', requird: false },
+    { id: 'empImageTxt', type: 'text', validationStategy: 'regexp', requird: false },
     { id: 'basicSalaryTxt', type: 'text', validationStategy: 'regexp', requird: true },
     { id: 'employeeCategoryFormSelect', type: 'dropdown', validationStategy: 'selected', requird: true },
-    { id: 'addressTxt', type: 'text', validationStategy: 'nothing', requird: true },
+    { id: 'addressTxt', type: 'text', validationStategy: 'nothing', requird: false },
     { id: 'noteTxt', type: 'text', validationStategy: 'nothing', requird: false },
 ];
 
 const valdationDetailsListt = {
     'FullNameTxt': { pattern: /^[A-Za-z'-]+(?:\s+[A-Za-z'-]+)+$/ },
-    'residentCheck': {  pattern: null ,functions: ResidentFunctionNames },
-    'countryDtlTxt': { pattern: /^\+\d{1,3}$/, functions: CountryFunction },
+    'residentCheck': {  pattern: null ,functions: MoreFunctionNames },
+    'countryDtlTxt': { pattern: '^[0][7][1,2,4,5,6,7,8][0-9]{7}$', functions: MoreFunctionNames },
     'dateOfBirth': { pattern: null, functions: birthDayvalidation },
-    'nicTxt': { pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$'},
-    'passportTxt': { pattern: '^(?!^0+$)[a-zA-Z0-9]{3,20}$',functions: PassportFunction },
+    'nicTxt': { pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$', functions: MoreFunctionNames },
+    'passportTxt': { pattern: '^(?!^0+$)[a-zA-Z0-9]{3,20}$', functions: MoreFunctionNames },
     'mobileNumberTxt': { pattern: '^[0][7][1,2,4,5,6,7,8][0-9]{7}$', functions: birthDayvalidation },
     'emailTxt': { pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, functions: birthDayvalidation },
-    'dateOfRecruitment': { pattern: null, functions: RecruitmentDateFunctio },
-    'epfNumberTxt': { pattern: '^([0-9]{6})$' },
-    'etfNumberTxt': { pattern: '^([0-9]{6})$' },
+    'dateOfRecruitment': { pattern: null, functions: birthDayvalidation },
+    'epfNumberTxt': { pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$' },
+    'etfNumberTxt': { pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$' },
     'basicSalaryTxt': { pattern: '^([0-9]{1,}|[0-9]{1,}.[0-9]{2})$' },
 };
 
@@ -419,7 +339,7 @@ const defaulTextError = {
     'countryDtlTxt': { pattern: "If you are not resident please select enter your country!"},
     'genderMaleRadioBtn': { pattern: "please select gender!"},
     'genderFemaleRadioBtn': { pattern: "please select gender!"},
-    'dateOfBirth': { pattern: "please enter valid Date of Birth more than 18+ "},
+    'dateOfBirth': { pattern: "please enter Date of Birth"},
     'nicTxt': { pattern: "please enter valid nic number!"},
     'passportTxt': { pattern: "please enter your Passport number!"},
     'mobileNumberTxt': { pattern: "please enter your mobile"},
