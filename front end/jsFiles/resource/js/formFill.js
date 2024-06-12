@@ -18,7 +18,7 @@ const FormFill = (objectData,inputElementDetails) =>{
             }
         }
 
-        if (element.type==='text' || element.type==='date'){
+        if (element.type==='text' || element.type==='date' || element.type==='datalist'){
             Inputelement.value = objectData[Inputelement.name];
         }
 

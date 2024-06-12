@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
@@ -24,11 +23,8 @@ public class Role {
     @Column(name = "name")
     String name;
 
-    @JsonIgnore
-    @ManyToMany(mappedBy = "roleList")
-    private List<User> userList;
-
     public Role(Integer id) {
         this.id = id;
     }
+
 }

@@ -3,6 +3,7 @@ const formClear = (fielddata,formId,defaultError)=>{
     fielddata.forEach(elementData=>{
         let element = document.getElementById(elementData.id)
         if (elementData.type==='dropdown'){
+            element.disabled = false;
             element.selectedIndex = 0;
             if (formId.classList.contains('try-validated')){
                 validationColorChange(element,defaultError);

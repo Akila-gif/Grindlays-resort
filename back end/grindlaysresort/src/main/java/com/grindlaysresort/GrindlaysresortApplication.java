@@ -1,8 +1,5 @@
-package com.grindlaysresort.loginDetails;
+package com.grindlaysresort;
 
-import com.grindlaysresort.EmployeeDao;
-import com.grindlaysresort.RoleDao;
-import com.grindlaysresort.UserDao;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,6 +16,7 @@ import java.io.IOException;
 @RestController
 public class GrindlaysresortApplication {
 
+	@Autowired
 	private final UserDao userDao;
 
 	@Autowired
@@ -33,7 +31,8 @@ public class GrindlaysresortApplication {
 	}
 /*
 	@Autowired
-	private BCryptPasswordEncoder bCryptPasswordEncoder;*/
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+*/
 
 	@Autowired
 	private EmployeeDao employeeDao;

@@ -37,13 +37,14 @@ public class EmployeeControlelr {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public Employee addNewEmployee(@RequestBody Employee employee){
-
+        System.out.println(employee.getCategory_id());
         employee.setEmployeeid(employeeDao.nextEmployeeID());
         HashMap<String, String> errorSet = validationError(employee);
 
         if (errorSet.isEmpty()){
             employee.setAdd_date(LocalDateTime.now());
-            return employeeDao.save(employee);
+            //return employeeDao.save(employee);
+            return employee;
         }else {
             JSONObject jsonObject = new JSONObject(errorSet);
             String orgJsonData = jsonObject.toString();
@@ -64,17 +65,19 @@ public class EmployeeControlelr {
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)
-    @PutMapping()
-    public Employee updateEmployee(@RequestParam("id") int id,@RequestBody Employee employee){
+    @PutMapping("/{id}")
+    public Employee updateEmployee(@PathVariable("id") int id,@RequestBody Employee employee){
         Optional<Employee> empForUpdate = employeeDao.findById(id);
         HashMap<String, String> errorSet = new HashMap<>();
         employee.setId(id);
         //fdsfsfdsf
         if (empForUpdate.isPresent()){
-            errorSet = validationError(empForUpdate.get());
+            employee.setEmployeeid(empForUpdate.get().getEmployeeid());
+            errorSet = validationError(employee);
 
             if (errorSet.isEmpty()){
                 employee.setEdit_date(LocalDateTime.now());
+                employee.setAdd_date(empForUpdate.get().add_date);
                 return employeeDao.save(employee);
             }else {
                 JSONObject jsonObject = new JSONObject(errorSet);

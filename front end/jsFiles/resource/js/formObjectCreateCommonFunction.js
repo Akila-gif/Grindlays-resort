@@ -9,7 +9,7 @@ const formObjectCreate = (validationFeildList,object)=>{
                object[inputElementID.name] = inputElementID.checked;
           }else if(element.type =="datalist"){
                object[inputElementID.name] = inputElementID.value;
-               if (element.hasOwnProperty("url")) object[inputElementID.name] = HTTPRequestService("GET",element.url+inputElementID.value);  
+               if (element.hasOwnProperty("url")) object[inputElementID.name] = HTTPRequestService("GET",element.url+inputElementID.value).data;  
           }else if(element.type =="radioButton"){
                if (inputElementID.checked) object[inputElementID.name] = inputElementID.value;
           }

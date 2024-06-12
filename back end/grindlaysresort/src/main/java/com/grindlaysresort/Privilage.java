@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Entity
 @Table(name = "privilage")
 @Data
@@ -18,20 +16,23 @@ public class Privilage {
     @Column(name = "id")
     Integer id;
 
-    @Column(name = "insert")
+    @Column(name = "`insert`")
     Boolean insert;
 
-    @Column(name ="delete")
+    @Column(name ="`delete`")
     Boolean delete;
 
-    @Column(name = "select")
+    @Column(name = "`select`")
     Boolean select;
 
-    @Column(name = "update")
+    @Column(name = "`update`")
     Boolean update;
-/*
-    @Column(name = "")
-    List<Role> role_id;
-    List<Module> module_id;
-*/
+
+    @ManyToOne
+    @JoinColumn(name = "module_id", referencedColumnName = "id")
+    Module module_id;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id", referencedColumnName = "id")
+    Role role_id;
 }
