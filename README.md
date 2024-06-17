@@ -1,5 +1,9 @@
 # Hall Project Readme
 
+## License
+The Hall Project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
+# Hall Project Readme
+
 This readme file provides an overview of the Hall Project.
 
 ## Table of Contents
@@ -13,6 +17,8 @@ This readme file provides an overview of the Hall Project.
 ## Introduction
 The Hall Project is a front-end project for Grindlays Resort. It aims to create a user-friendly interface for managing hall reservations and bookings.
 
+![Hall Project](https://example.com/hall-project.png)
+
 ## Features
 - User authentication and authorization
 - Hall reservation and booking management
@@ -20,11 +26,15 @@ The Hall Project is a front-end project for Grindlays Resort. It aims to create 
 - Payment integration
 - User-friendly interface
 
+![Features](https://example.com/features.png)
+
 ## Installation
 To install and run the Hall Project, follow these steps:
 1. Clone the repository: `git clone https://github.com/your-username/hall-project.git`
 2. Install the required dependencies: `npm install`
 3. Start the development server: `npm start`
+
+![Installation](https://example.com/installation.png)
 
 ## Usage
 To use the Hall Project, follow these steps:
@@ -35,6 +45,8 @@ To use the Hall Project, follow these steps:
 5. Proceed to the payment page and complete the transaction.
 6. Receive a confirmation email with your reservation details.
 
+![Usage](https://example.com/usage.png)
+
 ## Contributing
 Contributions to the Hall Project are welcome. To contribute, follow these steps:
 1. Fork the repository.
@@ -43,5 +55,9 @@ Contributions to the Hall Project are welcome. To contribute, follow these steps
 4. Push your changes to the branch: `git push origin feature/your-feature`
 5. Open a pull request.
 
+![Contributing](https://example.com/contributing.png)
+
 ## License
 The Hall Project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
+
+![License](https://example.com/license.png)
