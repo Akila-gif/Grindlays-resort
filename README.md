@@ -17,7 +17,7 @@ This readme file provides an overview of the Hall Project.
 ## Introduction
 The Hall Project is a front-end project for Grindlays Resort. It aims to create a user-friendly interface for managing hall reservations and bookings.
 
-![Hall Project](https://example.com/hall-project.png)
+![Hall Project]([https://example.com/hall-project.png](https://res.cloudinary.com/dqmgkczgk/image/upload/v1719470034/git-hub/Untitled-1_kx5jxd.jpg))
 
 ## Features
 - User authentication and authorization
