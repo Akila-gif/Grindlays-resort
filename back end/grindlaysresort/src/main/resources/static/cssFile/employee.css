@@ -3,8 +3,8 @@ body::-webkit-scrollbar {
 }
 
 .valid{
-     border: 1px solid green;
- }
+    border: 1px solid green;
+}
 
 .in-valid{
     border: 1px solid red;

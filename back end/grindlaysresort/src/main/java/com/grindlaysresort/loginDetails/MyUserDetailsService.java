@@ -1,4 +1,3 @@
-/*
 package com.grindlaysresort.loginDetails;
 
 import com.grindlaysresort.Role;
@@ -35,4 +34,3 @@ public class MyUserDetailsService implements UserDetailsService {
         return userDetails;
     }
 }
-*/

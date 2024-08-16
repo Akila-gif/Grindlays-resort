@@ -21,7 +21,7 @@ dependencies {
 	//use to mail server
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	//security maintaness
-	//implementation 'org.springframework.boot:spring-boot-starter-security:3.2.2'
+	implementation 'org.springframework.boot:spring-boot-starter-security:3.2.2'
 	//html template engine
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	//for back end validation
@@ -38,7 +38,9 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'org.apache.httpcomponents.client5:httpclient5'
-	implementation 'org.springframework.boot:spring-boot-starter-data-rest:2.6.7'
+
+	// Servlet API for javax.servlet classes
+	implementation 'javax.servlet:javax.servlet-api:4.0.1'
 
 	implementation group: 'org.json', name: 'json', version: '20240303'
 }

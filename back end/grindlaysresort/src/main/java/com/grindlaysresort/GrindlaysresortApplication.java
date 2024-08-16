@@ -6,15 +6,23 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootApplication
 @RestController
 public class GrindlaysresortApplication {
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Autowired
 	private final UserDao userDao;
@@ -48,7 +56,7 @@ public class GrindlaysresortApplication {
 			response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
 			response.setHeader("Access-Control-Allow-Credentials", "true");
 			response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
-			response.setHeader("Access-Control-Max-Age", "3600");
+			response.setHeader("Access-Control-Max-Age", "*");
 			response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, remember-me");
 			chain.doFilter(req, res);
 		}
@@ -63,6 +71,13 @@ public class GrindlaysresortApplication {
 		empView.setViewName("employee.html");
 		return empView;
 	}
+	@RequestMapping(value = "/usersview")
+	public ModelAndView displayuser(){
+		//return "<h1>miyew miyew miyew miyew</h1>";
+		ModelAndView userView = new ModelAndView();
+		userView.setViewName("user.html");
+		return userView;
+	}
 
 	@RequestMapping(value = "/errorpage")
 	public ModelAndView displayError(){
@@ -75,8 +90,14 @@ public class GrindlaysresortApplication {
 	@RequestMapping(value = "/index")
 	public ModelAndView displayDashboard(){
 		//return "<h1>miyew miyew miyew miyew</h1>";
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		ModelAndView dashboardView = new ModelAndView();
-		dashboardView.setViewName("dashboard.html");
+		User user = userDao.getUserByUsername(authentication.getName());
+		dashboardView.addObject("logusername", authentication.getName());
+		String [] nameArray = user.getEmployee_id().getFull_name().split(" ");
+		dashboardView.addObject("logEmployee", nameArray[0]+" "+ nameArray[nameArray.length-1]);
+		dashboardView.addObject("logEmployeeDesignation", user.getEmployee_id().getDesignation_id().getDesignation_name());
+		dashboardView.setViewName("index.html");
 		return dashboardView;
 	}
 	@RequestMapping(value = "/login")
@@ -95,19 +116,27 @@ public class GrindlaysresortApplication {
 		return empView;
 	}
 
-/*	@RequestMapping(value = "/createadmin")
+	@RequestMapping(value = "/roomview")
+	public ModelAndView displayRoom(){
+		//return "<h1>miyew miyew miyew miyew</h1>";
+		ModelAndView roomView = new ModelAndView();
+		roomView.setViewName("Room.html");
+		return roomView;
+	}
+
+	@RequestMapping(value = "/createadmin")
 	public void DisplayEmployee(){
 		User adminUser = new User();
-		adminUser.setUsername("admin");
-		adminUser.setPassword(bCryptPasswordEncoder.encode("1234"));
+		adminUser.setUsername("Akila");
+		adminUser.setPassword(bCryptPasswordEncoder.encode("12345"));
 		adminUser.setStatus(true);
 		adminUser.setAddeddate(LocalDateTime.now());
-		adminUser.setEmployee_id(employeeDao.getReferenceById(1));
+		adminUser.setEmployee_id(employeeDao.getReferenceById(2));
 
 		List<Role> roles = new ArrayList<>();
 		roles.add(roleDao.getReferenceById(1));
 		adminUser.setRoleList(roles);
 		userDao.save(adminUser);
-	}*/
+	}
 
 }
