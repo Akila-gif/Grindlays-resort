@@ -99,17 +99,17 @@ public class EmployeeControlelr {
         HashMap<String, String> errorSet = new HashMap<>();
 
         if (empForUpdate.isPresent()){
-                Employee employee = empForUpdate.get();
-                System.out.println(employee);
-                employee.setDelete_date(LocalDateTime.now());
-                Optional<WorkingStatus> removeWorkingStatus = workingStatusDao.findById(2);
-                if (removeWorkingStatus.isPresent()){
-                    employee.setWorkingstatus_id(removeWorkingStatus.get());
-                    return employeeDao.save(employee);
-                }else {
-                    errorSet.put("state","State is not found");
-                    throw new ObjectNotFoundException(errorSet);
-                }
+            Employee employee = empForUpdate.get();
+            System.out.println(employee);
+            employee.setDelete_date(LocalDateTime.now());
+            Optional<WorkingStatus> removeWorkingStatus = workingStatusDao.findById(2);
+            if (removeWorkingStatus.isPresent()){
+                employee.setWorkingstatus_id(removeWorkingStatus.get());
+                return employeeDao.save(employee);
+            }else {
+                errorSet.put("state","State is not found");
+                throw new ObjectNotFoundException(errorSet);
+            }
 
         }else {
             errorSet.put("employee","Employee is not found");
