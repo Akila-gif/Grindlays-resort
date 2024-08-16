@@ -1,0 +1,56 @@
+in this code ifram also is working
+
+
+package com.grindlaysresort.loginDetails;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration
+@EnableWebSecurity
+public class WebConfiguration {
+
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeRequests(authentication -> {
+                    authentication.requestMatchers("/login").permitAll()
+                            .requestMatchers("/createadmin").permitAll()
+                            .requestMatchers("/resources/**").permitAll()
+                            .requestMatchers("/user").permitAll()
+                            .requestMatchers("/index").hasAnyAuthority("admin", "Manager")
+                            .requestMatchers("/emp/**").hasAnyAuthority("admin")
+                            .anyRequest().authenticated();
+                })
+                .formLogin(formLogin -> {
+                    formLogin.loginPage("/login")
+                            .defaultSuccessUrl("/index")
+                            .failureUrl("/login")
+                            .usernameParameter("username")
+                            .passwordParameter("password");
+                })
+                .exceptionHandling(exception -> {
+                    exception.accessDeniedPage("/error");
+                })
+                .logout(logout -> {
+                    logout.logoutUrl("/logout").logoutSuccessUrl("/login");
+                })
+                .csrf(csrf -> csrf.disable())
+                .headers(headers -> {
+                    headers.frameOptions(frameOptions -> frameOptions.disable()); // Disable X-Frame-Options
+                });
+
+        return http.build();
+    }
+
+    @Bean
+    public BCryptPasswordEncoder getbCryptPasswordEncoder() {
+        bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        return bCryptPasswordEncoder;
+    }
+}
