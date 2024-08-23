@@ -134,6 +134,7 @@ const MoreFunctionName = (element, index) => {
 ValidationButton.addEventListener('click', () => {
     /* have 4 parameters the 4th one is inputID the defalt value is set as feildID=null . if you need a validat specify input you should enter FeildID */
     //return true of false result of validation
+    console.log(inputForm);
     validationResult = validationFunction(valdationFeildList, valdationDetailsListt, inputForm);
 
     /*

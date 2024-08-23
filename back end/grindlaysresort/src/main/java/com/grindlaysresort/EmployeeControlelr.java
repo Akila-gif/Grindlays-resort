@@ -43,8 +43,7 @@ public class EmployeeControlelr {
 
         if (errorSet.isEmpty()){
             employee.setAdd_date(LocalDateTime.now());
-            //return employeeDao.save(employee);
-            return employee;
+            return employeeDao.save(employee);
         }else {
             JSONObject jsonObject = new JSONObject(errorSet);
             String orgJsonData = jsonObject.toString();

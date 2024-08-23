@@ -7,7 +7,6 @@ const validationFunction = (valdationFeildList,valdationDetailsList,formID,feild
           valdationFeildList.forEach(element => {
 
                let inputfield =  document.getElementById(element.id);
-               
                Validationfunction(element,valdationDetailsList,inputfield);
           });
      } else if(feildID != null && formID.classList.contains('try-validated')){
@@ -28,8 +27,7 @@ const validationFunction = (valdationFeildList,valdationDetailsList,formID,feild
      return false;
 }    
 const Validationfunction =(ElimetOfValidateArray,valdationDetailsList,feildID) => {
-     validationError = false;   
-     
+     validationError = false;
      if(ElimetOfValidateArray.type=="radioButton" && ElimetOfValidateArray.requird){
           validationError = !radioButtonValidation(feildID,feildID.name);
      }
@@ -44,7 +42,6 @@ const Validationfunction =(ElimetOfValidateArray,valdationDetailsList,feildID) =
 
      else if(ElimetOfValidateArray.requird && feildID.value==""){
           validationError = true;
-          console.log(ElimetOfValidateArray);
      }
      
      if(validationError){
