@@ -124,6 +124,14 @@ public class GrindlaysresortApplication {
 		return roomView;
 	}
 
+	@RequestMapping(value = "/customerview")
+	public ModelAndView displayCustomer(){
+		//return "<h1>miyew miyew miyew miyew</h1>";
+		ModelAndView roomView = new ModelAndView();
+		roomView.setViewName("customer.html");
+		return roomView;
+	}
+
 	@RequestMapping(value = "/createadmin")
 	public void DisplayEmployee(){
 		User adminUser = new User();

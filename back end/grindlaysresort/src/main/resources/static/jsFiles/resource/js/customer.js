@@ -1,54 +1,56 @@
-var employee = new Object();
+var customer = new Object();
 var country = new Object();
+
+userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/Employee?user=admin').data;
 window.addEventListener("load", () => {
+    employeeFormPrivilageHandeling(userPrivilage);
+    refreshCustomertable(HTTPRequestService("GET",'http://localhost:8080/customers'),userPrivilage);
+    dataListCreate(HTTPRequestService("GET",'http://localhost:8080/country'),countryDatalistOptions,'countryName','countryCode');
+    CustomerStatusDropDown(HTTPRequestService("GET",'http://localhost:8080/customerStatus'));
+});
 
-    refreshEmployeetable(HTTPRequestService("GET",'http://localhost:8080/employees'));
-    DesignationDropDownCreate(HTTPRequestService("GET",'http://localhost:8080/designations'));
-    EmployeeStatusDropDown(HTTPRequestService("GET",'http://localhost:8080/empstatus'));
-    EmployeeCategoryDropDown(HTTPRequestService("GET",'http://localhost:8080/categories'));
-
-}); 
-
-refreshEmployeetable = (dataList) => {
+refreshCustomertable = (dataList) => {
 
     //displaying data list for employee table
     const displayProperty = [
-        { dataType: 'text', propertyName: "employeeid" },
+        { dataType: 'text', propertyName: "customernumber" },
         { dataType: 'text', propertyName: "full_name" },
         { dataType: 'function', propertyName: nicFunction },
         { dataType: 'function', propertyName: passportFunction },
         { dataType: 'function', propertyName: citizenshipFunction },
         { dataType: 'text', propertyName: "mobile" },
-        { dataType: 'function', propertyName: employeeAgeCalculate },
+        { dataType: 'function', propertyName: customerAgeCalculate },
         { dataType: 'function', propertyName: employeestatusFunction },
     ];
 
-    fillDataIntoTable(EmployeeView, dataList, displayProperty, EditfunctionName, DeleteFunctionName, MoreFunctionName, true);
+    fillDataIntoTable(customerView, dataList, displayProperty, EditfunctionName, DeleteFunctionName, MoreFunctionName,deleteStatusFunction, true,userPrivilage);
     // fillDataIntoTable(tableod,datalist,editfunctionName,DeleteFunctionName,MoreFunctionName,button visibility);
     //fillDataIntoTable02(EmployeeView,employees,displayProperty,EditfunctionName,DeleteFunctionName,MoreFunctionName);
     //fillDataIntoTable03(EmployeeView,employees,displayProperty,EditfunctionName,DeleteFunctionName,MoreFunctionName);
     //fillDataIntoTable04(EmployeeView,employees,displayProperty,EditfunctionName,DeleteFunctionName,MoreFunctionName);
     $(document).ready(function () {
-        $('#EmployeeView').DataTable();
+        $('#customerView').DataTable();
         $('.dataTables_length').addClass('bs-select');
 
-        EmployeeView_filter.classList.add('mb-3', 'pt-2');
-        let searchInputDiv = EmployeeView_filter.children[0].children[0];
+        customerView_filter.classList.add('mb-3', 'pt-2');
+        let searchInputDiv = customerView_filter.children[0].children[0];
         searchInputDiv.classList.add('form-control');
     });
 }
 // Shoud pass as parameters (datalist,Id,nameof the field that display as the innre html)
-const DesignationDropDownCreate = (designation) =>{
-    dropDownCreate(designation,designationFormSelect,'designation_name');
+//form Privilage handeling
+const employeeFormPrivilageHandeling = (userPrivilage) =>{
+    if(userPrivilage.insert){
+        $("#formOpenButton").css("visibility","visible");
+    }
 }
-const EmployeeStatusDropDown = (StatusDataList) =>{
-    dropDownCreate(StatusDataList,workingStatusFormSelect,'status');
+$("#formOpenButton").click(() => {
+    customerStatusFormSelect.selectedIndex = 3;
+    customerStatusFormSelect.disabled = true;
+});
+const CustomerStatusDropDown = (StatusDataList) =>{
+    dropDownCreate(StatusDataList,customerStatusFormSelect,'status');
 }
-const EmployeeCategoryDropDown = (CategoriesDataList) =>{
-    dropDownCreate(CategoriesDataList,employeeCategoryFormSelect,'category_name');
-}
-
-
 /* table related Function */
 
 const nicFunction = (element) => {
@@ -63,25 +65,35 @@ const passportFunction = (element) => {
     if (element.passport==null) return ('<p class="text-warning">N/A</p>')
     else return (element.passport);
 }
-const employeeAgeCalculate = (element) => {
+const customerAgeCalculate = (element) => {
     return calculateAge(element.date_of_birth);
 }
 const employeestatusFunction = (element) => {
-    if (element.workingstatus_id.status === 'Add')
+    if (element.customerstatus_id.status === 'checking')
         return ('<p class="text-success"><i class="fa-solid fa-circle"></i> Checkin</p>');
-    if (element.workingstatus_id.status === 'Resign')
+    if (element.customerstatus_id.status === 'checkedout')
         return ('<p class="text-warning"><i class="fa-solid fa-circle"></i> Checked out</p>');
-    if (element.workingstatus_id.status === 'Remove')
-        return ('<p class="text-danger "><i class="fa-solid fa-circle"></i> Checked out</p>');
+    if (element.customerstatus_id.status === 'inactive')
+        return ('<p class="text-warning "><i class="fa-solid fa-circle"></i> Inactive</p>');
+    if (element.customerstatus_id.status === 'delete')
+        return ('<p class="text-danger "><i class="fa-solid fa-circle"></i> Delete</p>');
 }
 const designationFunction = (element)=>{
     return ('<p>' + element.designation_id.designation_name + '</p>');
 }
 
 const EditfunctionName = (element, index) => {
+    $('#customerForm').modal('show');
+    element.country_id = element.country_id.countryCode;
+    console.log(    element);
+    window['oldCustomer'] = element;
     FormFill(element,valdationFeildList);
-    $('#employeeForm').modal('show');
-    window['oldEmployee'] = element;
+}
+
+const deleteStatusFunction = (element) => {
+
+    if (element.customerstatus_id.status=="inactive" || element.customerstatus_id.status=="checking"|| element.customerstatus_id.status=="checkedout") return true;
+    else return false;
 }
 
 const DeleteFunctionName = (element, index, tableBody) => {
@@ -94,9 +106,9 @@ const DeleteFunctionName = (element, index, tableBody) => {
     if (deleteConform) {
         const deleteServerResponse = 'OK';
         if (deleteServerResponse === 'OK') {
-            let deleteResponse = HTTPRequestService("DELETE",'http://localhost:8080/employees/'+element.id);
+            let deleteResponse = HTTPRequestService("DELETE",'http://localhost:8080/customers/'+element.id);
             if (199<deleteResponse.status && deleteResponse.status<300) {
-                tableBody.children[index].children[9].innerHTML = '<p class="text-danger "><i class="fa-solid fa-circle"></i> Delete</p>';
+                tableBody.children[index].children[8].innerHTML = '<p class="text-danger "><i class="fa-solid fa-circle"></i> Delete</p>';
                 console.log(element.id);
                 window.alert("Delete Successfull...");
             } else {
@@ -112,8 +124,7 @@ const MoreFunctionName = (element, index) => {
     console.log(element, index);
 }
 
-                                                            /* main form validation related Function */
-
+ /* main form validation related Function */
 
 ValidationButton.addEventListener('click', () => {
     /* have 4 parameters the 4th one is inputID the defalt value is set as feildID=null . if you need a validat specify input you should enter FeildID */
@@ -125,9 +136,9 @@ ValidationButton.addEventListener('click', () => {
     and return employee Object
  */
     if(validationResult) {
-        EmployeeObject = formObjectCreate(valdationFeildList,employee);
-        if(confirm("Do you Want to add "+EmployeeObject.full_name+"?")){
-            let addedResponse = HTTPRequestService("POST",'http://localhost:8080/employees',JSON.stringify(EmployeeObject));
+        CustomerObject = formObjectCreate(valdationFeildList,customer);
+        if(confirm("Do you Want to add "+CustomerObject.full_name+"?")){
+            let addedResponse = HTTPRequestService("POST",'http://localhost:8080/customers',JSON.stringify(CustomerObject));
             if(199<addedResponse.status && addedResponse.status<300)window.alert("Add Successfully"+addedResponse.status);
             else if(399<addedResponse.status && addedResponse.status<500) DynamicvalidationFunctioion(addedResponse.errorMessage,valdationFeildList,inputForm);
             else window.alert("Add Failure "+addedResponse.status);
@@ -143,8 +154,8 @@ UpdateButton.addEventListener('click',()=>{
         and return employee Object
      */
     if(validationResult) {
-        EmployeeObject = formObjectCreate(valdationFeildList,employee);
-        let changes = objectCompairFunction(window['oldEmployee'],EmployeeObject,valdationFeildList,comparisonStaregy);
+        CustomerObject = formObjectCreate(valdationFeildList,country);
+        let changes = objectCompairFunction(window['oldCustoemr'],CustomerObject,valdationFeildList,comparisonStaregy);
 
         let empdtl ="\n";
 
@@ -154,10 +165,10 @@ UpdateButton.addEventListener('click',()=>{
                 empdtl+=keyName+" : "+ changes[keyName]+"\n";
             }
         });
-        if(confirm("Do you Want update "+window['oldEmployee'].firt_name+"?"+empdtl)){
-            HTTPRequestService("PUT",'http://localhost:8082/empoloyees/'+window['oldEmployee'].idemployee,JSON.stringify(EmployeeObject));
+        if(confirm("Do you Want update "+window['oldCustomer'].full_name+"?"+empdtl)){
+            HTTPRequestService("PUT",'http://localhost:8080/customers/'+window['oldCustomer'].id,JSON.stringify(CustomerObject));
             formCloser();
-            alertFunction("Update Successfully","More.......","success",displayUpdateEmpDetail(EmployeeObject,changes));
+            alertFunction("Update Successfully","More.......","success",displayUpdateEmpDetail(CustomerObject,changes));
         }else {
             formCloser();
             alertFunction("Discarded update","More.......","warning");
@@ -173,8 +184,7 @@ let displayUpdateEmpDetail = (empObj,chan) => {
     console.log(chan);
 }
 
-                                                            /* main form validation related Function */
-
+/* main form validation related Function */
 
 countryAddButton.addEventListener('click', () => {
     /* have 4 parameters the 4th one is inputID the defalt value is set as feildID=null . if you need a validat specify input you should enter FeildID */
@@ -201,8 +211,8 @@ countryAddButton.addEventListener('click', () => {
 });
 
 /* Event Calling Functions */
-designationFormSelect.addEventListener('change',()=>{
-    validationFunction(valdationFeildList, valdationDetailsListt, inputForm, designationFormSelect);
+titleFormSelect.addEventListener('change',()=>{
+    validationFunction(valdationFeildList, valdationDetailsListt, inputForm, titleFormSelect);
 });
 
 FullNameTxt.addEventListener('keyup',()=>{
@@ -212,11 +222,14 @@ FullNameTxt.addEventListener('keyup',()=>{
 residentCheck.addEventListener('change',(event)=>{
     countryEnableFunction(event,countryDtlTxt);
     validationFunction(valdationFeildList, valdationDetailsListt, inputForm, residentCheck);
+    validationFunction(valdationFeildList, valdationDetailsListt, inputForm, countryDtlTxt);
+    validationResult = validationFunction(valdationFeildList, valdationDetailsListt, inputForm, passportTxt);
 });
 
 countryDtlTxt.addEventListener('keyup',(event)=>{
     dataListMatchingCheck(event,addNewCountry)
     validationFunction(valdationFeildList, valdationDetailsListt, inputForm, countryDtlTxt);
+    validationFunction(valdationFeildList, valdationDetailsListt, inputForm, residentCheck);
 });
 
 genderMaleRadioBtn.addEventListener('change',()=>{
@@ -251,10 +264,6 @@ civilStatusFormSelect.addEventListener('change',()=>{
     validationResult = validationFunction(valdationFeildList, valdationDetailsListt, inputForm, civilStatusFormSelect);
 });
 
-workingStatusFormSelect.addEventListener('change',()=>{ 
-    validationFunction(valdationFeildList, valdationDetailsListt, inputForm, workingStatusFormSelect);
-});
-
 addressTxt.addEventListener('keyup',()=>{
     validationResult = validationFunction(valdationFeildList, valdationDetailsListt, inputForm, addressTxt);
 });
@@ -263,16 +272,13 @@ noteTxt.addEventListener('keyup',()=>{
     validationResult = validationFunction(valdationFeildList, valdationDetailsListt, inputForm, noteTxt);
 });
 
-empImageTxt.addEventListener('keyup',()=>{
-    validationResult = validationFunction(valdationFeildList, valdationDetailsListt, inputForm, empImageTxt);
+emgContactNumberTxt.addEventListener('keyup',()=>{
+    console.log(emgContactNumberTxt.value);
+    validationResult = validationFunction(valdationFeildList, valdationDetailsListt, inputForm, emgContactNumberTxt);
 });
 
-basicSalaryTxt.addEventListener('keyup',()=>{
-    validationResult = validationFunction(valdationFeildList, valdationDetailsListt, inputForm, basicSalaryTxt);
-});
-
-employeeCategoryFormSelect.addEventListener('change',()=>{
-    validationFunction(valdationFeildList, valdationDetailsListt, inputForm, employeeCategoryFormSelect);
+emgNameTxt.addEventListener('keyup',()=>{
+    validationResult = validationFunction(valdationFeildList, valdationDetailsListt, inputForm, emgNameTxt);
 });
 
 //country form event
@@ -285,16 +291,56 @@ countryCodeTxt.addEventListener('keyup',()=>{
 });
 
 
+
+
 /* validation functions for input feild */
 const MoreFunctionNames = (pattern,required,inputFeild)=>{
     return true;    
 };
 const birthDayvalidation = (pattern,required,inputFeild)=>{
-    return true;
+    var currentDate = new Date();
+
+    // Create a date object for 2024-06-11
+    var comparisonDate = new Date(inputFeild.value);
+
+    // Calculate the year difference
+    var yearDifference = currentDate.getFullYear() - comparisonDate.getFullYear();
+
+    // Adjust if the current date is before the comparison date in the current year
+    var isCurrentDateBeforeComparisonDate = (
+        currentDate.getMonth() < comparisonDate.getMonth() ||
+        (currentDate.getMonth() === comparisonDate.getMonth() && currentDate.getDate() < comparisonDate.getDate())
+    );
+
+    if (isCurrentDateBeforeComparisonDate) yearDifference--;
+
+    // Check if the year difference is more than 18 years
+    return yearDifference > 18
 }
+
+const ResidentFunctionNames = (pattern,required,inputFeild) => {
+    return !countryDtlTxt.value == ""
+}
+
+const CountryFunction = (pattern,required,inputFeild) => {
+    if(residentCheck.checked) return true;
+    else {
+        regObject = new RegExp(pattern)
+        return regObject.test(inputFeild.value);
+        // code validatione ekata mekath danna pulwualna
+        //var pattern = new RegExp("^\\+\\d{1,3}$");
+        // there are two types of regex a one is literal and REGEXP Constructor
+    }
+}
+
+const PassportFunction = (pattern,required,inputFeild) => {
+    if (!residentCheck.checked) return inputFeild.value != "";
+    else return true;
+}
+
 /* main form validation data */
 const valdationFeildList = [
-    { id: 'designationFormSelect', type: 'dropdown', validationStategy: 'selected', requird: true },
+    { id: 'titleFormSelect', type: 'dropdown', validationStategy: 'selected', requird: true,static: true  },
     { id: 'FullNameTxt', type: 'text', validationStategy: 'regexp', requird: true },
     { id: 'residentCheck', type: 'checkbox', validationStategy: 'function', requird: true },
     { id: 'countryDtlTxt', type: 'datalist', validationStategy: 'function', requird: false ,url:'http://localhost:8080/country/'},
@@ -306,34 +352,27 @@ const valdationFeildList = [
     { id: 'mobileNumberTxt', type: 'text', validationStategy: 'regexp', requird: true },
     { id: 'emailTxt', type: 'text', validationStategy: 'regexp', requird: true },
     { id: 'civilStatusFormSelect', type: 'dropdown', validationStategy: 'selected', requird: true,static: true },
-    { id: 'workingStatusFormSelect', type: 'dropdown', validationStategy: 'selected', requird: true },
-    { id: 'dateOfRecruitment', type: 'date', validationStategy: 'function', requird: true },
-    { id: 'epfNumberTxt', type: 'text', validationStategy: 'regexp', requird: true },
-    { id: 'etfNumberTxt', type: 'text', validationStategy: 'regexp', requird: true },
-    { id: 'empImageTxt', type: 'text', validationStategy: 'regexp', requird: false },
-    { id: 'basicSalaryTxt', type: 'text', validationStategy: 'regexp', requird: true },
-    { id: 'employeeCategoryFormSelect', type: 'dropdown', validationStategy: 'selected', requird: true },
+    { id: 'customerStatusFormSelect', type: 'dropdown', validationStategy: 'selected', requird: true},
+    { id: 'emgContactNumberTxt',type: 'text', validationStategy: 'regexp', requird: true },
+    { id: 'emgNameTxt', type: 'text', validationStategy: 'nothing', requird: true },
     { id: 'addressTxt', type: 'text', validationStategy: 'nothing', requird: false },
-    { id: 'noteTxt', type: 'text', validationStategy: 'nothing', requird: false },
+    { id: 'noteTxt', type: 'text', validationStategy: 'nothing', requird: false }
 ];
 
 const valdationDetailsListt = {
     'FullNameTxt': { pattern: /^[A-Za-z'-]+(?:\s+[A-Za-z'-]+)+$/ },
-    'residentCheck': {  pattern: null ,functions: MoreFunctionNames },
-    'countryDtlTxt': { pattern: '^[0][7][1,2,4,5,6,7,8][0-9]{7}$', functions: MoreFunctionNames },
+    'residentCheck': {  pattern: null ,functions: ResidentFunctionNames },
+    'countryDtlTxt': { pattern: /^\+\d{1,3}$/, functions: CountryFunction },
     'dateOfBirth': { pattern: null, functions: birthDayvalidation },
-    'nicTxt': { pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$', functions: MoreFunctionNames },
-    'passportTxt': { pattern: '^(?!^0+$)[a-zA-Z0-9]{3,20}$', functions: MoreFunctionNames },
+    'nicTxt': { pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$'},
+    'passportTxt': { pattern: '^(?!^0+$)[a-zA-Z0-9]{3,20}$',functions: PassportFunction },
     'mobileNumberTxt': { pattern: '^[0][7][1,2,4,5,6,7,8][0-9]{7}$', functions: birthDayvalidation },
     'emailTxt': { pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, functions: birthDayvalidation },
-    'dateOfRecruitment': { pattern: null, functions: birthDayvalidation },
-    'epfNumberTxt': { pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$' },
-    'etfNumberTxt': { pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$' },
-    'basicSalaryTxt': { pattern: '^([0-9]{1,}|[0-9]{1,}.[0-9]{2})$' },
+    'emgContactNumberTxt': { pattern: '^[0][7][1,2,4,5,6,7,8][0-9]{7}$' },
 };
 
 const defaulTextError = {
-    'designationFormSelect': { pattern: "please select your designation!"},
+    'titleFormSelect': { pattern: "please select your designation!"},
     'FullNameTxt': {  pattern: "please enter valid full name!"},
     'residentCheck': { pattern: "please enter resident!"},
     'countryDtlTxt': { pattern: "If you are not resident please select enter your country!"},
@@ -344,16 +383,12 @@ const defaulTextError = {
     'passportTxt': { pattern: "please enter your Passport number!"},
     'mobileNumberTxt': { pattern: "please enter your mobile"},
     'emailTxt': { pattern: "please eneter your email!"},
-    'dateOfRecruitment': { pattern: "please enter Date of recruitment"},
-    'epfNumberTxt':{pattern: "please eneter EPF number!"},
-    'etfNumberTxt':{pattern: "please eneter ETF number!"},
-    'civilStatusFormSelect': { pattern: "please select your civil status!"},
-    'workingStatusFormSelect': { pattern: "please select your working states!"},
-    'addressTxt': { pattern: "please Enter your Address!"},
-    'noteTxt': { pattern: "please enter your note!"},
-    'empImageTxt': { pattern: "please Enter image!"},
-    'basicSalaryTxt': { pattern: "please enter your basic salary!"},
-    'employeeCategoryFormSelect': { pattern: "please select your working Category!"},
+    'civilStatusFormSelect': { pattern: "please enter Date of recruitment"},
+    'customerStatusFormSelect':{pattern: "please eneter EPF number!"},
+    'emgContactNumberTxt':{pattern: "please eneter ETF number!"},
+    'emgNameTxt': { pattern: "please select your civil status!"},
+    'addressTxt': { pattern: "please select your working states!"},
+    'noteTxt': { pattern: "please select your working states!"}
 };
 
 const comparisonStaregy = {
@@ -380,7 +415,7 @@ const countryValdationDetailsListt = {
 };
 
 //Modal close confermation
-employeeFormClose.addEventListener('click', (e) => {
+customerFormClose.addEventListener('click', (e) => {
     if (confirm("Are you sure ?")){
         formCloser();
     }
@@ -399,10 +434,10 @@ backtoPrimary.addEventListener('click', (e) => {
     formSwitcher(CountryForm,employeeForm);
 });
 const formCloser = ()=>{
-    $('#employeeForm').modal('hide');
+    $('#customerForm').modal('hide');
     formClear(valdationFeildList,inputForm,defaulTextError);
     inputForm.classList.remove('try-validated');
-    refreshEmployeetable(HTTPRequestService("GET",'http://localhost:8080/employees'));
+    refreshCustomertable(HTTPRequestService("GET",'http://localhost:8080/customers'));
 }
 
 const formSwitcher = (currentForm,TargetForm)=>{
