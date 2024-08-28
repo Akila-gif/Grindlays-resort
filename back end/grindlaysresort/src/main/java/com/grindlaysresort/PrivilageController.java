@@ -29,11 +29,10 @@ public class PrivilageController {
         return privilageDao.save(privilage);
     }
 
-    @DeleteMapping()
-    public void deletePrivilage(@RequestParam("id") Integer id){
-        HashMap<String,Boolean> deleteUsertprivilage = getPrivilageOfUserForModule("User","ak");
-        if (deleteUsertprivilage.get("insert")) {//privilageDao.deleteById(id);
-        }
+    @DeleteMapping("/{id}")
+    public void deletePrivilage(@PathVariable("id") Integer id){
+        HashMap<String,Boolean> deleteUsertprivilage = getPrivilageOfUserForModule("User","admin");
+        if (deleteUsertprivilage.get("insert")) {privilageDao.deleteById(id);}
         else {
             HashMap<String,String> errorSet  = new HashMap<>();
             errorSet.put("message", "Don't have Privilage not deleted!");

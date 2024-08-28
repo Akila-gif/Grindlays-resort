@@ -1,4 +1,4 @@
-package com.grindlaysresort;
+package com.grindlaysresort.employeeModule.designation;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,5 +1,7 @@
-package com.grindlaysresort;
+package com.grindlaysresort.employeeModule;
 
+import com.grindlaysresort.WorkingStatus;
+import com.grindlaysresort.WorkingStatusDao;
 import com.grindlaysresort.exception.ConflictException;
 import com.grindlaysresort.exception.ObjectNotFoundException;
 import org.json.JSONObject;

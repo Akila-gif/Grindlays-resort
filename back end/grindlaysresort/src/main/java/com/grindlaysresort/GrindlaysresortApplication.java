@@ -1,5 +1,6 @@
 package com.grindlaysresort;
 
+import com.grindlaysresort.employeeModule.EmployeeDao;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -79,6 +80,14 @@ public class GrindlaysresortApplication {
 		return userView;
 	}
 
+	@RequestMapping(value = "/privilegeview")
+	public ModelAndView displayprivilage(){
+		//return "<h1>miyew miyew miyew miyew</h1>";
+		ModelAndView userView = new ModelAndView();
+		userView.setViewName("privilege.html");
+		return userView;
+	}
+
 	@RequestMapping(value = "/errorpage")
 	public ModelAndView displayError(){
 		//return "<h1>miyew miyew miyew miyew</h1>";
@@ -130,6 +139,14 @@ public class GrindlaysresortApplication {
 		ModelAndView roomView = new ModelAndView();
 		roomView.setViewName("customer.html");
 		return roomView;
+	}
+
+	@RequestMapping(value = "/serviceview")
+	public ModelAndView displayService(){
+		//return "<h1>miyew miyew miyew miyew</h1>";
+		ModelAndView serviceView = new ModelAndView();
+		serviceView.setViewName("service.html");
+		return serviceView;
 	}
 
 	@RequestMapping(value = "/createadmin")

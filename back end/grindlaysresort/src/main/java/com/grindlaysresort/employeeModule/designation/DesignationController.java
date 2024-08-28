@@ -1,4 +1,4 @@
-package com.grindlaysresort;
+package com.grindlaysresort.employeeModule.designation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

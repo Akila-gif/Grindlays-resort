@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+     <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <link rel="stylesheet" href="jsFiles/resource/bootstrap-5.3.1-dist/css/bootstrap.min.css" />
+          <script src="jsFiles/resource/bootstrap-5.3.1-dist/js/bootstrap.bundle.min.js"></script>
+          <link rel="stylesheet" href="jsFiles/resource/fontawesome-free-6.4.2-web/css/all.css" />
+          <script src="jsFiles/resource/fontawesome-free-6.4.2-web/js/all.min.js"></script>
+          <script src="jsFiles/resource/js/jquery-3.7.1.js"></script>
+          <script src="jsFiles/resource/js/toastr.js"></script>
+          <script src="jsFiles/resource/js/objectCompair.js"></script>
+          <script src="jsFiles/resource/js/notification.js"></script>
+          <script src="jsFiles/resource/js/serviceRequest.js"></script>
+          <link href="jsFiles/resource/js/DataTables/datatables.min.css" rel="stylesheet" />
+          <script src="jsFiles/resource/js/DataTables/datatables.min.js"></script>
+
+          <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/> -->
+          <link rel="stylesheet" href="cssFile/animated/animate.css" />
+          <link rel="stylesheet" href="cssFile/privilege.css" />
+          <link rel="stylesheet" href="cssFile/user.css" />
+          <link rel="stylesheet" href="cssFile/toastr.css" />
+          <title>Privilege</title>
+     </head>
+
+     <body>
+          <div class="d-flex justify-content-around bg-black">
+               <h1 class="text-center p-4 bg-black text-light fs-1">Privilage Table</h1>
+          </div>
+
+          <!--     form modal-->
+          <div class="modal modal-xl" id="privilageForm" aria-labelledby="userForm" tabindex="-1">
+               <div class="modal-dialog">
+                    <div class="modal-content">
+                         <div class="modal-header">
+                              <h1>Privelage <i class="fa-solid fa-user-plus"></i></h1>
+                              <button type="button" class="btn-close" id="privilageFormClose"></button>
+                         </div>
+                         <div class="modal-body">
+                              <form action="" class="form-control" id="inputForm">
+                                   <div class="row m-2">
+                                        <div class="col-lg-3 col-md-3 module-checks" style=" justify-content: center;">
+                                             <h2 style="text-align: center;">Role</h2>
+                                             <div  id="roleSelector" style="margin: 10%;" name="role_id">
+          
+                                             </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 module-checks">
+                                             <h2 style="text-align: center;">Module</h2>
+                                             <div id="ModuleSelector" style="margin: 10%;" name="module_id">
+          
+                                             </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-3 module-checks" style="display: flex; flex-direction: column; justify-content: center;">
+                                             <div class="input-group mb-3 check-switch-align" style="display: flex;justify-content: center;">
+                                                  <h2>Privilage</h2>
+                                             </div>
+                                             <div class="input-group mb-3 check-switch-align" style="display: flex;justify-content: center;">
+                                                  <span></span>
+                                                  <div class="form-check form-switch"  >
+                                                       <input class="form-check-input" type="checkbox" role="switch" id="insertCheck" name="insert"/>
+                                                       <label class="form-check-label" for="insertCheck"> Insert </label>
+                                                  </div>
+                                                  <button
+                                                       disabled
+                                                       style="display: none"
+                                                       class="input-group-text"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-placement="top"
+                                                       data-bs-custom-class="custom-tooltip"
+                                                       data-bs-title="Enter your full name as first."
+                                                  >
+                                                       <i class="fas fa-info-circle"></i>
+                                                  </button>
+                                             </div>
+                                             <div class="input-group mb-3 " style="display: flex;justify-content: center;">
+                                                  <span></span>
+                                                  <div class="form-check form-switch" >
+                                                       <input class="form-check-input" type="checkbox" role="switch" id="deleteCheck" name="delete"/>
+                                                       <label class="form-check-label" for="deleteCheck"> Delete </label>
+                                                  </div>
+                                                  <button
+                                                       disabled
+                                                       style="display: none"
+                                                       class="input-group-text"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-placement="top"
+                                                       data-bs-custom-class="custom-tooltip"
+                                                       data-bs-title="Enter your full name as first."
+                                                  >
+                                                       <i class="fas fa-info-circle"></i>
+                                                  </button>
+                                             </div>
+                                             <div class="input-group mb-3" style="display: flex;justify-content: center;">
+                                                  <span></span>
+                                                  <div class="form-check form-switch" >
+                                                       <input class="form-check-input" type="checkbox" role="switch" id="selectCheck" name="select"/>
+                                                       <label class="form-check-label" for="selectCheck"> Select </label>
+                                                  </div>
+                                                  <button
+                                                       disabled
+                                                       style="display: none"
+                                                       class="input-group-text"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-placement="top"
+                                                       data-bs-custom-class="custom-tooltip"
+                                                       data-bs-title="Enter your full name as first."
+                                                  >
+                                                       <i class="fas fa-info-circle"></i>
+                                                  </button>
+                                             </div>
+                                             <div class="input-group mb-3" style="display: flex;justify-content: center;">
+                                                  <span></span>
+                                                  <div class="form-check form-switch" >
+                                                       <input class="form-check-input" type="checkbox" role="switch" id="updateCheck" name="update"/>
+                                                       <label class="form-check-label" for="updateCheck"> Update </label>
+                                                  </div>
+                                                  <button
+                                                       disabled
+                                                       style="display: none"
+                                                       class="input-group-text"
+                                                       data-bs-toggle="tooltip"
+                                                       data-bs-placement="top"
+                                                       data-bs-custom-class="custom-tooltip"
+                                                       data-bs-title="Enter your full name as first."
+                                                  >
+                                                       <i class="fas fa-info-circle"></i>
+                                                  </button>
+                                             </div>
+                                        </div>
+                                        <br /><br />
+                                   </div>
+                              </form>
+                              <br /><br />
+                              <button class="btn btn-primary mx-3" id="ValidationButton">Add</button>
+                              <button class="btn btn-primary mx-3" id="clearButton">Clear</button>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="container-fluid d-flex justify-content-end">
+               <button class="btn btn-primary mx-5 mt-3 px-4" data-bs-target="#privilageForm" data-bs-toggle="modal">
+                    <i class="fa-solid fa-user-plus" style="color: #ffffff"></i>
+               </button>
+          </div>
+          <!--     user table-->
+          <div class="container-fluid mt-4 table-responsive px-lg-5">
+               <table class="table table-dark table-striped my-4 mt-lg-5" id="PrivilageView">
+                    <thead class="mt-3">
+                         <tr>
+                              <th>#</th>
+                              <th>Role</th>
+                              <th>Module</th>
+                              <th>Privilage</th>
+                              <th>Modify</th>
+                         </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+               </table>
+          </div>
+
+          <!--     user Details modle-->
+          <div class="modal modal-xl fade" id="userDetails">
+               <div class="modal-dialog">
+                    <div class="modal-content">
+                         <div class="modal-header">
+                              <h1><i class="fa-solid fa-user"></i></h1>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" id="userDetailsClose"></button>
+                         </div>
+                         <div class="modal-body">
+                              <div class="d-flex justify-content-center">
+                                   <div id="userDetailsList">
+                                        <div class="row mt-3">
+                                             <div class="col-lg-3">
+                                                  <h5>Title</h5>
+                                             </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                             <div class="col-lg-3">
+                                                  <h5>First name</h5>
+                                             </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                             <div class="col-lg-3">
+                                                  <h5>Last Name</h5>
+                                             </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                             <div class="col-lg-3">
+                                                  <h5>Full Name</h5>
+                                             </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                             <div class="col-lg-3">
+                                                  <h5>Last Name</h5>
+                                             </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                             <div class="col-lg-3">
+                                                  <h5>State</h5>
+                                             </div>
+                                        </div>
+                                   </div>
+                              </div>
+                              <div class="d-flex justify-content-end">
+                                   <div>
+                                        <div class="row">
+                                             <div class="col-lg-3 mx-4">
+                                                  <button class="btn btn-primary px-5"><i class="fa-solid fa-print"></i>Print</button>
+                                             </div>
+                                             <div class="col-lg-2 mx-3">
+                                                  <button class="btn btn-primary px-5"><i class="fa-solid fa-pen"></i>Edit</button>
+                                             </div>
+                                        </div>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <script src="jsFiles/resource/js/employeeCommonfunction.js"></script>
+          <script src="jsFiles/resource/js/privilege.js"></script>
+          <script src="jsFiles/resource/js/validationCommonfunction.js"></script>
+          <script src="jsFiles/resource/js/formObjectCreateCommonFunction.js"></script>
+          <script src="jsFiles/resource/js/dropDuwnCreateCommonFunction.js"></script>
+          <script src="jsFiles/resource/js/dataListCreateFunction.js"></script>
+          <script src="jsFiles/resource/js/roleTranferFunction.js"></script>
+          <script src="jsFiles/resource/js/formFill.js"></script>
+     </body>
+</html>
