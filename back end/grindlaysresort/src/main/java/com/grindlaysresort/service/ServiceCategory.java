@@ -1,21 +1,21 @@
-package com.grindlaysresort;
+package com.grindlaysresort.service;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Table(name = "category")
 @Entity
+@Table(name = "servicecategory")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeCategory {
+@AllArgsConstructor
+public class ServiceCategory {
 
     @Id
-    @Column(name = "id",unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    @Column(name = "id")
+    Integer id;
 
     @Column(name = "category_name")
     String category_name;

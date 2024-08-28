@@ -1,6 +1,8 @@
 var privilege = new Object();
+userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/Employee?user=admin').data;
+userPrivilage.update = false;
 window.addEventListener("load", () => {
-     refreshPrivilage(HTTPRequestService("GET", "http://localhost:8080/privilege"));
+     refreshPrivilage(HTTPRequestService("GET", "http://localhost:8080/privilege"),userPrivilage);
      RoleSelectecterCreate(HTTPRequestService("GET", "http://localhost:8080/roles"));
      ModuleSelectecterCreate(HTTPRequestService("GET", "http://localhost:8080/module"));
 });
@@ -12,7 +14,7 @@ refreshPrivilage = (dataList) => {
           { dataType: "function", propertyName: privilageFunction },
      ];
 
-     fillDataIntoTable(PrivilageView, dataList, displayProperty, EditfunctionName, DeleteFunctionName, MoreFunctionName, true);
+     fillDataIntoTable(PrivilageView, dataList, displayProperty, EditfunctionName, DeleteFunctionName, MoreFunctionName,deleteStatusFunction, true,userPrivilage);
      // fillDataIntoTable(tableod,datalist,editfunctionName,DeleteFunctionName,MoreFunctionName,button visibility);
      //fillDataIntoTable02(EmployeeView,employees,displayProperty,EditfunctionName,DeleteFunctionName,MoreFunctionName);
      //fillDataIntoTable03(EmployeeView,employees,displayProperty,EditfunctionName,DeleteFunctionName,MoreFunctionName);
@@ -93,6 +95,10 @@ const EditfunctionName = (element, index) => {
      window["oldEmployee"] = element;
 };
 
+const deleteStatusFunction = (element) => {
+     return true;
+}
+
 const DeleteFunctionName = (element, index, tableBody) => {
      let deleteConform = window.confirm(
           "Are you sure ?\n" + "Employee number " + element.employeeid + "\nFull Name " + element.full_name + "\nNIC " + element.nic_number
@@ -100,10 +106,11 @@ const DeleteFunctionName = (element, index, tableBody) => {
      if (deleteConform) {
           const deleteServerResponse = "OK";
           if (deleteServerResponse === "OK") {
-               let deleteResponse = HTTPRequestService("DELETE", "http://localhost:8080/employees/" + element.id);
+               let deleteResponse = HTTPRequestService("DELETE", "http://localhost:8080/privilege/" + element.id);
                if (199 < deleteResponse.status && deleteResponse.status < 300) {
-                    tableBody.children[index].children[9].innerHTML = '<p class="text-danger "><i class="fa-solid fa-circle"></i> Delete</p>';
+                    //tableBody.children[index].children[9].innerHTML = '<p class="text-danger "><i class="fa-solid fa-circle"></i> Delete</p>';
                     console.log(element.id);
+                    refreshPrivilage(HTTPRequestService("GET", "http://localhost:8080/privilege"),userPrivilage);
                     window.alert("Delete Successfull...");
                } else {
                     window.alert("Delete not compleate error " + deleteResponse.message);

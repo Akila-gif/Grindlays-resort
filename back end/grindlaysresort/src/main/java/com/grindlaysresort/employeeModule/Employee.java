@@ -1,13 +1,15 @@
-package com.grindlaysresort;
+package com.grindlaysresort.employeeModule;
 
+import com.grindlaysresort.Country;
+import com.grindlaysresort.employeeModule.designation.Designation;
+import com.grindlaysresort.WorkingStatus;
+import com.grindlaysresort.employeeModule.category.EmployeeCategory;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

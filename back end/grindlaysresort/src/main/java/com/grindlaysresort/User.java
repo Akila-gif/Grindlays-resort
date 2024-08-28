@@ -1,5 +1,6 @@
 package com.grindlaysresort;
 
+import com.grindlaysresort.employeeModule.Employee;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

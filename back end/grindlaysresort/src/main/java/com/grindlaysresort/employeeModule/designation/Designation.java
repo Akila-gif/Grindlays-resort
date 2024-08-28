@@ -1,4 +1,4 @@
-package com.grindlaysresort;
+package com.grindlaysresort.employeeModule.designation;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

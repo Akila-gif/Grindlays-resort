@@ -1,10 +1,10 @@
 var employee = new Object();
 var user = new Object();
 var EmployeeWithOutUserAccoutFoundStatus = false;
-
+userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/Employee?user=admin').data;
 
 window.addEventListener("load", () => {
-    refreshUserTable(HTTPRequestService("GET",'http://localhost:8080/user/withoutpassword'));
+    refreshUserTable(HTTPRequestService("GET",'http://localhost:8080/user/withoutpassword'),userPrivilage);
     NoUserAccountEmployeedropDownCreate(HTTPRequestService("GET",'http://localhost:8080/employees/getemployeewithoutaccount'));
     RoleTransferObject(HTTPRequestService("GET",'http://localhost:8080/roles'));
 });
@@ -19,7 +19,7 @@ refreshUserTable = (dataList) => {
         { dataType: 'text', propertyName: "addeddate" },
     ];
     // fillDataIntoTable(tableod,datalist,editfunctionName,DeleteFunctionName,MoreFunctionName,button visibility);
-    fillDataIntoTable(UserView, dataList, displayProperty, EditfunctionName, DeleteFunctionName, MoreFunctionName, true);
+    fillDataIntoTable(UserView, dataList, displayProperty, EditfunctionName, DeleteFunctionName, MoreFunctionName,deleteStatusFunction, true,userPrivilage);
     //fillDataIntoTable02(EmployeeView,employees,displayProperty,EditfunctionName,DeleteFunctionName,MoreFunctionName);
     //fillDataIntoTable03(EmployeeView,employees,displayProperty,EditfunctionName,DeleteFunctionName,MoreFunctionName);
     //fillDataIntoTable04(EmployeeView,employees,displayProperty,EditfunctionName,DeleteFunctionName,MoreFunctionName);
@@ -97,7 +97,9 @@ const DeleteFunctionName = (element, index, tableBody) => {
         }
     }
 }
-
+const deleteStatusFunction = (element) => {
+    return element.status;
+}
 const MoreFunctionName = (element, index) => {
     console.log(element, index);
 }
@@ -166,7 +168,7 @@ ValidationButton.addEventListener('click', () => {
 
 userDtlTxt.addEventListener('keyup',(event)=>{
     dataListMatchingCheck(event,addNewEmployee);
-    
+
     // below function eka user karala thiyenne hari create employee respose eka awama eka name eka aragena set karanna 
     let responseEmployeeById = HTTPRequestService("GET",'http://localhost:8080/employees/getemployeebyemployeeid?id='+userDtlTxt.value);
     if (responseEmployeeById.status===200) {
@@ -240,14 +242,14 @@ const dataListMatchingCheck = (event,targetButton) =>{
     var datalistOptions = document.getElementById('userDatalistOptions').getElementsByTagName('option');
     var matchFound = false;
     for (var i = 0; i < datalistOptions.length; i++) {
-           var optionValue = datalistOptions[i].innerText;
+        var optionValue = datalistOptions[i].innerText;
         if (optionValue.toLowerCase().replace(/\s+/g,'').trim().includes(inputText.replace(/\s+/g,'').trim())) {
             matchFound = true;
             break;
         }
     }
     for (var i = 0; i < datalistOptions.length; i++) {
-           var optionValue = datalistOptions[i].value;
+        var optionValue = datalistOptions[i].value;
         if (optionValue.toLowerCase().replace(/\s+/g,'').trim().includes(inputText.replace(/\s+/g,'').trim())) {
             matchFound = true;
             break;
