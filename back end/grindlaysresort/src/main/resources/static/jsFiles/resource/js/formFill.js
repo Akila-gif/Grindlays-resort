@@ -38,7 +38,7 @@ const selectIndexing = (dropDownElement,objId,dropDownSelectedId) =>{
     for (i=0;i<dropDownElement.children.length;i++){
         try {
             if (typeof objId==='undefined'){
-                if (dropDownElement.children[i].value === dropDownSelectedId){
+                if (dropDownElement.children[i].value.toString() === dropDownSelectedId.toString()){
                     break;
                 }
             }

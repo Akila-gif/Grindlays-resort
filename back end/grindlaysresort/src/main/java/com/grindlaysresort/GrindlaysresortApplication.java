@@ -133,6 +133,14 @@ public class GrindlaysresortApplication {
 		return roomView;
 	}
 
+	@RequestMapping(value = "/packageview")
+	public ModelAndView displayPackage(){
+		//return "<h1>miyew miyew miyew miyew</h1>";
+		ModelAndView roomView = new ModelAndView();
+		roomView.setViewName("roompackage.html");
+		return roomView;
+	}
+
 	@RequestMapping(value = "/customerview")
 	public ModelAndView displayCustomer(){
 		//return "<h1>miyew miyew miyew miyew</h1>";
