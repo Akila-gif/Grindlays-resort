@@ -1,11 +1,15 @@
 package com.grindlaysresort.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.grindlaysresort.User;
+import com.grindlaysresort.hotelpackages.RoomPackage;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "service")
@@ -32,4 +36,9 @@ public class Service {
     @ManyToOne
     @JoinColumn(name = "serviceavaliability_id", referencedColumnName = "id")
     ServiceAvaliability serviceAvaliability_id;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "serviceList")
+    private List<RoomPackage> roomPackagesList;
+
 }

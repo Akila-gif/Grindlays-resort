@@ -37,6 +37,11 @@ public class ServiceController {
         return serviceCagegoryDao.findAll();
     }
 
+    @GetMapping("/categories/{id}")
+    public List<Service> getServiceById(@PathVariable("id") int id){
+        return serviceDao.findByServicecategory_id(id);
+    }
+
     @GetMapping("/availability")
     public List<ServiceAvaliability> getServiceAvalilability(){
         return serviceAvaliabilityDao.findAll();
