@@ -92,7 +92,7 @@ public class GrindlaysresortApplication {
 	public ModelAndView displayError(){
 		//return "<h1>miyew miyew miyew miyew</h1>";
 		ModelAndView empView = new ModelAndView();
-		empView.setViewName("error.html");
+		empView.setViewName("errorpage.html");
 		return empView;
 	}
 

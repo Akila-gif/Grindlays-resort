@@ -32,6 +32,6 @@ logoutBtn.addEventListener("click", (e) => {
    }
 });
 
-function loademployee(){
-    viewIframId.src = 'http://localhost:8080/emp';
+function loademployee(urlstr){
+    viewIframId.src = urlstr;
 }
