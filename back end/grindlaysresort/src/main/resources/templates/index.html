@@ -26,67 +26,83 @@
         <li>
             <a href="http://localhost:8080/emp">
                 <i class="fab fa-microsoft"></i>
-                <span class="link-name">Dashboard</span>
+                <span class="link-name">Home</span>
             </a>
 
             <ul class="sub-menu blank">
-                <li><a href="http://localhost:8080/emp" class="link-name">Dashboard</a></li>
+                <li><a href="http://localhost:8080/emp" class="link-name">Home</a></li>
             </ul>
         </li>
 
         <li>
             <div class="icon-link">
                 <a href="#">
-                    <i class="fab fa-codepen"></i>
-                    <span class="link-name">Courses</span>
+                    <i class="fa-solid fa-gear"></i>
+                    <span class="link-name">Administrate</span>
                 </a>
                 <i class="fas fa-caret-down arrow"></i>
             </div>
 
             <ul class="sub-menu">
-                <li><a class="link-name">Courses</a></li>
-                <li><a onclick="loademployee()">Block Chain</a></li>
-                <li><a>Cryptography</a></li>
-                <li><a>Animation</a></li>
+                <li><a class="link-name">Administrate</a></li>
+                <li><a onclick="loademployee('http://localhost:8080/emp')">Employee</a></li>
+                <li><a onclick="loademployee('http://localhost:8080/usersview')">User</a></li>
+                <li><a onclick="loademployee('http://localhost:8080/privilegeview')">Privilege</a></li>
             </ul>
         </li>
 
         <li>
-            <div class="icon-link">
-                <a href="#">
-                    <i class="fab fa-blogger"></i>
-                    <span class="link-name">Blog</span>
-                </a>
-                <i class="fas fa-caret-down arrow"></i>
-            </div>
-
-            <ul class="sub-menu">
-                <li><a href="#" class="link-name">Blog</a></li>
-                <li><a href="#">Web Design</a></li>
-                <li><a href="#">Card Design</a></li>
-                <li><a href="#">Form Design</a></li>
-            </ul>
-        </li>
-
-        <li>
-            <a href="#">
-                <i class="fas fa-clock-rotate-left"></i>
-                <span class="link-name">Activity</span>
+            <a onclick="loademployee('http://localhost:8080/customerview')">
+                <i class="fa-solid fa-users"></i>
+                <span class="link-name">Customer</span>
             </a>
 
             <ul class="sub-menu blank">
-                <li><a href="#" class="link-name">Activity</a></li>
+                <li><a onclick="loademployee('http://localhost:8080/customerview')"class="link-name">Customer</a></li>
             </ul>
         </li>
 
         <li>
-            <a href="#">
+            <a onclick="loademployee('http://localhost:8080/roomview')">
+                <i class="fa-solid fa-door-open"></i>
+                <span class="link-name">Room</span>
+            </a>
+
+            <ul class="sub-menu blank">
+                <li><a onclick="loademployee('http://localhost:8080/roomview')" class="link-name">Room</a></li>
+            </ul>
+        </li>
+
+        <li>
+            <a onclick="loademployee('http://localhost:8080/packageview')">
+                <i class="fa-regular fa-window-restore"></i>
+                <span class="link-name">Package</span>
+            </a>
+
+            <ul class="sub-menu blank">
+                <li><a onclick="loademployee('http://localhost:8080/packageview')" class="link-name">Package</a></li>
+            </ul>
+        </li>
+
+        <li>
+            <a onclick="loademployee('http://localhost:8080/customerview')">
                 <i class="fas fa-heart"></i>
-                <span class="link-name">Favourite</span>
+                <span class="link-name">Reservation</span>
             </a>
 
             <ul class="sub-menu blank">
-                <li><a href="#" class="link-name">Favourite</a></li>
+                <li><a onclick="loademployee('http://localhost:8080/customerview')" class="link-name">Reservation</a></li>
+            </ul>
+        </li>
+
+        <li>
+            <a onclick="loademployee('http://localhost:8080/serviceview')">
+                <i class="fa-brands fa-servicestack"></i>
+                <span class="link-name">Service</span>
+            </a>
+
+            <ul class="sub-menu blank">
+                <li><a onclick="loademployee('http://localhost:8080/serviceview')" class="link-name">Service</a></li>
             </ul>
         </li>
 
@@ -166,7 +182,7 @@
 </div>
 <div class="home-section home-section-view" style="border: none;overflow: hidden;">
     <iframe style="width: 100%; height: calc(100vh - 70px); border: none;overflow: hidden;"
-            src="https://www.youtube.com" frameborder="0" id="viewIframId">
+            src="https://www.google.lk/" frameborder="0" id="viewIframId">
     </iframe>
 </div>
 
