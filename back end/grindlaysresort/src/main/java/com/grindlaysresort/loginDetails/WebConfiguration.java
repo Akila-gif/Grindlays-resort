@@ -31,6 +31,7 @@ public class WebConfiguration {
                             .requestMatchers("/roomtype/**").permitAll()
                             .requestMatchers("/feature/**").permitAll()
                             .requestMatchers("/privilege/**").permitAll()
+                            .requestMatchers("/report/**").permitAll()
                             .requestMatchers("http://localhost:8080/privilege/Employee?user=admin").permitAll()
                             .requestMatchers("/index").hasAnyAuthority("admin","Manager","Akila")
                             //.requestMatchers("/emp/**").hasAnyAuthority("admin")
