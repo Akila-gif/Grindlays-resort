@@ -7,4 +7,4 @@ function calculateAge(dateOfBirth) {
          age--;
      }
      return age;
- }
+}

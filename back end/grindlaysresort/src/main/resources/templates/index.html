@@ -110,64 +110,18 @@
             <div class="icon-link">
                 <a href="#">
                     <i class="fas fa-laptop-code"></i>
-                    <span class="link-name">Compiler</span>
+                    <span class="link-name">Report</span>
                 </a>
                 <i class="fas fa-caret-down arrow"></i>
             </div>
             <ul class="sub-menu">
-                <li><a href="#" class="link-name">Compiler</a></li>
-                <li><a href="#">Python Compiler</a></li>
-                <li><a href="#">Java Compiler</a></li>
-                <li><a href="#">C Compiler</a></li>
+                <li><a href="#" class="link-name">Report</a></li>
+                <li><a onclick="loademployee('http://localhost:8080/employeereportview')">Employee Report</a></li>
+                <li><a href="#">Customer Report</a></li>
+                <li><a href="#">Service Report</a></li>
             </ul>
         </li>
 
-        <li>
-            <a href="#">
-                <i class="fas fa-bookmark"></i>
-                <span class="link-name">Saved</span>
-            </a>
-
-            <ul class="sub-menu blank">
-                <li><a href="#" class="link-name">Saved</a></li>
-            </ul>
-        </li>
-
-        <li>
-            <a href="#">
-                <i class="fas fa-cart-shopping"></i>
-                <span class="link-name">Cart</span>
-            </a>
-
-            <ul class="sub-menu blank">
-                <li><a href="#" class="link-name">Cart</a></li>
-            </ul>
-        </li>
-
-        <li>
-            <a href="#">
-                <i class="fas fa-gear"></i>
-                <span class="link-name">Settings</span>
-            </a>
-
-            <ul class="sub-menu blank">
-                <li><a href="#" class="link-name">Settings</a></li>
-            </ul>
-        </li>
-
-        <li>
-            <div class="profile-details">
-                <div class="profile-content">
-                    <img src="profile.jpg" alt="" />
-                </div>
-
-                <div class="name-job">
-                    <div class="name" th:text="${logEmployee}"></div>
-                    <div class="job" th:text="${logEmployeeDesignation}"></div>
-                </div>
-                <i class="fas fa-right-to-bracket"></i>
-            </div>
-        </li>
     </ul>
 </div>
 

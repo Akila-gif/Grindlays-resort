@@ -156,6 +156,13 @@ public class GrindlaysresortApplication {
 		serviceView.setViewName("service.html");
 		return serviceView;
 	}
+	@RequestMapping(value = "/employeereportview")
+	public ModelAndView displayEmployeeReportView(){
+		//return "<h1>miyew miyew miyew miyew</h1>";
+		ModelAndView EmployeeReporteView = new ModelAndView();
+		EmployeeReporteView.setViewName("employeereport.html");
+		return EmployeeReporteView;
+	}
 
 	@RequestMapping(value = "/createadmin")
 	public void DisplayEmployee(){
