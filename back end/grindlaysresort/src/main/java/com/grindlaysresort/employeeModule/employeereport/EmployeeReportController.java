@@ -28,8 +28,9 @@ public class EmployeeReportController {
     public List<Integer> EmployeeAgeDataList(){
         return employeeDao.EmployeeAgeDataList();
     }
+
     @GetMapping("/employeelist")
-    public List<Employee> findEmployeesByDynamicCriteria(Boolean citizenship, Integer workingstatus_id, Integer designation, Integer category_id, Integer min_age, Integer max_age, String civil_status) {
+    public List<Employee> findEmployeesByDynamicCriteria(@RequestParam(required = false) Boolean citizenship,@RequestParam(required = false) Integer workingstatus_id,@RequestParam(required = false) Integer designation,@RequestParam(required = false) Integer category_id,@RequestParam(required = false) Integer min_age,@RequestParam(required = false) Integer max_age,@RequestParam(required = false) String civil_status) {
         // Start building the query string
         StringBuilder queryString = new StringBuilder("SELECT * FROM employee e");
 

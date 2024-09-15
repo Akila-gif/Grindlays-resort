@@ -1,4 +1,3 @@
-var urlObject = new Object();
 userPrivilage ={"select": true, "insert": false, "update": false, "delete": false};
 
 window.addEventListener("load", () => {
@@ -22,7 +21,7 @@ refreshEmployeetable = (dataList) => {
         { dataType: 'function', propertyName: employeestatusFunction },
     ];
     fillDataIntoTable(EmployeeView, dataList, displayProperty, EditfunctionName, DeleteFunctionName, MoreFunctionName,deleteStatusFunction, true,userPrivilage);
-    // fillDataIntoTable(tableod,datalist,editfunctionName,DeleteFunctionName,MoreFunctionName,button visibility);
+    //fillDataIntoTable(tableod,datalist,editfunctionName,DeleteFunctionName,MoreFunctionName,button visibility);
     //fillDataIntoTable02(EmployeeView,employees,displayProperty,EditfunctionName,DeleteFunctionName,MoreFunctionName);
     //fillDataIntoTable03(EmployeeView,employees,displayProperty,EditfunctionName,DeleteFunctionName,MoreFunctionName);
     //fillDataIntoTable04(EmployeeView,employees,displayProperty,EditfunctionName,DeleteFunctionName,MoreFunctionName);
@@ -58,39 +57,15 @@ const employeeAgeCalculate = (element) => {
 }
 
 const EditfunctionName = (element, index) => {
-    $('#employeeForm').modal('show');
-    element.country_id = element.country_id.countryCode;
-    console.log(    element);
-    window['oldEmployee'] = element;
-    FormFill(element,valdationFeildList);
+    console.log();
 }
 
 const deleteStatusFunction = (element) => {
-    if (element.workingstatus_id.status=="Add") return true;
-    else return false;
+    return false;
 }
 
 const DeleteFunctionName = (element, index, tableBody) => {
-
-    let deleteConform = window.confirm("Are you sure ?\n"
-        + "Employee number " + element.employeeid
-        + "\nFull Name " + element.full_name
-        + "\nNIC " + element.nic_number
-    );
-    if (deleteConform) {
-        const deleteServerResponse = 'OK';
-        if (deleteServerResponse === 'OK') {
-            let deleteResponse = HTTPRequestService("DELETE",'http://localhost:8080/employees/'+element.id);
-            if (199<deleteResponse.status && deleteResponse.status<300) {
-                window.alert("Delete Successfull...");
-                refreshEmployeetable(HTTPRequestService("GET",'http://localhost:8080/employees'));
-            } else {
-                window.alert("Delete not compleate error "+deleteResponse.message);
-            }
-        } else {
-            window.alert("Delete not compleate error ");
-        }
-    }
+    console.log();
 }
 
 const MoreFunctionName = (element, index) => {
@@ -108,7 +83,6 @@ const EmployeeCategoryDropDown = (CategoriesDataList) =>{
 var minmaxagevalidation = (obj) => {
 
     obj = JSON.parse(obj);
-    console.log(obj);
     return 'min_age='+obj.min_age+'&max_age='+obj.max_age;
 }
 
@@ -158,34 +132,29 @@ var urlcreatefunction = (drl,FeildList,validatinStrategy) =>{
     });
     return domainurl;
 }
+
 citizenshipFormSelect.addEventListener('change',()=>{
     refreshEmployeetable(HTTPRequestService("GET",urlcreatefunction(domaiurl,valdationFeildList,valigationStrategylist)),userPrivilage);
-    console.log(urlcreatefunction(domaiurl,valdationFeildList,valigationStrategylist));
 });
 
 workingstatusFormSelect.addEventListener('change',()=>{
     refreshEmployeetable(HTTPRequestService("GET",urlcreatefunction(domaiurl,valdationFeildList,valigationStrategylist)),userPrivilage);
-    console.log(urlcreatefunction(domaiurl,valdationFeildList,valigationStrategylist));
 });
 
 designationFormSelect.addEventListener('change',()=>{
     refreshEmployeetable(HTTPRequestService("GET",urlcreatefunction(domaiurl,valdationFeildList,valigationStrategylist)),userPrivilage);
-    console.log(urlcreatefunction(domaiurl,valdationFeildList,valigationStrategylist));
 });
 
 categoryFormSelect.addEventListener('change',()=>{
     refreshEmployeetable(HTTPRequestService("GET",urlcreatefunction(domaiurl,valdationFeildList,valigationStrategylist)),userPrivilage);
-    console.log(urlcreatefunction(domaiurl,valdationFeildList,valigationStrategylist));
 });
 
 ageFormSelect.addEventListener('change',()=>{
     refreshEmployeetable(HTTPRequestService("GET",urlcreatefunction(domaiurl,valdationFeildList,valigationStrategylist)),userPrivilage);
-    console.log(urlcreatefunction(domaiurl,valdationFeildList,valigationStrategylist));
 });
 
 civilStatusFormSelect.addEventListener('change',()=>{
     refreshEmployeetable(HTTPRequestService("GET",urlcreatefunction(domaiurl,valdationFeildList,valigationStrategylist)),userPrivilage);
-    console.log(urlcreatefunction(domaiurl,valdationFeildList,valigationStrategylist));
 });
 
 agerangechart = () => {
