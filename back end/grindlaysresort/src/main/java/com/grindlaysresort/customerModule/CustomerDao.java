@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface CustomerDao extends JpaRepository<Customer,Integer> {
 
@@ -17,5 +19,14 @@ public interface CustomerDao extends JpaRepository<Customer,Integer> {
     Customer findCustomerByMobile(String mobile);
 
     Customer findCustomerByEmail(String email);
+
+    @Query(value = "select count(*) from customer cu join country co on cu.country_id = co.id group by co.country_name;", nativeQuery = true)
+    List findCountByCountry();
+
+    @Query(value = "select co.country_name from customer cu join country co on cu.country_id = co.id group by co.country_name;", nativeQuery = true)
+    List findByCountryAvailableList();
+
+    @Query(value = "select co.country_name ,count(*)from customer cu join country co on cu.country_id = co.id group by co.country_name;", nativeQuery = true)
+    List findByCountryandcountAvailableList();
 
 }
