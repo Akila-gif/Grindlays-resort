@@ -38,13 +38,17 @@ public class CustomerReportController {
     }
 
     @GetMapping("/customercountryandcountlist")
-    public HashMap<String,Integer> getByCountryandcountAvailableList (){
-        HashMap<String,Integer> countrycountmap = new HashMap<>();
+    public List<Object> getByCountryandcountAvailableList (){
+
+        List<Object> customerlist = new ArrayList<>();
         for (Object element: customerDao.findByCountryandcountAvailableList()){
             Object[] obj = (Object[]) element;
-            countrycountmap.put(obj[0].toString(),Integer.parseInt(obj[1].toString()));
+            HashMap<String,Object> countrycountmap = new HashMap<>();
+            countrycountmap.put("country",obj[0].toString());
+            countrycountmap.put("count",Integer.parseInt(obj[1].toString()));
+            customerlist.add(countrycountmap);
         }
-        return countrycountmap;
+        return customerlist;
     }
 
     @GetMapping("/customerlist")
@@ -81,6 +85,7 @@ public class CustomerReportController {
             queryString.append(" c.civil_status = :civil_status");
         }
 
+        queryString.append(" ORDER BY c.id desc");
         // Create the query
         Query query = entityManager.createNativeQuery(queryString.toString(), Customer.class);
 
@@ -105,6 +110,11 @@ public class CustomerReportController {
         }
 
         return query.getResultList();
+    }
+
+    @GetMapping("/agelist")
+    public List<Integer> CustomerAgeDataList(){
+        return customerDao.CustomerAgeDataList();
     }
 
 }

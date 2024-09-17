@@ -68,6 +68,8 @@ public class EmployeeReportController {
             queryString.append(" e.civil_status = :civil_status");
         }
 
+        queryString.append(" ORDER BY e.id desc");
+
         // Create the query
         Query query = entityManager.createNativeQuery(queryString.toString(), Employee.class);
 
