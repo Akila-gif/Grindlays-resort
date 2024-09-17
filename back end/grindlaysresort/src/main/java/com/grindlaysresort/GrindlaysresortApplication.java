@@ -156,12 +156,37 @@ public class GrindlaysresortApplication {
 		serviceView.setViewName("service.html");
 		return serviceView;
 	}
+
+	// report section
 	@RequestMapping(value = "/employeereportview")
 	public ModelAndView displayEmployeeReportView(){
 		//return "<h1>miyew miyew miyew miyew</h1>";
 		ModelAndView EmployeeReporteView = new ModelAndView();
 		EmployeeReporteView.setViewName("employeereport.html");
 		return EmployeeReporteView;
+	}
+
+	@RequestMapping(value = "/customerreportview")
+	public ModelAndView displayCustomerReportView(){
+		//return "<h1>miyew miyew miyew miyew</h1>";
+		ModelAndView CustommerReporteView = new ModelAndView();
+		CustommerReporteView.setViewName("customerreport.html");
+		return CustommerReporteView;
+	}
+	@RequestMapping(value = "/customerreportviewheatmap")
+	public ModelAndView displayCustomerReportHeatmap(){
+		//return "<h1>miyew miyew miyew miyew</h1>";
+		ModelAndView CustommerReporteViewHeatmap = new ModelAndView();
+		CustommerReporteViewHeatmap.setViewName("heatmapcustomerreport.html");
+		return CustommerReporteViewHeatmap;
+	}
+
+	@RequestMapping(value = "/customerreportviewcountmap")
+	public ModelAndView displayCustomerReportCountmap(){
+		//return "<h1>miyew miyew miyew miyew</h1>";
+		ModelAndView CustommerReporteViewCountmap = new ModelAndView();
+		CustommerReporteViewCountmap.setViewName("countmapcustomerreport.html");
+		return CustommerReporteViewCountmap;
 	}
 
 	@RequestMapping(value = "/createadmin")

@@ -29,4 +29,6 @@ public interface CustomerDao extends JpaRepository<Customer,Integer> {
     @Query(value = "select co.country_name ,count(*)from customer cu join country co on cu.country_id = co.id group by co.country_name;", nativeQuery = true)
     List findByCountryandcountAvailableList();
 
+    @Query(value = "SELECT TIMESTAMPDIFF(YEAR, date_of_birth, CURDATE()) AS age FROM customer",nativeQuery = true)
+    List<Integer> CustomerAgeDataList();
 }
