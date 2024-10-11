@@ -65,6 +65,7 @@ const valdationFeildList = [
     { id: 'ageFormSelect', type: 'dropdown', validationStategy: 'function'},
     { id: 'civilStatusFormSelect', type: 'dropdown', validationStategy: 'selected'}
 ];
+
 const valigationStrategylist = {
     'ageFormSelect': {functions: minmaxagevalidation},
 }
@@ -129,7 +130,7 @@ const citizenshipFunction = (element) => {
     else return ('<p class="text-success">Resident</p>');
 }
 const customerAgeCalculate = (element) => {
-    return calculateAge(element.date_of_birth);
+    return calculateAge(element.date_of_birth);mon
 }
 const customerstatusFunction = (element) => {
     if (element.customerstatus_id.status === 'checking')

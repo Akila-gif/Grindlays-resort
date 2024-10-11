@@ -8,6 +8,7 @@ window.addEventListener("load", () => {
     DesignationDropDownCreate(HTTPRequestService("GET",'http://localhost:8080/designations'));
     EmployeeStatusDropDown(HTTPRequestService("GET",'http://localhost:8080/empstatus'));
     EmployeeCategoryDropDown(HTTPRequestService("GET",'http://localhost:8080/categories'));
+    dataListCreate(HTTPRequestService("GET",'http://localhost:8080/country'),countryDatalistOptions,'countryName','countryCode');
 });
 refreshEmployeetable = (dataList) => {
     //displaying data list for employee table

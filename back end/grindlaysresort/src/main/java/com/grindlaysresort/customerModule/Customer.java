@@ -97,4 +97,11 @@ public class Customer {
     @JoinColumn(name = "country_id", referencedColumnName = "id")
     Country country_id;
 
+    public Customer(String nic,String mobile, String full_name, String passport, String customernumber) {
+        this.nic = nic;
+        this.mobile = mobile;
+        this.full_name = full_name;
+        this.passport = passport;
+        this.customernumber = customernumber;
+    }
 }
