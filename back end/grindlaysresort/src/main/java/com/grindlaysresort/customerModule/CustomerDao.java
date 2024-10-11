@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -31,4 +32,8 @@ public interface CustomerDao extends JpaRepository<Customer,Integer> {
 
     @Query(value = "SELECT TIMESTAMPDIFF(YEAR, date_of_birth, CURDATE()) AS age FROM customer",nativeQuery = true)
     List<Integer> CustomerAgeDataList();
+
+    @Query(value = "SELECT new Customer(cu.nic,cu.mobile,cu.full_name,cu.passport,cu.customernumber) FROM Customer cu")
+    ArrayList<Object> findAllMobileNicPassportAndName();
+
 }

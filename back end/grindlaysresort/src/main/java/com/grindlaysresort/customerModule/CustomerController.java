@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +33,10 @@ public class CustomerController {
         return  customerDao.findAll(Default_Sort);
     }
 
+    @GetMapping(value = "/getallnicmobilepassport")
+    public ArrayList<Object> getAllNic(){
+        return  customerDao.findAllMobileNicPassportAndName();
+    }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping(path = "{id}")

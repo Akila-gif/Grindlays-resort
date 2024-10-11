@@ -173,6 +173,15 @@ public class GrindlaysresortApplication {
 		CustommerReporteView.setViewName("customerreport.html");
 		return CustommerReporteView;
 	}
+
+	@RequestMapping(value = "/reservationview")
+	public ModelAndView displayReservationView(){
+		//return "<h1>miyew miyew miyew miyew</h1>";
+		ModelAndView ReservationView = new ModelAndView();
+		ReservationView.setViewName("reservation.html");
+		return ReservationView;
+	}
+
 	@RequestMapping(value = "/customerreportviewheatmap")
 	public ModelAndView displayCustomerReportHeatmap(){
 		//return "<h1>miyew miyew miyew miyew</h1>";

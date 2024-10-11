@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="jsFiles/resource/bootstrap-5.3.1-dist/css/bootstrap.min.css"/>
+    <script src="jsFiles/resource/bootstrap-5.3.1-dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="jsFiles/resource/fontawesome-free-6.4.2-web/css/all.css"/>
+    <script src="jsFiles/resource/fontawesome-free-6.4.2-web/js/all.min.js"></script>
+    <script src="jsFiles/resource/js/jquery-3.7.1.js"></script>
+    <script src="jsFiles/resource/js/toastr.js"></script>
+    <script src="jsFiles/resource/js/objectCompair.js"></script>
+    <script src="jsFiles/resource/js/agecalculate.js"></script>
+    <script src="jsFiles/resource/js/notification.js"></script>
+    <script src="jsFiles/resource/js/serviceRequest.js"></script>
+    <link href="jsFiles/resource/js/DataTables/datatables.min.css" rel="stylesheet"/>
+    <script src="jsFiles/resource/js/DataTables/datatables.min.js"></script>
+
+    <!--     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>-->
+    <link rel="stylesheet" href="cssFile/animated/animate.css"/>
+
+    <link rel="stylesheet" href="cssFile/employee.css"/>
+    <link rel="stylesheet" href="cssFile/toastr.css"/>
+
+    <title>Reservation</title>
+</head>
+
+<body style="overflow: scroll">
+<div class="d-flex justify-content-around bg-black">
+    <h1 class="text-center p-4 bg-black text-light fs-1">Reservation Table</h1>
+</div>
+
+<!--     form modal-->
+<div class="modal modal-xl fade " id="roomForm" aria-labelledby="roomForm" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1>Reservation <i class="fa-solid fa-user-plus"></i></h1>
+                <button type="button" class="btn-close" id="reservationFormClose"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" class="form-control" id="inputForm">
+                    <div class="row m-2 border">
+                        <h2 class="my-4">Select Customer</h2>
+                        <div class="col-lg-4 col-md-3">
+                            <div class="input-group mb-3">
+                                <span class=""></span>
+                                <div class="form-floating">
+                                    <input list="nicDatalistOptions" class="form-control" id="nicDtlTxt"
+                                           placeholder="nicDtlTxt" name="nic"/>
+                                    <datalist id="nicDatalistOptions">
+                                        <option value="+94">Srilanka</option>
+                                        <option value="+91">India</option>
+                                    </datalist>
+
+                                    <label for="nicDtlTxt">NIC</label>
+                                </div>
+                                <button
+                                        disabled
+                                        class="input-group-text"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Please select your Country."
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div class="text-danger input-group fst-italic hide" id="nicDtlTxtError"
+                                     style="font-size: 12px">
+                                    If you are not resident please select enter your country!
+                                </div>
+                                <div>
+                                    <span id="BtnAddByNic" class="btn btn-primary disabled">Add By Nic</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-3">
+                            <div class="input-group mb-3">
+                                <span class=""></span>
+                                <div class="form-floating">
+                                    <input list="mobileDatalistOptions" class="form-control" id="mobileDtlTxt"
+                                           placeholder="mobileDtlTxt" name="mobile"/>
+                                    <datalist id="mobileDatalistOptions">
+                                        <option value="+94">775636604</option>
+                                        <option value="+91">764974060</option>
+                                    </datalist>
+                                    <label for="mobileDtlTxt">Mobile</label>
+                                </div>
+                                <button
+                                        disabled
+                                        class="input-group-text"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Please select your Country."
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div class="text-danger input-group fst-italic hide" id="mobileDtlTxtError"
+                                     style="font-size: 12px">
+                                    If you are not resident please select enter your country!
+                                </div>
+                                <div>
+                                    <span id="BtnAddByMobile" class="btn btn-primary disabled">Add By Mobile</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-3">
+                            <div class="input-group mb-3">
+                                <span class=""></span>
+                                <div class="form-floating">
+                                    <input list="passportDatalistOptions" class="form-control" id="passportDtlTxt"
+                                           placeholder="passportDtlTxt" name="passport"/>
+                                    <datalist id="passportDatalistOptions">
+                                        <option value="+94">789654</option>
+                                        <option value="+91">123456</option>
+                                    </datalist>
+
+                                    <label for="passportDtlTxt">Passport</label>
+                                </div>
+                                <button
+                                        disabled
+                                        class="input-group-text"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Please select your Country."
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div class="text-danger input-group fst-italic hide" id="passportDtlTxtError"
+                                     style="font-size: 12px">
+                                    If you are not resident please select enter your country!
+                                </div>
+                                <div>
+                                    <span id="BtnAddByPassport" class="btn btn-primary disabled">Add By Passport</span>
+                                </div>
+                            </div>
+                        </div>
+                        <h4>Name :<span id="customerName"></span></h4>
+                    </div>
+                    <div class="row m-2 border">
+                        <h2 class="my-4">Add Room Details</h2>
+                        <div class="col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><i class="fa-solid fa-bed"></i></span>
+                                <div class="form-floating">
+                                    <input
+                                            type="number"
+                                            class="form-control"
+                                            id="headCountTxt"
+                                            placeholder="Head Count"
+                                            name="head_count"
+                                    />
+                                    <label for="headCountTxt">Head Count</label>
+                                </div>
+                                <button
+                                        disabled
+                                        class="input-group-text"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Please enter Bed Count of the room.The bed details add button is available when the bed type is selected. and the bed count is entered more than 0."
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div
+                                        class="text-danger input-group fst-italic hide Error"
+                                        id="headCountTxtError"
+                                        style="font-size: 12px"
+                                >
+                                    please enter your EPF Number!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3 col-md-12">
+                            <span class="btn btn-lg btn-dark" id="btnOpenRoomModule">Add Room</span>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><i class="fa-solid fa-bed"></i></span>
+                                <div class="form-floating">
+                                    <input
+                                            type="date"
+                                            class="form-control"
+                                            id="checkingDateTxt"
+                                            placeholder="Checking Date"
+                                            name="checking_date"
+                                    />
+                                    <label for="checkingDateTxt">Checking Date</label>
+                                </div>
+                                <button
+                                        disabled
+                                        class="input-group-text"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Please enter Bed Count of the room.The bed details add button is available when the bed type is selected. and the bed count is entered more than 0."
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div
+                                        class="text-danger input-group fst-italic hide Error"
+                                        id="checkingDateTxtError"
+                                        style="font-size: 12px"
+                                >
+                                    please enter your EPF Number!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><i class="fa-solid fa-bed"></i></span>
+                                <div class="form-floating">
+                                    <input
+                                            type="date"
+                                            class="form-control"
+                                            id="checkedOutDateTxt"
+                                            placeholder="EPF Number"
+                                            name="bed_count"
+                                    />
+                                    <label for="checkedOutDateTxt">Checked out Date</label>
+                                </div>
+                                <button
+                                        disabled
+                                        class="input-group-text"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Please enter Bed Count of the room.The bed details add button is available when the bed type is selected. and the bed count is entered more than 0."
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div
+                                        class="text-danger input-group fst-italic hide Error"
+                                        id="checkedOutDateTxtError"
+                                        style="font-size: 12px"
+                                >
+                                    please enter your EPF Number!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group mb-3">
+                                <span class="btn btn-lg btn-dark">Add For All Room</span>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div class="col-md-12">
+                            <table class="table table-secondary" id="ReservationRoomList" style="visibility: hidden">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Bed Type</th>
+                                    <th scope="col">Bed Count</th>
+                                    <th scope="col">Head Count</th>
+                                    <th scope="col">Modification</th>
+                                </tr>
+                                </thead>
+                                <tbody name="bedTypes">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row m-2 border">
+                        <h2 class="mt-4">Add Package</h2>
+                        <div class="col-md-4">
+                            <div class="input-group mb-3">
+                                <span class=""></span>
+                                <div class="form-floating">
+                                    <select class="form-select" name="package" id="packageFormSelect">
+                                        <option selected value="" disabled>Selecte Room Status</option>
+                                    </select>
+                                    <label for="packageFormSelect">Package</label>
+                                </div>
+                                <button
+                                        disabled
+                                        class="input-group-text"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Please select your Designation."
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div class="text-danger input-group fst-italic hide" id="packageTxtError"
+                                     style="font-size: 12px">
+                                    please select your view type!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><i class="fa-solid fa-bed"></i></span>
+                                <div class="form-floating">
+                                    <input
+                                            type="number"
+                                            class="form-control"
+                                            id="packageCountTxt"
+                                            placeholder="Package Count"
+                                            name="bed_count"
+                                    />
+                                    <label for="packageCountTxt">Package Count</label>
+                                </div>
+                                <button
+                                        disabled
+                                        class="input-group-text"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Please enter Bed Count of the room.The bed details add button is available when the bed type is selected. and the bed count is entered more than 0."
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div
+                                        class="text-danger input-group fst-italic hide Error"
+                                        id="packageCountTxtError"
+                                        style="font-size: 12px"
+                                >
+                                    please enter your EPF Number!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="">
+                            <button type="button" class="btn btn-primary disabled" style="height: 50px"
+                                    id="packageaddBtn">Add Package
+                            </button>
+                        </div>
+                        <hr/>
+                        <div class="col-md-12">
+                            <table class="table table-secondary" id="packageView" style="visibility: hidden">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Features</th>
+                                    <th scope="col">Modification</th>
+                                </tr>
+                                </thead>
+                                <tbody id="packageData">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row m-2 border">
+                        <h2 class="mt-4">Add Service</h2>
+                        <div class="col-lg-4 col-md-3">
+                            <div class="input-group mb-3">
+                                <span class=""></span>
+                                <div class="form-floating">
+                                    <input list="serviceListOptions" class="form-control" id="serviceDtlTxt"
+                                           placeholder="Service" name="service"/>
+                                    <datalist id="serviceListOptions">
+                                        <option value="+94">Srilanka</option>
+                                        <option value="+91">India</option>
+                                    </datalist>
+
+                                    <label for="nicDtlTxt">Service</label>
+                                </div>
+                                <button
+                                        disabled
+                                        class="input-group-text"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Please select your Country."
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div class="text-danger input-group fst-italic hide" id="serviceDtlTxtError"
+                                     style="font-size: 12px">
+                                    If you are not resident please select enter your country!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><i class="fa-solid fa-bed"></i></span>
+                                <div class="form-floating">
+                                    <input
+                                            type="number"
+                                            class="form-control"
+                                            id="serviceCountTxt"
+                                            placeholder="servicecount"
+                                            name="service_count"
+                                    />
+                                    <label for="serviceCountTxt">Count</label>
+                                </div>
+                                <button
+                                        disabled
+                                        class="input-group-text"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Please enter Bed Count of the room.The bed details add button is available when the bed type is selected. and the bed count is entered more than 0."
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div
+                                        class="text-danger input-group fst-italic hide Error"
+                                        id="bedCountTxtError"
+                                        style="font-size: 12px"
+                                >
+                                    please enter your EPF Number!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="">
+                            <button type="button" class="btn btn-primary disabled" style="height: 50px"
+                                    id="featureaddBtn">Add service
+                            </button>
+                        </div>
+                        <hr/>
+                        <div class="col-md-12">
+                            <table class="table table-secondary" id="FeaturesView" style="visibility: hidden">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Features</th>
+                                    <th scope="col">Modification</th>
+                                </tr>
+                                </thead>
+                                <tbody id="feturesData">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </form>
+                <br/><br/>
+                <button class="btn btn-primary mx-3" id="ValidationButton">Add</button>
+                <button class="btn btn-primary mx-3" id="UpdateButton">Update button</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal modal-xl fade" id="RoomSelectionForm" aria-hidden="true" data-bs-backdrop="static"
+     aria-labelledby="RoomSelectionModalToggleLabel2" tabindex="-1">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="CountryLabel2">Add Table</h1>
+            </div>
+            <div class="modal-body">
+                <form action="" class="form-control" id="countryInputForm">
+                    <div class="row ">
+                        <div class="col-md-4">
+                            <div class="input-group mb-3">
+                                <span class=""></span>
+                                <div class="form-floating">
+                                    <select class="form-select" name="viewtype_id" id="viewTypeFormSelect">
+                                        <option selected value="" disabled>Open this select View Type</option>
+                                    </select>
+                                    <label for="viewTypeFormSelect">View Type</label>
+                                </div>
+                                <button
+                                        disabled
+                                        class="input-group-text"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Please select your Designation."
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div class="text-danger input-group fst-italic hide" id="viewTypeTxtError" style="font-size: 12px">
+                                    please select your designation!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group mb-3">
+                                <span class=""></span>
+                                <div class="form-floating">
+                                    <select class="form-select" name="roomtype_id" id="roomTypeFormSelect">
+                                        <option selected value="" disabled>Open this select Room Type</option>
+                                    </select>
+                                    <label for="roomTypeFormSelect">Room Type</label>
+                                </div>
+                                <button
+                                        disabled
+                                        class="input-group-text"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Please select your Designation."
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div class="text-danger input-group fst-italic hide" id="roomTypeTxtError" style="font-size: 12px">
+                                    please select your designation!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"></span>
+                                <div class="form-floating">
+                                    <input type="number" class="form-control" id="headCountFilterTxt"
+                                           placeholder="Head Count" name="maxheadcount"/>
+                                    <label for="headCountFilterTxt">Head Count</label>
+                                </div>
+                                <button
+                                        disabled
+                                        class="input-group-text"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Enter your National identicard number"
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div class="text-danger input-group fst-italic hide" id="headCountFilterTxtError"
+                                     style="font-size: 12px">
+                                    plese eneter your CountryCode
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col-md-4">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"></span>
+                                <div class="form-floating">
+                                    <input type="number" class="form-control" id="minPriceTxt"
+                                           placeholder="Head Count" name="min_price"/>
+                                    <label for="minPriceTxt">Min Price</label>
+                                </div>
+                                <button
+                                        disabled
+                                        class="input-group-text"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Enter your National identicard number"
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div class="text-danger input-group fst-italic hide" id="minPriceTxtError"
+                                     style="font-size: 12px">
+                                    plese eneter your CountryCode
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"></span>
+                                <div class="form-floating">
+                                    <input type="number" class="form-control" id="maxPriceTxt"
+                                           placeholder="Head Count" name="max_price"/>
+                                    <label for="maxPriceTxt">Max Price</label>
+                                </div>
+                                <button
+                                        disabled
+                                        class="input-group-text"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Enter your National identicard number"
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div class="text-danger input-group fst-italic hide" id="maxPriceTxtError"
+                                     style="font-size: 12px">
+                                    plese eneter your CountryCode
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group mb-3">
+                                <span class=""></span>
+                                <div class="form-floating">
+                                    <select class="form-select" name="sortedtype" id="sortTypeFormSelect">
+                                        <option selected value="" disabled>select sort option</option>
+                                        <option value='{"orderbytype":"roomprice","order":"asc"}'>price low to high</option>
+                                        <option value='{"orderbytype":"roomprice","order":"desc"}'>price high to low</option>
+                                    </select>
+                                    <label for="viewTypeFormSelect">sort by</label>
+                                </div>
+                                <button
+                                        disabled
+                                        class="input-group-text"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Please select your Designation."
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div class="text-danger input-group fst-italic hide" id="sortTypeTxtError" style="font-size: 12px">
+                                    please select your designation!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col-md-3 d-flex">
+                            <h5>Total room Count : <span id="totalRoomCount"></span></h5>
+                        </div>
+                        <div class="col-md-3 d-flex">
+                            <h5>Asign Head Count : <span id="AssignHeadCount"></span></h5>
+                        </div>
+                        <div class="col-md-3 d-flex">
+                            <h5>Head count left :  <span id="HeadCountLeft"></span></h5>
+                        </div>
+                        <div class="col-md-3 d-flex">
+                            <span class="btn btn-sm btn-primary" id="moreModalOpen">More ...</span>
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="container-fluid mt-2 table-responsive animate__animated animate__fadeInDown">
+                            <table class="table table-dark table-striped  mt-lg-5" id="RoomDataView">
+                                <thead class="mt-3">
+                                <tr>
+                                    <th>#</th>
+                                    <th>number</th>
+                                    <th>Room Name</th>
+                                    <th>Maximum Head Count</th>
+                                    <th>Price</th>
+                                    <th>Room Type</th>
+                                    <th>View Type</th>
+                                    <th>Modify</th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary mx-3" id="roomsAddButton">Add</button>
+                <button class="btn btn-primary" id="backtoPrimary">Clear Back to first</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--     room table-->
+<div class="modal modal-xl fade" id="RoomaddedForm" aria-hidden="true" data-bs-backdrop="static"
+     aria-labelledby="RoomSelectionModalToggleLabel2" tabindex="-1">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" >Room Table</h1>
+            </div>
+            <div class="modal-body">
+                <div class="row ">
+                    <div class="container-fluid mt-2 table-responsive animate__animated animate__fadeInDown">
+                        <table class="table table-dark table-striped  mt-lg-5" id="RoomDataTableView">
+                            <thead class="mt-3">
+                            <tr>
+                                <th>#</th>
+                                <th>number</th>
+                                <th>Room Name</th>
+                                <th>Maximum Head Count</th>
+                                <th>Price</th>
+                                <th>Room Type</th>
+                                <th>View Type</th>
+                                <th>Modify</th>
+                            </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="backtoRoomAddedPrimary">Back to Added View</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="container-fluid d-flex justify-content-end">
+    <button class="btn btn-primary mx-5 mt-3 px-4" data-bs-target="#roomForm" data-bs-toggle="modal" id="formOpenButton"
+            style="visibility: hidden;">
+        <i class="fa-solid fa-user-plus" style="color: #ffffff"></i>
+    </button>
+</div>
+<div class="container-fluid mt-4 table-responsive px-lg-5 animate__animated animate__fadeInDown">
+    <table class="table table-dark table-striped my-4 mt-lg-5" id="Reservation">
+        <thead class="mt-3">
+        <tr>
+            <th>#</th>
+            <th>number</th>
+            <th>Room Name</th>
+            <th>Maximum Head Count</th>
+            <th>Price</th>
+            <th>Room Status</th>
+            <th>Room Type</th>
+            <th>View Type</th>
+            <th>Modify</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<script src="jsFiles/resource/js/employeeCommonfunction.js"></script>
+<script src="jsFiles/resource/js/reservation.js"></script>
+<script src="jsFiles/resource/js/moreViewRefill.js"></script>
+<script src="jsFiles/resource/js/validationCommonfunction.js"></script>
+<script src="jsFiles/resource/js/formObjectCreateCommonFunction.js"></script>
+<script src="jsFiles/resource/js/dropDuwnCreateCommonFunction.js"></script>
+<script src="jsFiles/resource/js/dataListCreateFunction.js"></script>
+<script src="jsFiles/resource/js/formClear.js"></script>
+<script src="jsFiles/resource/js/formFill.js"></script>
+<script src="jsFiles/resource/js/errorDisplay.js"></script>
+</body>
+</html>
