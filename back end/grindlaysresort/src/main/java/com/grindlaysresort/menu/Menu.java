@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -22,5 +24,7 @@ public class Menu {
     @Column(name = "name")
     String name;
 
+    @Column(name = "per_amount_price")
+    BigDecimal per_amount_price;
 
 }

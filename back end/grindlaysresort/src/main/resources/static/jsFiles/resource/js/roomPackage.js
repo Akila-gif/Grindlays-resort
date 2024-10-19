@@ -247,7 +247,7 @@ const accordionBodyDataListfunction = (element) =>{
 }
 serviceDetailsObject.data = serviceDetails;
 const serviceInnerDataListfunction = (serviceElement) =>{
-    serviceDetails.map(element => element.id).find(element => element === serviceElement.id) ? alertFunction("Already added","This Service is already added","error") :serviceDetails.push(serviceElement);;
+    serviceDetails.map(element => element.id).find(element => element === serviceElement.id) ? alertFunction("Already added","This Service is already added","error") :serviceDetails.push(serviceElement);
     refreshInnerServiceDetailsTable(serviceDetailsObject,servicedetailsPrivilage);
 }
 packagePriceTxt.addEventListener('blur',()=>{
