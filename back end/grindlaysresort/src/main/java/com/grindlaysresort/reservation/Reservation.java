@@ -80,4 +80,13 @@ public class Reservation {
             inverseJoinColumns = @JoinColumn(name = "room_id")
     )
     List<Room> rooms;
+
+    public Reservation(Integer id, String reservation_number, ReservationState state_id) {
+        this.id = id;
+        this.reservation_number = reservation_number;
+        this.state_id = state_id;
+    }
+
+    public Reservation(Integer integer) {
+    }
 }

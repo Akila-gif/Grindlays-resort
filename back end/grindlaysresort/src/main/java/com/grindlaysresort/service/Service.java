@@ -41,4 +41,6 @@ public class Service {
     @ManyToMany(mappedBy = "serviceList")
     private List<RoomPackage> roomPackagesList;
 
+    public Service(Integer integer) {
+    }
 }

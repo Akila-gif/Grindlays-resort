@@ -30,6 +30,12 @@ public class Payment {
     @Column(name = "paidamount")
     BigDecimal paidamount;
 
+    @Column(name = "paymentstatus")
+    boolean paymentstatus;
+
+    @Column(name = "discount")
+    BigDecimal discount;
+
     @ManyToMany(mappedBy = "Payment_id")
     @JsonIgnore
     List<Reservation> reservations;

@@ -1,7 +1,5 @@
 package com.grindlaysresort.service;
 
-import com.grindlaysresort.WorkingStatus;
-import com.grindlaysresort.employeeModule.Employee;
 import com.grindlaysresort.exception.ConflictException;
 import com.grindlaysresort.exception.ObjectNotFoundException;
 import org.json.JSONObject;
@@ -9,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +42,11 @@ public class ServiceController {
     @GetMapping("/availability")
     public List<ServiceAvaliability> getServiceAvalilability(){
         return serviceAvaliabilityDao.findAll();
+    }
+
+    @GetMapping("/servicegetid/{id}")
+    public Optional<Service> getServiceFindById(@PathVariable int id){
+        return serviceDao.findById(id);
     }
 
     @PostMapping()

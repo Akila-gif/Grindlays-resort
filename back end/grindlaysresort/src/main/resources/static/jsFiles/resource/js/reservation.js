@@ -2,7 +2,13 @@ var selectCustomerList ;
 var selectedCustomer;
 var addedRoomObjectArray = [];
 var addedRoomDataObject = new Object();
-addedRoomDataObject.data =addedRoomObjectArray;
+var addedPackageObjectArray = [];
+var addedPackageDataObject = new Object();
+var addedServiceObjectArray = [];
+var addedServiceDataObject = new Object();
+addedRoomDataObject.data = addedRoomObjectArray;
+addedPackageDataObject.data = addedPackageObjectArray;
+addedServiceDataObject.data = addedServiceObjectArray;
 var headcount = 0;
 
 userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/Employee?user=admin').data;
@@ -10,27 +16,88 @@ selectCustomerList = HTTPRequestService("GET",'http://localhost:8080/customers/g
 roomTablePrivilage = {select: true, insert: false, update: true, delete: false};
 roomViewTablePrivilage = {select: false, insert: false, update: false, delete: true};
 window.addEventListener("load", () => {
-    employeeFormPrivilageHandeling(userPrivilage);
+    reservationFormPrivilageHandeling(userPrivilage);
     dataListCreate(selectCustomerList,nicDatalistOptions,'full_name','nic');
     dataListCreate(selectCustomerList,mobileDatalistOptions,'full_name','mobile');
     dataListCreate(selectCustomerList,passportDatalistOptions,'full_name','passport');
+    dataListCreate(HTTPRequestService("GET",'http://localhost:8080/services'),serviceListOptions,'name','id');
     refreshRoomTable(HTTPRequestService("GET",'http://localhost:8080/report/roomreport/roomlist?roomstates_id=1'),roomTablePrivilage);
     viewTypeDropDownCreate(HTTPRequestService("GET",'http://localhost:8080/viewtypes'));
     roomTypeDropDownCreate(HTTPRequestService("GET",'http://localhost:8080/roomtypes'));
+    packageTypeDropDownCreate(HTTPRequestService("GET",'http://localhost:8080/roompackages'));
     changingDataEditIcon();
+    refreshReservationTable(HTTPRequestService("GET",'http://localhost:8080/reservation'));
 });
 
-const employeeFormPrivilageHandeling = (userPrivilage) =>{
+refreshReservationTable = (dataList) => {
+
+    //displaying data list for employee table
+    const displayProperty = [
+        { dataType: 'text', propertyName: "reservation_number" },
+        { dataType: 'function', propertyName: customerNameFunction },
+        { dataType: 'text', propertyName: "headcount" },
+        { dataType: 'function', propertyName: roomListFunction },
+        { dataType: 'function', propertyName: reservationStatusFunction },
+        { dataType: 'function', propertyName: reservationPaymentStatusFunction },
+    ];
+
+    fillDataIntoTable(ReservationView, dataList, displayProperty, EditfunctionName, DeleteFunctionName, MoreFunctionName,deleteStatusFunction, true,userPrivilage);
+    // fillDataIntoTable(tableod,datalist,editfunctionName,DeleteFunctionName,MoreFunctionName,button visibility);
+    //fillDataIntoTable02(EmployeeView,employees,displayProperty,EditfunctionName,DeleteFunctionName,MoreFunctionName);
+    //fillDataIntoTable03(EmployeeView,employees,displayProperty,EditfunctionName,DeleteFunctionName,MoreFunctionName);
+    //fillDataIntoTable04(EmployeeView,employees,displayProperty,EditfunctionName,DeleteFunctionName,MoreFunctionName);
+    $(document).ready(function () {
+        $('#ReservationView').DataTable();
+        $('.dataTables_length').addClass('bs-select');
+        ReservationView_filter.classList.add('mb-3', 'pt-2');
+        let searchInputDiv = ReservationView_filter.children[0].children[0];
+        searchInputDiv.classList.add('form-control');
+    });
+}
+
+const reservationFormPrivilageHandeling = (userPrivilage) =>{
     if(userPrivilage.insert){
         $("#formOpenButton").css("visibility","visible");
     }
 }
+
+const roomListFunction =  (element) => {
+    var eleList = '<ol>';
+    element.rooms.forEach((room) => {
+        eleList += '<li class="text bg-danger text-center rounded-pill m-1 p-1" style="list-style-type: none;">'+'no : ' +room.room_number+' '+room.roomname+'</li>';
+    });
+    eleList += '</ol>';
+    return eleList;
+}
+
+const customerNameFunction =  (element) => {
+    return ('<p class="text">'+element.customer_id.full_name+'</p>');
+}
+
+const reservationStatusFunction =  (element) => {
+    if (element.state_id.name === 'Pending') return ('<p class="text-warning">'+element.state_id.name+'</p>');
+    if (element.state_id.name === 'available') return ('<p class="text-success text-center">'+element.state_id.name+'</p>');
+    if (element.state_id.name === 'Canceled') return ('<p class="text-danger text-center">'+element.state_id.name+'</p>');
+    if (element.state_id.name === 'Completed') return ('<p class="text-primary text-center">'+element.state_id.name+'</p>');
+    if (element.state_id.name === 'CheckedIn') return ('<p class="text-info text-center">'+element.state_id.name+'</p>');
+    if (element.state_id.name === 'CheckedOut') return ('<p class="text-secondary text-center">'+element.state_id.name+'</p>');
+    return ('<p class="text">'+element.state_id.name+'</p>');
+}
+
+const reservationPaymentStatusFunction =  (element) => {
+    if (element.payment_id.paymentstatus) return ('<p class="text-success"><i class="fa-solid fa-circle"></i> Paid</p>');
+    else return ('<p class="text-danger"><i class="fa-solid fa-circle"></i> not Total Paid</p>');
+}
+
 
 const viewTypeDropDownCreate = (viewType) =>{
     dropDownCreate(viewType,viewTypeFormSelect,'type');
 }
 const roomTypeDropDownCreate = (roomType) =>{
     dropDownCreate(roomType,roomTypeFormSelect,'name');
+}
+const packageTypeDropDownCreate = (packageType) =>{
+    dropDownCreate(packageType,packageFormSelect,'packagename');
 }
 
 refreshRoomTable = (dataList) => {
@@ -68,6 +135,32 @@ refreshRoomDetailsTable = (dataList) => {
     fillDataIntoTable(RoomDataTableView, dataList, displayProperty, EditfunctionName, DeleteFunctionName, MoreFunctionName,deleteStatusFunction, true,roomViewTablePrivilage);
 }
 
+refreshPackageDetailsTable = (dataList) => {
+    //displaying data list for employee table
+    const displayProperty = [
+        { dataType: 'text', propertyName: "packagename" },
+        { dataType: 'text', propertyName: "price" },
+        { dataType: 'text', propertyName: "packageCount" },
+        { dataType: 'function', propertyName: packagePriceCalculation },
+    ];
+
+    // deleteStatusFunction - this parameter use for define delete button visibility in the table (if the delete status is true then the delete button will be visibility)
+    fillDataIntoTable(packageView, dataList, displayProperty, EditfunctionName, PackageDeleteFunctionName, MoreFunctionName,deleteStatusFunction, true,roomViewTablePrivilage);
+}
+
+refreshServiceDetailsTable = (dataList) => {
+    //displaying data list for employee table
+    const displayProperty = [
+        { dataType: 'text', propertyName: "name" },
+        { dataType: 'text', propertyName: "peramount" },
+        { dataType: 'text', propertyName: "serviceCount" },
+        { dataType: 'function', propertyName: servicePriceCalculation },
+    ];
+
+    // deleteStatusFunction - this parameter use for define delete button visibility in the table (if the delete status is true then the delete button will be visibility)
+    fillDataIntoTable(FeaturesView, dataList, displayProperty, EditfunctionName, DeleteFunctionName, MoreFunctionName,deleteStatusFunction, true,roomViewTablePrivilage);
+}
+
 const EditfunctionName = (elements, index) => {
 
     if(addedRoomObjectArray.find((element) => element.id === elements.id)){
@@ -102,6 +195,30 @@ const DeleteFunctionName = (element, index, tableBody) => {
     }
 }
 
+//Main Thable Delete Function
+const DeleteFunctionName = (element, index, tableBody) => {
+
+    let deleteConform = window.confirm("Are you sure ?\n"
+        + "\nRoom Name " + element.full_name
+        + "\nNIC " + element.nic_number
+    );
+    if (deleteConform) {
+        const deleteServerResponse = 'OK';
+        if (deleteServerResponse === 'OK') {
+            let deleteResponse = HTTPRequestService("DELETE",'http://localhost:8080/room/'+element.id);
+            if (199<deleteResponse.status && deleteResponse.status<300) {
+                window.alert("Delete Successfull...");
+                refreshRoomTable(HTTPRequestService("GET",'http://localhost:8080/room'));
+            } else {
+                window.alert("Delete not compleate error "+deleteResponse.message);
+            }
+        } else {
+            window.alert("Delete not compleate error ");
+        }
+    }
+}
+
+
 //Main Table More Function
 const MoreFunctionName = (element, index) => {
     console.log(element, index);
@@ -110,28 +227,27 @@ const MoreFunctionName = (element, index) => {
 }
 
 const deleteStatusFunction = (element) => {
-    if (element.roomstates_id.status==="Avalilable") {return true ;}
-    else return false;
-}
-//table function
-// table room status selection function
-const roomstatesFunction = (element) => {
-    if (element.roomstates_id.status === 'Avalilable')
-        return ('<p class="text-success"><i class="fa-solid fa-circle"></i> Avalilable</p>');
-    if (element.roomstates_id.status === 'Received')
-        return ('<p class="text-warning"><i class="fa-solid fa-circle"></i> Received</p>');
-    if (element.roomstates_id.status === 'unavailable')
-        return ('<p class="text-danger "><i class="fa-solid fa-circle"></i> Unavailable</p>');
+    return true;
+    // if (element.roomstates_id.status==="Avalilable") {return true ;}
+    // else return false;
 }
 
 // table room type selection function
 const roomtypeFunction = (element) => {
-    return ('<p class="text">'+element.roomtype_id.name+'</p>')
+    return ('<p class="text">'+element.roomtype_id.name+'</p>');
 }
 
 // table view type selection function
 const viewtypeFunction = (element) => {
-    return ('<p class="text">'+element.viewtype_id.type+'</p>')
+    return ('<p class="text">'+element.viewtype_id.type+'</p>');
+}
+
+//Package table view type selection function
+const packagePriceCalculation = (element) => {
+    return ('<p class="text">'+(element.price)*(element.packageCount)+'</p>');
+}
+const servicePriceCalculation = (element) => {
+    return ('<p class="text">'+(element.peramount)*(element.serviceCount)+'</p>');
 }
 
 const changingDataEditIcon = () =>{
@@ -169,6 +285,37 @@ passportDtlTxt.addEventListener('keyup', (event) => {
     mobileDtlTxt.value = '';
 });
 
+packageaddBtn.addEventListener('click', (event) => {
+    tempPackageObj = JSON.parse(packageFormSelect.value);
+    findPackageObjectIndex = addedPackageObjectArray.findIndex((element) => element.id === tempPackageObj.id);
+    if (findPackageObjectIndex !== -1) {
+        alertFunction("All ready add","Do you want to Update count ? <br><p type=\"button\" class=\"btn btn-outline-dark btn-sm mt-2\">Yes</p>","warning",()=>{
+            addedPackageDataObject.data[findPackageObjectIndex].packageCount += parseInt(packageCountTxt.value);
+            refreshPackageDetailsTable(addedPackageDataObject);
+        });
+    }else{
+        tempPackageObj.packageCount = parseInt(packageCountTxt.value);
+        addedPackageObjectArray.push(tempPackageObj);
+    }
+    refreshPackageDetailsTable(addedPackageDataObject);
+})
+featureaddBtn.addEventListener('click', (event) => {
+    HTTPRequestService("GET",'http://localhost:8080/services/servicegetid/'+serviceDtlTxt.value);
+    tempServiceObj = HTTPRequestService("GET",'http://localhost:8080/services/servicegetid/'+serviceDtlTxt.value).data;
+
+    findServiceObjectIndex = addedServiceObjectArray.findIndex((element) => element.id === tempServiceObj.id);
+    if (findServiceObjectIndex !== -1) {
+        alertFunction("All ready add","Do you want to Update count ? <br><p type=\"button\" class=\"btn btn-outline-dark btn-sm mt-2\">Yes</p>","warning",()=>{
+            addedServiceDataObject.data[findServiceObjectIndex].serviceCount += parseInt(serviceCountTxt.value);
+            refreshServiceDetailsTable(addedServiceDataObject);
+        });
+    }else{
+        tempServiceObj.serviceCount = parseInt(serviceCountTxt.value);
+        addedServiceObjectArray.push(tempServiceObj);
+    }
+    refreshServiceDetailsTable(addedServiceDataObject);
+})
+
 BtnAddByNic.addEventListener('click',()=>{
     selectedCustomer = selectCustomerList.data.find((element) => element.nic == nicDtlTxt.value);
     customerName.innerHTML = selectedCustomer.full_name;
@@ -186,17 +333,17 @@ BtnAddByPassport.addEventListener('click',()=>{
 
 btnOpenRoomModule.addEventListener('click',()=>{
     headcount = headCountTxt.value;
-    $('#roomForm').modal('hide');
+    $('#reservationForm').modal('hide');
     $('#RoomSelectionForm').modal('show');
 });
 
 roomsAddButton.addEventListener('click', ()=>{
     $('#RoomSelectionForm').modal('hide');
-    $('#roomForm').modal('show');
+    $('#reservationForm').modal('show');
 });
 backtoPrimary.addEventListener('click', ()=>{
     $('#RoomSelectionForm').modal('hide');
-    $('#roomForm').modal('show');
+    $('#reservationForm').modal('show');
 });
 moreModalOpen.addEventListener('click',()=>{
     refreshRoomDetailsTable(addedRoomDataObject);
@@ -206,6 +353,11 @@ moreModalOpen.addEventListener('click',()=>{
 backtoRoomAddedPrimary.addEventListener('click',()=>{
     $('#RoomaddedForm').modal('hide');
     $('#RoomSelectionForm').modal('show');
+});
+reservationFormClose.addEventListener('click', (e) => {
+    if (confirm("Are you sure ?")){
+        formCloser();
+    }
 });
 
 viewTypeFormSelect.addEventListener('change', ()=>{
@@ -330,7 +482,6 @@ var urlcreatefunction = (drl,FeildList,validatinStrategy) =>{
 var updateNeededHeadCount = () =>{
 
     if (headcount !== 0) {
-
         var  AddedRoomHeadCount= 0;
         addedRoomObjectArray.find((element) => {AddedRoomHeadCount += element.maxheadcount;});
 
@@ -338,6 +489,12 @@ var updateNeededHeadCount = () =>{
         document.getElementById("totalRoomCount").innerHTML = addedRoomObjectArray.length;
         document.getElementById("AssignHeadCount").innerHTML = AddedRoomHeadCount;
         headcount-AddedRoomHeadCount>=0 ? document.getElementById("HeadCountLeft").innerHTML = headcount-AddedRoomHeadCount : document.getElementById("HeadCountLeft").innerHTML = 0;
-
     }
+}
+
+const formCloser = ()=>{
+    $('#reservationForm').modal('hide');
+    //formClear(valdationFeildList,inputForm,defaulTextError);
+    inputForm.classList.remove('try-validated');
+    refreshReservationTable(HTTPRequestService("GET",'http://localhost:8080/reservation'));
 }
