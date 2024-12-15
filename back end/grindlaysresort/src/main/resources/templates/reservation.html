@@ -176,75 +176,6 @@
                         <div class="mb-3 col-md-12">
                             <span class="btn btn-lg btn-dark" id="btnOpenRoomModule">Add Room</span>
                         </div>
-                        <div class="col-md-4">
-                            <div class="input-group mb-3">
-                                <span class="input-group-text"><i class="fa-solid fa-bed"></i></span>
-                                <div class="form-floating">
-                                    <input
-                                            type="date"
-                                            class="form-control"
-                                            id="checkingDateTxt"
-                                            placeholder="Checking Date"
-                                            name="checking_date"
-                                    />
-                                    <label for="checkingDateTxt">Checking Date</label>
-                                </div>
-                                <button
-                                        disabled
-                                        class="input-group-text"
-                                        data-bs-toggle="tooltip"
-                                        data-bs-placement="top"
-                                        data-bs-custom-class="custom-tooltip"
-                                        data-bs-title="Please enter Bed Count of the room.The bed details add button is available when the bed type is selected. and the bed count is entered more than 0."
-                                >
-                                    <i class="fas fa-info-circle"></i>
-                                </button>
-                                <div
-                                        class="text-danger input-group fst-italic hide Error"
-                                        id="checkingDateTxtError"
-                                        style="font-size: 12px"
-                                >
-                                    please enter your EPF Number!
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="input-group mb-3">
-                                <span class="input-group-text"><i class="fa-solid fa-bed"></i></span>
-                                <div class="form-floating">
-                                    <input
-                                            type="date"
-                                            class="form-control"
-                                            id="checkedOutDateTxt"
-                                            placeholder="EPF Number"
-                                            name="bed_count"
-                                    />
-                                    <label for="checkedOutDateTxt">Checked out Date</label>
-                                </div>
-                                <button
-                                        disabled
-                                        class="input-group-text"
-                                        data-bs-toggle="tooltip"
-                                        data-bs-placement="top"
-                                        data-bs-custom-class="custom-tooltip"
-                                        data-bs-title="Please enter Bed Count of the room.The bed details add button is available when the bed type is selected. and the bed count is entered more than 0."
-                                >
-                                    <i class="fas fa-info-circle"></i>
-                                </button>
-                                <div
-                                        class="text-danger input-group fst-italic hide Error"
-                                        id="checkedOutDateTxtError"
-                                        style="font-size: 12px"
-                                >
-                                    please enter your EPF Number!
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="input-group mb-3">
-                                <span class="btn btn-lg btn-dark">Add For All Room</span>
-                            </div>
-                        </div>
                         <hr/>
                         <div class="col-md-12">
                             <table class="table table-secondary" id="ReservationRoomList" style="visibility: hidden">
@@ -449,6 +380,55 @@
             </div>
             <div class="modal-body">
                 <form action="" class="form-control" id="countryInputForm">
+                    <div class="row ">
+                        <div class="col-md-4">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"></span>
+                                <div class="form-floating">
+                                    <input type="date" class="form-control" id="preRoomCheckinDateTxt"
+                                           placeholder="checkin Date" name="checkinDate"/>
+                                    <label for="preRoomCheckinDateTxt">checkin Date</label>
+                                </div>
+                                <button
+                                        disabled
+                                        class="input-group-text"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Enter your National identicard number"
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div class="text-danger input-group fst-italic hide" id="preRoomCheckinDateTxtError"
+                                     style="font-size: 12px">
+                                    plese eneter your CountryCode
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"></span>
+                                <div class="form-floating">
+                                    <input type="date" class="form-control" id="preRoomCheckedoutDateTxt"
+                                           placeholder="check out Date" disabled name="checkoutDate"/>
+                                    <label for="preRoomCheckedoutDateTxt">check out Date</label>
+                                </div>
+                                <button
+                                        disabled
+                                        class="input-group-text"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Enter your National identicard number"
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div class="text-danger input-group fst-italic hide" id="preRoomCheckedoutDateTxtError"
+                                     style="font-size: 12px">
+                                    plese eneter your CountryCode
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
                     <div class="row ">
                         <div class="col-md-4">
                             <div class="input-group mb-3">
@@ -657,6 +637,8 @@
                                 <th>number</th>
                                 <th>Room Name</th>
                                 <th>Maximum Head Count</th>
+                                <th>checking date</th>
+                                <th>checkout date</th>
                                 <th>Price</th>
                                 <th>Room Type</th>
                                 <th>View Type</th>
@@ -711,5 +693,20 @@
 <script src="jsFiles/resource/js/formClear.js"></script>
 <script src="jsFiles/resource/js/formFill.js"></script>
 <script src="jsFiles/resource/js/errorDisplay.js"></script>
+<script>
+    // Get today's date
+    let today = new Date();
+
+    // Format the date to YYYY-MM-DD (the format required by the "min" attribute)
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    let yyyy = today.getFullYear();
+
+    //today = yyyy + '-' + mm + '-' + dd;
+    //console.log(today);
+    console.log(String(today.getFullYear())+ '-' +String(today.getMonth())+ '-' +String(today.getDate()));
+    // Set the "min" attribute to today's date
+    document.getElementById("preRoomCheckinDateTxt").setAttribute("min", today);
+</script>
 </body>
 </html>
