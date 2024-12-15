@@ -10,6 +10,8 @@ addedRoomDataObject.data = addedRoomObjectArray;
 addedPackageDataObject.data = addedPackageObjectArray;
 addedServiceDataObject.data = addedServiceObjectArray;
 var headcount = 0;
+var domaiurl = 'http://localhost:8080/report/roomreport/roomlist?';
+var checkinCheckoutSet = false;
 
 userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/Employee?user=admin').data;
 selectCustomerList = HTTPRequestService("GET",'http://localhost:8080/customers/getallnicmobilepassport');
@@ -126,15 +128,17 @@ refreshRoomDetailsTable = (dataList) => {
         { dataType: 'text', propertyName: "number" },
         { dataType: 'text', propertyName: "roomname" },
         { dataType: 'text', propertyName: "maxheadcount" },
+        { dataType: 'text', propertyName: "checkingdate" },
+        { dataType: 'text', propertyName: "checkoutdate" },
         { dataType: 'text', propertyName: "roomprice" },
         { dataType: 'function', propertyName: roomtypeFunction },
         { dataType: 'function', propertyName: viewtypeFunction },
     ];
 
     // deleteStatusFunction - this parameter use for define delete button visibility in the table (if the delete status is true then the delete button will be visibility)
-    fillDataIntoTable(RoomDataTableView, dataList, displayProperty, EditfunctionName, DeleteFunctionName, MoreFunctionName,deleteStatusFunction, true,roomViewTablePrivilage);
+    fillDataIntoTable(RoomDataTableView, dataList, displayProperty, EditfunctionName, DeleteInnerRoomTableFunctionName, MoreFunctionName,deleteStatusFunction, true,roomViewTablePrivilage);
 }
-
+//Load  the Package Table
 refreshPackageDetailsTable = (dataList) => {
     //displaying data list for employee table
     const displayProperty = [
@@ -145,9 +149,10 @@ refreshPackageDetailsTable = (dataList) => {
     ];
 
     // deleteStatusFunction - this parameter use for define delete button visibility in the table (if the delete status is true then the delete button will be visibility)
-    fillDataIntoTable(packageView, dataList, displayProperty, EditfunctionName, PackageDeleteFunctionName, MoreFunctionName,deleteStatusFunction, true,roomViewTablePrivilage);
+    fillDataIntoTable(packageView, dataList, displayProperty, EditfunctionName, DeletePackageFunctionName, MoreFunctionName,deleteStatusFunction, true,roomViewTablePrivilage);
 }
 
+//Load  the Service Table
 refreshServiceDetailsTable = (dataList) => {
     //displaying data list for employee table
     const displayProperty = [
@@ -158,7 +163,7 @@ refreshServiceDetailsTable = (dataList) => {
     ];
 
     // deleteStatusFunction - this parameter use for define delete button visibility in the table (if the delete status is true then the delete button will be visibility)
-    fillDataIntoTable(FeaturesView, dataList, displayProperty, EditfunctionName, DeleteFunctionName, MoreFunctionName,deleteStatusFunction, true,roomViewTablePrivilage);
+    fillDataIntoTable(FeaturesView, dataList, displayProperty, EditfunctionName, DeleteServiceFunctionName, MoreFunctionName,deleteStatusFunction, true,roomViewTablePrivilage);
 }
 
 const EditfunctionName = (elements, index) => {
@@ -166,13 +171,19 @@ const EditfunctionName = (elements, index) => {
     if(addedRoomObjectArray.find((element) => element.id === elements.id)){
         alertFunction("Add","Already Added","warning");
     }else {
-        addedRoomObjectArray.push(elements);
-        updateNeededHeadCount();
-        alertFunction("Add","Added Succusfully","success");
+        if(checkinCheckoutSet) {
+            elements.checkingdate = preRoomCheckinDateTxt.value;
+            elements.checkoutdate = preRoomCheckedoutDateTxt.value;
+            addedRoomObjectArray.push(elements);
+            updateNeededHeadCount();
+            alertFunction("Add","Added Succusfully","success");
+        }
+        else
+            alertFunction("Select Date","Please Select Checkin and Checkout Date","warning");
     }
 }
 
-//Main Thable Delete Function
+//Main Table Delete Function
 const DeleteFunctionName = (element, index, tableBody) => {
 
     let deleteConform = window.confirm("Are you sure ?\n"
@@ -195,26 +206,44 @@ const DeleteFunctionName = (element, index, tableBody) => {
     }
 }
 
-//Main Thable Delete Function
-const DeleteFunctionName = (element, index, tableBody) => {
+//Service Table Delete Function
+const DeleteServiceFunctionName = (element, index, tableBody) => {
 
     let deleteConform = window.confirm("Are you sure ?\n"
-        + "\nRoom Name " + element.full_name
+        + "\nService NAme" + element.full_name
         + "\nNIC " + element.nic_number
     );
     if (deleteConform) {
-        const deleteServerResponse = 'OK';
-        if (deleteServerResponse === 'OK') {
-            let deleteResponse = HTTPRequestService("DELETE",'http://localhost:8080/room/'+element.id);
-            if (199<deleteResponse.status && deleteResponse.status<300) {
-                window.alert("Delete Successfull...");
-                refreshRoomTable(HTTPRequestService("GET",'http://localhost:8080/room'));
-            } else {
-                window.alert("Delete not compleate error "+deleteResponse.message);
-            }
-        } else {
-            window.alert("Delete not compleate error ");
-        }
+        addedServiceObjectArray.splice(index, 1);
+        addedServiceDataObject.data = addedServiceObjectArray;
+        refreshServiceDetailsTable(addedServiceDataObject);
+    }
+}
+//Service Table Delete Function
+const DeletePackageFunctionName = (element, index, tableBody) => {
+
+    let deleteConform = window.confirm("Are you sure ?\n"
+        + "\nService NAme" + element.full_name
+        + "\nNIC " + element.nic_number
+    );
+    if (deleteConform) {
+        addedPackageObjectArray.splice(index, 1);
+        addedPackageDataObject.data = addedPackageObjectArray;
+        refreshPackageDetailsTable(addedPackageDataObject);
+    }
+}
+//Inner Room Display Table Delete Function
+const DeleteInnerRoomTableFunctionName = (element, index, tableBody) => {
+    let deleteConform = window.confirm("Are you sure ?\n"
+        + "\nService NAme" + element.full_name
+        + "\nNIC " + element.nic_number
+    );
+    if (deleteConform) {
+        console.log(addedRoomObjectArray);
+        addedRoomObjectArray.splice(index, 1);
+        addedRoomDataObject.data = addedRoomObjectArray;
+        refreshRoomDetailsTable(addedRoomDataObject);
+        console.log(addedRoomObjectArray);
     }
 }
 
@@ -349,6 +378,7 @@ moreModalOpen.addEventListener('click',()=>{
     refreshRoomDetailsTable(addedRoomDataObject);
     $('#RoomSelectionForm').modal('hide');
     $('#RoomaddedForm').modal('show');
+    console.log(addedRoomDataObject);
 });
 backtoRoomAddedPrimary.addEventListener('click',()=>{
     $('#RoomaddedForm').modal('hide');
@@ -360,36 +390,75 @@ reservationFormClose.addEventListener('click', (e) => {
     }
 });
 
-viewTypeFormSelect.addEventListener('change', ()=>{
+var domainUrlCreateFunction= (maindomain,checkin,checkout) => {
+    domaiurl = maindomain + 'checkinDate=' + checkin + '&checkoutDate=' + checkout;
+    checkinCheckoutSet = true;
+}
+
+preRoomCheckinDateTxt.addEventListener('change', ()=>{
+    preRoomCheckedoutDateTxt.hasAttributes("disabled") ? preRoomCheckedoutDateTxt.removeAttribute('disabled') : null;
+    if(checkinCheckoutSet)
+        refreshRoomTable(HTTPRequestService("GET",urlcreatefunction(domaiurl,valdationFeildList,validationStrategyList)+'&roomstates_id=1'),roomTablePrivilage);
+    else
+        alertFunction("Select Date","Please Select Checkin and Checkout Date","warning");
+});
+
+preRoomCheckedoutDateTxt.addEventListener('change', ()=>{
+    preRoomCheckedoutDateTxt.value != "" && preRoomCheckedoutDateTxt.value != "" ? domainUrlCreateFunction(domaiurl,preRoomCheckedoutDateTxt.value,preRoomCheckedoutDateTxt.value) : null;
     refreshRoomTable(HTTPRequestService("GET",urlcreatefunction(domaiurl,valdationFeildList,validationStrategyList)+'&roomstates_id=1'),roomTablePrivilage);
+});
+
+viewTypeFormSelect.addEventListener('change', ()=>{
+    if(checkinCheckoutSet)
+        refreshRoomTable(HTTPRequestService("GET",urlcreatefunction(domaiurl,valdationFeildList,validationStrategyList)+'&roomstates_id=1'),roomTablePrivilage);
+    else
+        alertFunction("Select Date","Please Select Checkin and Checkout Date","warning");
 });
 
 roomTypeFormSelect.addEventListener('change', ()=>{
-    refreshRoomTable(HTTPRequestService("GET",urlcreatefunction(domaiurl,valdationFeildList,validationStrategyList)+'&roomstates_id=1'),roomTablePrivilage);
+    if(checkinCheckoutSet)
+        refreshRoomTable(HTTPRequestService("GET",urlcreatefunction(domaiurl,valdationFeildList,validationStrategyList)+'&roomstates_id=1'),roomTablePrivilage);
+    else
+        alertFunction("Select Date","Please Select Checkin and Checkout Date","warning");
 });
 
 headCountFilterTxt.addEventListener('keyup', ()=>{
-    refreshRoomTable(HTTPRequestService("GET",urlcreatefunction(domaiurl,valdationFeildList,validationStrategyList)+'&roomstates_id=1'),roomTablePrivilage);
+    if(checkinCheckoutSet)
+        refreshRoomTable(HTTPRequestService("GET",urlcreatefunction(domaiurl,valdationFeildList,validationStrategyList)+'&roomstates_id=1'),roomTablePrivilage);
+    else
+        alertFunction("Select Date","Please Select Checkin and Checkout Date","warning");
 });
 
 minPriceTxt.addEventListener('keyup', ()=>{
-    refreshRoomTable(HTTPRequestService("GET",urlcreatefunction(domaiurl,valdationFeildList,validationStrategyList)+'&roomstates_id=1'),roomTablePrivilage);
+    if(checkinCheckoutSet)
+        refreshRoomTable(HTTPRequestService("GET",urlcreatefunction(domaiurl,valdationFeildList,validationStrategyList)+'&roomstates_id=1'),roomTablePrivilage);
+    else
+        alertFunction("Select Date","Please Select Checkin and Checkout Date","warning");
 });
 
 maxPriceTxt.addEventListener('keyup', ()=>{
-    refreshRoomTable(HTTPRequestService("GET",urlcreatefunction(domaiurl,valdationFeildList,validationStrategyList)+'&roomstates_id=1'),roomTablePrivilage);
+    if(checkinCheckoutSet)
+        refreshRoomTable(HTTPRequestService("GET",urlcreatefunction(domaiurl,valdationFeildList,validationStrategyList)+'&roomstates_id=1'),roomTablePrivilage);
+    else
+        alertFunction("Select Date","Please Select Checkin and Checkout Date","warning");
 });
 
 sortTypeFormSelect.addEventListener('change', ()=>{
-    refreshRoomTable(HTTPRequestService("GET",urlcreatefunction(domaiurl,valdationFeildList,validationStrategyList)+'&roomstates_id=1'),roomTablePrivilage);
+    if(checkinCheckoutSet)
+        refreshRoomTable(HTTPRequestService("GET",urlcreatefunction(domaiurl,valdationFeildList,validationStrategyList)+'&roomstates_id=1'),roomTablePrivilage);
+    else
+        alertFunction("Select Date","Please Select Checkin and Checkout Date","warning");
 });
 
+// Return value as that was concatenate with the url
 var sortedselectfunction = (obj) => {
     obj = JSON.parse(obj);
     return 'orderbytype='+obj.orderbytype+'&asendordesend='+obj.order;
 }
 
 const valdationFeildList = [
+    { id: 'preRoomCheckinDateTxt', type: 'date', validationStategy: 'function'},
+    { id: 'preRoomCheckedoutDateTxt', type: 'date', validationStategy: 'function'},
     { id: 'viewTypeFormSelect', type: 'dropdown', validationStategy: 'selected'},
     { id: 'roomTypeFormSelect', type: 'dropdown', validationStategy: 'selected'},
     { id: 'headCountFilterTxt', type: 'text', validationStategy: 'nothing'},
@@ -432,10 +501,8 @@ const dataListMatchingCheck = (event,targetButton,datalist,regPattern) =>{
     }
 }
 
-var domaiurl = 'http://localhost:8080/report/roomreport/roomlist?';
-
 var urlcreatefunction = (drl,FeildList,validatinStrategy) =>{
-    var firststateadd = false;
+    var firststateadd = true;
     var domainurl = drl;
     FeildList.forEach(element => {
         var getelement = document.getElementById(element.id);
@@ -484,7 +551,6 @@ var updateNeededHeadCount = () =>{
     if (headcount !== 0) {
         var  AddedRoomHeadCount= 0;
         addedRoomObjectArray.find((element) => {AddedRoomHeadCount += element.maxheadcount;});
-
         console.log(AddedRoomHeadCount);
         document.getElementById("totalRoomCount").innerHTML = addedRoomObjectArray.length;
         document.getElementById("AssignHeadCount").innerHTML = AddedRoomHeadCount;
