@@ -471,6 +471,9 @@ const validationStrategyList = {
     'sortTypeFormSelect': {functions: sortedselectfunction},
 }
 
+ValidationButton.addEventListener('click', ()=>{
+    window.alert("Akila Weerasinghe");
+});
 
 const dataListMatchingCheck = (event,targetButton,datalist,regPattern) =>{
     var inputText = event.target.value.toLowerCase();
