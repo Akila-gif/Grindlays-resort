@@ -33,7 +33,7 @@ public interface CustomerDao extends JpaRepository<Customer,Integer> {
     @Query(value = "SELECT TIMESTAMPDIFF(YEAR, date_of_birth, CURDATE()) AS age FROM customer",nativeQuery = true)
     List<Integer> CustomerAgeDataList();
 
-    @Query(value = "SELECT new Customer(cu.nic,cu.mobile,cu.full_name,cu.passport,cu.customernumber) FROM Customer cu")
+    @Query(value = "SELECT new Customer(cu.id, cu.nic,cu.mobile,cu.full_name,cu.passport,cu.customernumber) FROM Customer cu")
     ArrayList<Object> findAllMobileNicPassportAndName();
 
 }

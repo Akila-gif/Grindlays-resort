@@ -473,6 +473,19 @@ const validationStrategyList = {
 
 ValidationButton.addEventListener('click', ()=>{
     window.alert("Akila Weerasinghe");
+    var newReservation = new  Object();
+    newReservation.customer_id = selectedCustomer;
+    newReservation.headcount = (parseInt(headcount));
+    newReservation.services_id = addedServiceObjectArray;
+    newReservation.rooms = addedRoomObjectArray;
+    newReservation.roomPackages = addedPackageObjectArray;
+
+    if(confirm("Do you Want to add ?")){
+        let addedResponse = HTTPRequestService("POST",'http://localhost:8080/reservation',JSON.stringify(newReservation));
+        if(199<addedResponse.status && addedResponse.status<300)window.alert("Add Successfully"+addedResponse.status);
+        else if(399<addedResponse.status && addedResponse.status<500) DynamicvalidationFunctioion(addedResponse.errorMessage,valdationFeildList,inputForm);
+        else window.alert("Add Failure "+addedResponse.status);
+    }
 });
 
 const dataListMatchingCheck = (event,targetButton,datalist,regPattern) =>{
@@ -548,6 +561,52 @@ var urlcreatefunction = (drl,FeildList,validatinStrategy) =>{
     });
     return domainurl;
 }
+
+// Total Price calculation
+var calculateTotalPrice = () => {
+    let totalRoomPrice = 0;
+    let totalPackagePrice = 0;
+    let totalServicePrice = 0;
+    let TotalPrice;
+
+    // Calculate Total Room Price
+    addedRoomObjectArray.forEach(room => {
+        if (room && room.roomprice) {
+            totalRoomPrice += room.roomprice;
+        }
+    });
+
+    // Calculate Total Package Price
+    addedPackageObjectArray.forEach(package => {
+        if (package && package.price) {
+            totalPackagePrice += (package.price*package.packageCount);
+        }
+    });
+
+    // Calculate Total Service Price
+    addedServiceObjectArray.forEach(service => {
+        if (service && service.peramount) {
+            totalServicePrice += (service.peramount * service.serviceCount);;
+        }
+    });
+
+    // Update Total Price in the DOM
+    const totalPrice = totalRoomPrice + totalPackagePrice + totalServicePrice;
+    document.getElementById("totalRoomPrice").innerHTML = totalRoomPrice.toFixed(2);
+    document.getElementById("totalPackagePrice").innerHTML = totalPackagePrice.toFixed(2);
+    document.getElementById("totalServicePrice").innerHTML = totalServicePrice.toFixed(2);
+    document.getElementById("totalPrice").innerHTML = totalPrice.toFixed(2);
+};
+
+TotalPriceCalculationButton.addEventListener('click',()=>{
+    calculateTotalPrice();
+});
+
+
+BtnAddByNic.addEventListener('click',()=>{
+    selectedCustomer = selectCustomerList.data.find((element) => element.nic == nicDtlTxt.value);
+    customerName.innerHTML = selectedCustomer.full_name;
+});
 
 var updateNeededHeadCount = () =>{
 

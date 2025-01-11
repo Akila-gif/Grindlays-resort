@@ -38,6 +38,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'org.apache.httpcomponents.client5:httpclient5'
+	implementation 'org.springframework.data:spring-data-rest-core'
 
 	// Servlet API for javax.servlet classes
 	implementation 'javax.servlet:javax.servlet-api:4.0.1'
