@@ -1,16 +1,21 @@
 package com.grindlaysresort.reservation;
 
+import com.grindlaysresort.customerModule.Customer;
+import com.grindlaysresort.customerModule.CustomerDao;
 import com.grindlaysresort.hotelpackages.RoomPackage;
+import com.grindlaysresort.hotelpackages.RoomPackageDao;
 import com.grindlaysresort.menu.Menu;
 import com.grindlaysresort.payment.Payment;
+import com.grindlaysresort.payment.PaymentDao;
 import com.grindlaysresort.roomModule.Room;
+import com.grindlaysresort.roomModule.RoomDao;
 import com.grindlaysresort.service.Service;
+import com.grindlaysresort.service.ServiceDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +28,23 @@ public class ReservationController {
     @Autowired
     ReservationDao reservationDao;
 
+    @Autowired
+    ReservationStateDao reservationStateDao;
+
+    @Autowired
+    RoomPackageDao roomPackageDao;
+
+    @Autowired
+    CustomerDao customerDao;
+
+    @Autowired
+    RoomDao roomDao;
+
+    @Autowired
+    PaymentDao paymentDao;
+
+    @Autowired
+    private ServiceDao serviceDao;
 
     @GetMapping("/sdas")
     public List<Reservation> getReservationDataList() {
@@ -115,5 +137,74 @@ public class ReservationController {
             reservationList.add(map);
         }
         return reservationList;
+    }
+
+    @PostMapping()
+    public HashMap<String,Object> addNewReservation(@RequestBody HashMap<String,Object> reservationData){
+
+        Reservation reservation = new Reservation();
+        reservation.setReservation_number(reservationDao.nextReservationNumber());
+        reservation.setHeadcount(Integer.parseInt(reservationData.get("headcount").toString()));
+        reservation.setState_id(reservationStateDao.getReferenceById(1));
+
+        HashMap<String,Object> customerData = (HashMap<String, Object>) reservationData.get("customer_id");
+        reservation.setCustomer_id(customerDao.getReferenceById(Integer.parseInt(customerData.get("id").toString())));
+
+        //map room many-to-many relationship
+        List<Room> roomList = new ArrayList<>();
+        for (HashMap<String,Object> roomDataList : (List<HashMap<String,Object>>) reservationData.get("rooms")){
+            roomList.add(roomDao.getReferenceById((Integer) roomDataList.get("id")));
+        }
+        reservation.setRooms(roomList);
+
+        //map roompackage many-to-many relationship
+        List<RoomPackage> roomPackageslList = new ArrayList<>();
+        for(HashMap<String,Object> roompackageDetails : (List<HashMap<String,Object>>) reservationData.get("roomPackages")){
+            roomPackageslList.add(roomPackageDao.getReferenceById((Integer) roompackageDetails.get("id")));
+        }
+        reservation.setRoomPackages(roomPackageslList);
+
+        //map service many-to-many relationship
+        List<Service> serviceList = new ArrayList<>();
+        for (HashMap<String,Object> serviceDataList : (List<HashMap<String,Object>>) reservationData.get("services_id")){
+            //service.setPeramount(service.getPeramount());
+            serviceList.add(serviceDao.getReferenceById((Integer) serviceDataList.get("id")));
+        }
+
+        reservation.setServices_id(serviceList);
+
+        //map menu many-to-many relationship
+        //reservation.setMenu_id((List<Menu>) reservationData.get("menu_id"));
+
+        Reservation addedReservation = reservationDao.save(reservation);
+
+        Payment payment = new Payment();
+        payment.setTotalpayment(new BigDecimal(String.valueOf(reservationData.get("totalpayment"))));
+        payment.setPaidamount(new BigDecimal(String.valueOf(reservationData.get("paidamount"))));
+        payment.setPaymentstatus((Boolean) reservationData.get("paymentstatus"));//totaly paid or not booleam value
+        payment.setDiscount(new BigDecimal(String.valueOf(reservationData.get("discount"))));
+
+        paymentDao.save(payment);
+
+
+        for (HashMap<String,Object> roomDataList : (List<HashMap<String,Object>>) reservationData.get("rooms")){
+            reservationDao.updateRoomReservationDetails(roomDataList.get("checkingdate").toString(),roomDataList.get("checkoutdate").toString(),addedReservation.getId(),(Integer) roomDataList.get("id"));
+        }
+
+        for (HashMap<String,Object> packageDataList : (List<HashMap<String,Object>>) reservationData.get("roomPackages")){
+            reservationDao.updatePackageReservationDetails((Integer) packageDataList.get("packageCount"), new BigDecimal(String.valueOf(packageDataList.get("price"))),addedReservation.getId(),(Integer) packageDataList.get("id"));
+        }
+
+        for (HashMap<String,Object> packageDataList : (List<HashMap<String,Object>>) reservationData.get("services_id")){
+
+            BigDecimal perAmount = new BigDecimal(String.valueOf(packageDataList.get("peramount")));
+            BigDecimal serviceCount = new BigDecimal(String.valueOf(packageDataList.get("serviceCount")));
+            BigDecimal totalAmount = perAmount.multiply(serviceCount);
+
+            reservationDao.updateServiceReservationDetails
+                    ((Integer) packageDataList.get("serviceCount"), totalAmount,addedReservation.getId(),(Integer) packageDataList.get("id"));
+        }
+
+        return reservationData;
     }
 }

@@ -97,7 +97,8 @@ public class Customer {
     @JoinColumn(name = "country_id", referencedColumnName = "id")
     Country country_id;
 
-    public Customer(String nic,String mobile, String full_name, String passport, String customernumber) {
+    public Customer(Integer id,String nic,String mobile, String full_name, String passport, String customernumber) {
+        this.id = id;
         this.nic = nic;
         this.mobile = mobile;
         this.full_name = full_name;
