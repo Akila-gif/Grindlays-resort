@@ -1,12 +1,12 @@
 package com.grindlaysresort.reservation;
 
-import com.grindlaysresort.customerModule.Customer;
 import com.grindlaysresort.customerModule.CustomerDao;
 import com.grindlaysresort.hotelpackages.RoomPackage;
 import com.grindlaysresort.hotelpackages.RoomPackageDao;
 import com.grindlaysresort.menu.Menu;
-import com.grindlaysresort.payment.Payment;
-import com.grindlaysresort.payment.PaymentDao;
+import com.grindlaysresort.payment.PaymentMethodDao;
+import com.grindlaysresort.payment.ReservationPayment;
+import com.grindlaysresort.payment.ReservationPaymentDao;
 import com.grindlaysresort.roomModule.Room;
 import com.grindlaysresort.roomModule.RoomDao;
 import com.grindlaysresort.service.Service;
@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +42,10 @@ public class ReservationController {
     RoomDao roomDao;
 
     @Autowired
-    PaymentDao paymentDao;
+    ReservationPaymentDao reservationPaymentDao;
+
+    @Autowired
+    PaymentMethodDao paymentMethodDao;
 
     @Autowired
     private ServiceDao serviceDao;
@@ -132,8 +136,7 @@ public class ReservationController {
             map.put("rooms",roomListListMap);
 
             //create a list of payment
-            List<Payment> paymentList = reservation.getPayment_id();
-            map.put("payment_id",paymentList.get(0));
+            map.put("payment_id", reservation.getReservationtotalpayment());
             reservationList.add(map);
         }
         return reservationList;
@@ -176,16 +179,27 @@ public class ReservationController {
         //map menu many-to-many relationship
         //reservation.setMenu_id((List<Menu>) reservationData.get("menu_id"));
 
+        BigDecimal reservationtotalpayment = new BigDecimal(String.valueOf(reservationData.get("reservationtotalpayment")));
+        BigDecimal totalpaidamount = new BigDecimal(String.valueOf(reservationData.get("totalpaidamount")));
+        BigDecimal discount = new BigDecimal(String.valueOf(reservationData.get("discount")));
+
+        reservation.setReservationtotalpayment(reservationtotalpayment);
+        reservation.setTotalpaidamount(totalpaidamount);
+        reservation.setPaymentstatus(reservationtotalpayment.subtract(totalpaidamount.add(discount)).equals(new BigDecimal(0)));
+        reservation.setDiscount(discount);
+
+        HashMap<String,Object> reservationpayment = (HashMap<String, Object>) reservationData.get("reservationpayment");
+        ReservationPayment reservationPayment = new ReservationPayment();
+        reservationPayment.setPaidamount(new BigDecimal(String.valueOf(reservationpayment.get("paidamount"))));
+        reservationPayment.setDiscription(String.valueOf(reservationpayment.get("discription")));
+
+        HashMap<String,Object> paymentMethod = (HashMap<String, Object>) reservationpayment.get("payment_method_id");
+        reservationPayment.setPayment_method_id(paymentMethodDao.getReferenceById((Integer) paymentMethod.get("id")));
+        reservationPayment.setDateandtime(LocalDateTime.now());
         Reservation addedReservation = reservationDao.save(reservation);
+        reservationPayment.setReservation(addedReservation);
 
-        Payment payment = new Payment();
-        payment.setTotalpayment(new BigDecimal(String.valueOf(reservationData.get("totalpayment"))));
-        payment.setPaidamount(new BigDecimal(String.valueOf(reservationData.get("paidamount"))));
-        payment.setPaymentstatus((Boolean) reservationData.get("paymentstatus"));//totaly paid or not booleam value
-        payment.setDiscount(new BigDecimal(String.valueOf(reservationData.get("discount"))));
-
-        paymentDao.save(payment);
-
+        reservationPaymentDao.save(reservationPayment);
 
         for (HashMap<String,Object> roomDataList : (List<HashMap<String,Object>>) reservationData.get("rooms")){
             reservationDao.updateRoomReservationDetails(roomDataList.get("checkingdate").toString(),roomDataList.get("checkoutdate").toString(),addedReservation.getId(),(Integer) roomDataList.get("id"));

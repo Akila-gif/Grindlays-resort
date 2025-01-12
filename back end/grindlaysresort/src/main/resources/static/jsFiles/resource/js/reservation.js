@@ -473,12 +473,24 @@ const validationStrategyList = {
 
 ValidationButton.addEventListener('click', ()=>{
     window.alert("Akila Weerasinghe");
-    var newReservation = new  Object();
+    var newReservation = new Object();
+    var newReservationpayment = new Object();
+    newReservationpayment.paidamount = "1000.00"
+    newReservationpayment.discription = "pay for thing"
+    newReservationpayment.payment_method_id = {
+        id : 1,
+        method : 'Card Payment'
+    };
+
+    newReservation.reservationtotalpayment = 10000;
+    newReservation.totalpaidamount = "1200";
+    newReservation.discount = 100;
     newReservation.customer_id = selectedCustomer;
     newReservation.headcount = (parseInt(headcount));
     newReservation.services_id = addedServiceObjectArray;
     newReservation.rooms = addedRoomObjectArray;
     newReservation.roomPackages = addedPackageObjectArray;
+    newReservation.reservationpayment = newReservationpayment;
 
     if(confirm("Do you Want to add ?")){
         let addedResponse = HTTPRequestService("POST",'http://localhost:8080/reservation',JSON.stringify(newReservation));

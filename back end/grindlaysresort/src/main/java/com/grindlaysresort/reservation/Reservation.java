@@ -1,10 +1,9 @@
 package com.grindlaysresort.reservation;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.grindlaysresort.customerModule.Customer;
 import com.grindlaysresort.hotelpackages.RoomPackage;
 import com.grindlaysresort.menu.Menu;
-import com.grindlaysresort.payment.Payment;
+import com.grindlaysresort.payment.ReservationPayment;
 import com.grindlaysresort.roomModule.Room;
 import com.grindlaysresort.service.Service;
 import jakarta.persistence.*;
@@ -12,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -25,6 +25,7 @@ public class Reservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     Integer id;
 
     @Column(name = "reservation_number")
@@ -41,13 +42,23 @@ public class Reservation {
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     Customer customer_id;
 
-    @ManyToMany
-    @JoinTable(
-            name = "payment_has_reservation",
-            joinColumns = @JoinColumn(name = "reservation_id"),
-            inverseJoinColumns = @JoinColumn(name = "Payment_id")
-    )
-    List<Payment> Payment_id;
+    @Column(name = "reservationtotalpayment")
+    BigDecimal reservationtotalpayment;
+
+    @Column(name = "totalpaidamount")
+    BigDecimal totalpaidamount;
+
+    @Column(name = "paymentstatus")
+    boolean paymentstatus;
+
+    @Column(name = "discount")
+    BigDecimal discount;
+
+    @OneToMany
+    List<Reservation> reservationList;
+
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReservationPayment> paymentList;
 
     @ManyToMany
     @JoinTable(

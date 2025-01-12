@@ -2,13 +2,13 @@ package com.grindlaysresort.payment;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.grindlaysresort.reservation.Reservation;
-import com.grindlaysresort.reservation.ReservationState;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -16,27 +16,30 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(
-        name = "payment"
+        name = "reservationpayment"
 )
-public class Payment {
+public class ReservationPayment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     Integer id;
 
-    @Column(name = "totalpayment")
-    BigDecimal totalpayment;
-
     @Column(name = "paidamount")
     BigDecimal paidamount;
 
-    @Column(name = "paymentstatus")
-    boolean paymentstatus;
+    @Column(name = "dateandtime")
+    LocalDateTime dateandtime;
 
-    @Column(name = "discount")
-    BigDecimal discount;
+    @Column(name = "discription")
+    String discription;
 
-    @ManyToMany(mappedBy = "Payment_id")
+    @ManyToOne
+    @JoinColumn(name = "payment_method_id",referencedColumnName = "id")
     @JsonIgnore
-    List<Reservation> reservations;
+    PaymentMethod payment_method_id;
+
+    @ManyToOne
+    @JoinColumn(name = "reservation_id", referencedColumnName = "id")
+    @JsonIgnore
+    private Reservation reservation;
 }
