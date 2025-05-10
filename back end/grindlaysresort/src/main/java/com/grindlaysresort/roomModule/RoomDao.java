@@ -23,4 +23,5 @@ public interface RoomDao extends JpaRepository<Room,Integer> {
     @Transactional
     @Query(value = "DELETE FROM grindlays_resort.room_has_bedtype WHERE room_id = :roomid", nativeQuery = true)
     void deleteRoomBedTypes(@Param("roomid") int roomId);
+
 }
