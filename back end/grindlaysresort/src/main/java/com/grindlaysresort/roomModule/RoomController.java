@@ -32,6 +32,17 @@ public class RoomController {
         return roomHasBedTypeDao.findRoomCountByBedTypeAndRoomId(bedTypeId,roomId);
     }
 
+    @GetMapping("/roomdetails")
+    public Optional<Room> roomDetail(@RequestParam("room_id") int roomId) {
+        Optional<Room> room = roomDao.findById(roomId);
+        if (room.isEmpty()) {
+            HashMap<String, String> errorSet = new HashMap<>();
+            errorSet.put("room", "Room is not found");
+            throw new ObjectNotFoundException(errorSet);
+        }
+        return Optional.of(room.get());
+    }
+
     @GetMapping("/detailsbedcountinroom")
     public  List<RoomHasBedType> name(@RequestParam("room_id") int roomId) {
         return roomHasBedTypeDao.findRoomCountByRoomId(roomId);

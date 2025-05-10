@@ -19,7 +19,7 @@ public interface ReservationDao extends JpaRepository<Reservation,Integer> {
 
     @Query("SELECT new Reservation (r.id,r.reservation_number,r.state_id) FROM Reservation r")
     List<Reservation> findAllLegasyLord();
-//
+
 //    @Query(value = "select * from reservation_has_service rhs where rhs.reservation_id=1 and rhs.service_id=6", nativeQuery = true)
 //    ReservationHasService findByUsingREservationandService();
     @org.springframework.transaction.annotation.Transactional
@@ -46,6 +46,23 @@ public interface ReservationDao extends JpaRepository<Reservation,Integer> {
     @Query(value = "UPDATE reservation_has_room set checkingdate = :checkin ,checkoutdate= :checkout where reservation_id= :resId and room_id= :roomId",nativeQuery = true)
     void updateRoomReservationDetails(@Param("checkin") String checkin, @Param("checkout") String checkout, @Param("resId") int resId, @Param("roomId") int roomId);
 
+    //Using when Update record when delete
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE reservation_has_room set reservation_room_status_id = :reservationRoomStatus_id where reservation_id= :resId and room_id= :roomId", nativeQuery = true)
+    void updateRoomReservationDetails(@Param("reservationRoomStatus_id") int status, @Param("resId") int resId, @Param("roomId") int roomId);
+
+    //Using when Update record when delete
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO grindlays_resort.reservation_has_room (reservation_id, room_id, checkingdate, checkoutdate, reservation_room_status_id) VALUES (:resId, :roomId, :checkin, :checkout, :reservationRoomStatus_id)",nativeQuery = true)
+    void AddUpdateRoomReservationDetails(@Param("checkin") String checkin, @Param("checkout") String checkout, @Param("resId") int resId, @Param("roomId") int roomId, @Param("reservationRoomStatus_id") int status);
+
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO grindlays_resort.reservation_has_room (reservation_id, room_id, checkingdate, checkoutdate, reservation_room_status_id) VALUES (:resId, :roomId, :checkin, :checkout, :reservationRoomStatus_id)", nativeQuery = true)
+    void addUpdateRoomReservationDetails(@Param("checkin") String checkin, @Param("checkout") String checkout, @Param("resId") int resId, @Param("roomId") int roomId, @Param("reservationRoomStatus_id") int status);
+
     @Modifying
     @Transactional
     @Query(value = "UPDATE reservation_has_roompackage set amount = :packageAmount,totalprice = :package_total_price where reservation_id= :resId and roompackage_id= :packageId",nativeQuery = true)
@@ -55,5 +72,32 @@ public interface ReservationDao extends JpaRepository<Reservation,Integer> {
     @Transactional
     @Query(value = "UPDATE reservation_has_service set amount = :serviceAmount,totalprice = :service_total_price where reservation_id= :resId and service_id= :serviceId",nativeQuery = true)
     void updateServiceReservationDetails(@Param("serviceAmount") int serviceAmount, @Param("service_total_price") BigDecimal package_total_price, @Param("resId") int resId, @Param("serviceId") int serviceId);
+/*
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE reservation_has_menu set amount = :menuAmount,totalprice = :menu_total_price where reservation_id= :resId and menu_id= :menuId",nativeQuery = true)
+    void updateMenuReservationDetails(@Param("menuAmount") int menuAmount, @Param("menu_total_price") BigDecimal menu_total_price, @Param("resId") int resId, @Param("menuId") int menuId);
+*/
+
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM reservation_has_room WHERE reservation_id = : reservation_id",nativeQuery = true)
+    void deleteRoomReservationDetails(@Param("reservation_id") int reservation_id);
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM reservation_has_service WHERE reservation_id = : reservation_id",nativeQuery = true)
+    void deleteServiceReservationDetails(@Param("reservation_id") int reservation_id);
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM reservation_has_menu WHERE reservation_id = : reservation_id",nativeQuery = true)
+    void deleteMenuReservationDetails(@Param("reservation_id") int reservation_id);
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM reservation_has_roompackage WHERE reservation_id = : reservation_id",nativeQuery = true)
+    void deleteRoomPackageReservationDetails(@Param("reservation_id") int reservation_id);
 
 }

@@ -54,10 +54,7 @@ public class Reservation {
     @Column(name = "discount")
     BigDecimal discount;
 
-    @OneToMany
-    List<Reservation> reservationList;
-
-    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "reservation", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<ReservationPayment> paymentList;
 
     @ManyToMany
@@ -84,7 +81,7 @@ public class Reservation {
     )
     List<RoomPackage> roomPackages;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.PERSIST})
     @JoinTable(
             name = "reservation_has_room",
             joinColumns = @JoinColumn(name = "reservation_id"),

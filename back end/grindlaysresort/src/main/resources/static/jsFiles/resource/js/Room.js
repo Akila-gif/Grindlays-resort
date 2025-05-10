@@ -182,7 +182,6 @@ refreshInnerFeaturesDetailsTable = (dataList) => {
     const featuresinnerdisplayProperty = [
         { dataType: 'text', propertyName: "feature" },
     ];
-
     featuresDetails.length === 0 ? FeaturesView.style.visibility = "hidden" : FeaturesView.style.visibility = "visible";
     // deleteStatusFunction - this parameter use for define delete button visibility in the table (if the delete status is true then the delete button will be visibility)
     fillDataIntoTable(FeaturesView, dataList, featuresinnerdisplayProperty,  innerFeaturesFormEditfunctionName,innerFeaturesFormDeleteFunction, innerFeaturesFormMoreFunctionName, innerFeaturesFormdeleteStatusFunction , true,roomdetailsPrivilage);

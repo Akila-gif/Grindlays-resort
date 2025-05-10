@@ -12,6 +12,7 @@ addedServiceDataObject.data = addedServiceObjectArray;
 var headcount = 0;
 var domaiurl = 'http://localhost:8080/report/roomreport/roomlist?';
 var checkinCheckoutSet = false;
+var isEdit = false;
 
 userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/Employee?user=admin').data;
 selectCustomerList = HTTPRequestService("GET",'http://localhost:8080/customers/getallnicmobilepassport');
@@ -43,7 +44,7 @@ refreshReservationTable = (dataList) => {
         { dataType: 'function', propertyName: reservationPaymentStatusFunction },
     ];
 
-    fillDataIntoTable(ReservationView, dataList, displayProperty, EditfunctionName, DeleteFunctionName, MoreFunctionName,deleteStatusFunction, true,userPrivilage);
+    fillDataIntoTable(ReservationView, dataList, displayProperty, ReservationEditfunctionName, DeleteFunctionName, MoreFunctionName,deleteStatusFunction, true,userPrivilage);
     // fillDataIntoTable(tableod,datalist,editfunctionName,DeleteFunctionName,MoreFunctionName,button visibility);
     //fillDataIntoTable02(EmployeeView,employees,displayProperty,EditfunctionName,DeleteFunctionName,MoreFunctionName);
     //fillDataIntoTable03(EmployeeView,employees,displayProperty,EditfunctionName,DeleteFunctionName,MoreFunctionName);
@@ -55,6 +56,37 @@ refreshReservationTable = (dataList) => {
         let searchInputDiv = ReservationView_filter.children[0].children[0];
         searchInputDiv.classList.add('form-control');
     });
+}
+
+// Reservation Edit Function
+const ReservationEditfunctionName = (element,index) =>{
+    console.log(element);
+    this.isEdit = true;
+    customerName.innerHTML = element.customer_id.full_name;
+    selectedCustomer = selectCustomerList.data.find((ele) => ele.id == element.customer_id.id);
+    customerName.innerHTML = selectedCustomer.full_name;
+    headCountTxt.value = element.headcount;
+    passportDtlTxt.value = element.passport;
+    mobileDtlTxt.value = element.mobile;
+    $('#reservationForm').modal('show');
+    window['oldReservation'] = element;
+    let roomsDataObjects = element.rooms;
+    addedPackageDataObject.data = element.roomPackages;
+    addedServiceDataObject.data = element.services_id;
+    refreshPackageDetailsTable(addedPackageDataObject);
+    refreshServiceDetailsTable(addedServiceDataObject);
+    //refreshRoomDetailsTable(addedRoomDataObject);
+
+    addedRoomObjectArray.length = 0;
+
+    roomsDataObjects.map((element) => {
+        var TempRoomObj = new Object();
+        TempRoomObj =HTTPRequestService("GET",`http://localhost:8080/room/roomdetails?room_id=${element.id}`).data ;
+        TempRoomObj.checkingdate = element.checkingdate;
+        TempRoomObj.checkoutdate = element.checkingdate;
+        addedRoomObjectArray.push(TempRoomObj);
+    });
+    addedRoomDataObject.data = addedRoomObjectArray;
 }
 
 const reservationFormPrivilageHandeling = (userPrivilage) =>{
@@ -214,8 +246,8 @@ const DeleteServiceFunctionName = (element, index, tableBody) => {
         + "\nNIC " + element.nic_number
     );
     if (deleteConform) {
-        addedServiceObjectArray.splice(index, 1);
-        addedServiceDataObject.data = addedServiceObjectArray;
+        addedServiceDataObject.data.splice(index, 1);
+        //addedServiceDataObject.data = addedServiceObjectArray;
         refreshServiceDetailsTable(addedServiceDataObject);
     }
 }
@@ -227,8 +259,8 @@ const DeletePackageFunctionName = (element, index, tableBody) => {
         + "\nNIC " + element.nic_number
     );
     if (deleteConform) {
-        addedPackageObjectArray.splice(index, 1);
-        addedPackageDataObject.data = addedPackageObjectArray;
+        addedPackageDataObject.data.splice(index, 1);
+        //addedPackageDataObject.data = addedPackageObjectArray;
         refreshPackageDetailsTable(addedPackageDataObject);
     }
 }
@@ -239,14 +271,24 @@ const DeleteInnerRoomTableFunctionName = (element, index, tableBody) => {
         + "\nNIC " + element.nic_number
     );
     if (deleteConform) {
-        console.log(addedRoomObjectArray);
-        addedRoomObjectArray.splice(index, 1);
-        addedRoomDataObject.data = addedRoomObjectArray;
-        refreshRoomDetailsTable(addedRoomDataObject);
-        console.log(addedRoomObjectArray);
+        if(this.isEdit){
+            let deleteResponse = HTTPRequestService("DELETE",'http://localhost:8080/reservation/reservationhasroom?reservation_id='+ window['oldReservation'].id+'&room_id='+element.id);
+            console.log('http://localhost:8080/reservation/reservationhasroom?reservation_id='+ window['oldReservation'].id+'&room_id'+element.id);
+            if (199<deleteResponse.status && deleteResponse.status<300) {
+                alertFunction("Delete","Added Succusfully","success");
+                addedRoomObjectArray.splice(index, 1);
+                addedRoomDataObject.data = addedRoomObjectArray;
+                refreshRoomDetailsTable(addedRoomDataObject);
+            } else {
+                window.alert("Delete not complete error "+deleteResponse.message);
+            }
+        }else {
+            addedRoomObjectArray.splice(index, 1);
+            addedRoomDataObject.data = addedRoomObjectArray;
+            refreshRoomDetailsTable(addedRoomDataObject);
+        }
     }
 }
-
 
 //Main Table More Function
 const MoreFunctionName = (element, index) => {
@@ -316,7 +358,7 @@ passportDtlTxt.addEventListener('keyup', (event) => {
 
 packageaddBtn.addEventListener('click', (event) => {
     tempPackageObj = JSON.parse(packageFormSelect.value);
-    findPackageObjectIndex = addedPackageObjectArray.findIndex((element) => element.id === tempPackageObj.id);
+    findPackageObjectIndex = addedPackageDataObject.data.findIndex((element) => element.id === tempPackageObj.id);
     if (findPackageObjectIndex !== -1) {
         alertFunction("All ready add","Do you want to Update count ? <br><p type=\"button\" class=\"btn btn-outline-dark btn-sm mt-2\">Yes</p>","warning",()=>{
             addedPackageDataObject.data[findPackageObjectIndex].packageCount += parseInt(packageCountTxt.value);
@@ -324,7 +366,7 @@ packageaddBtn.addEventListener('click', (event) => {
         });
     }else{
         tempPackageObj.packageCount = parseInt(packageCountTxt.value);
-        addedPackageObjectArray.push(tempPackageObj);
+        addedPackageDataObject.data.push(tempPackageObj);
     }
     refreshPackageDetailsTable(addedPackageDataObject);
 })
@@ -332,7 +374,7 @@ featureaddBtn.addEventListener('click', (event) => {
     HTTPRequestService("GET",'http://localhost:8080/services/servicegetid/'+serviceDtlTxt.value);
     tempServiceObj = HTTPRequestService("GET",'http://localhost:8080/services/servicegetid/'+serviceDtlTxt.value).data;
 
-    findServiceObjectIndex = addedServiceObjectArray.findIndex((element) => element.id === tempServiceObj.id);
+    findServiceObjectIndex = addedServiceDataObject.data.findIndex((element) => element.id === tempServiceObj.id);
     if (findServiceObjectIndex !== -1) {
         alertFunction("All ready add","Do you want to Update count ? <br><p type=\"button\" class=\"btn btn-outline-dark btn-sm mt-2\">Yes</p>","warning",()=>{
             addedServiceDataObject.data[findServiceObjectIndex].serviceCount += parseInt(serviceCountTxt.value);
@@ -340,7 +382,7 @@ featureaddBtn.addEventListener('click', (event) => {
         });
     }else{
         tempServiceObj.serviceCount = parseInt(serviceCountTxt.value);
-        addedServiceObjectArray.push(tempServiceObj);
+        addedServiceDataObject.data.push(tempServiceObj);
     }
     refreshServiceDetailsTable(addedServiceDataObject);
 })
@@ -487,18 +529,48 @@ ValidationButton.addEventListener('click', ()=>{
     newReservation.discount = 100;
     newReservation.customer_id = selectedCustomer;
     newReservation.headcount = (parseInt(headcount));
-    newReservation.services_id = addedServiceObjectArray;
+    newReservation.services_id = addedServiceDataObject.data;
     newReservation.rooms = addedRoomObjectArray;
-    newReservation.roomPackages = addedPackageObjectArray;
+    newReservation.roomPackages = addedPackageDataObject.data;
     newReservation.reservationpayment = newReservationpayment;
 
     if(confirm("Do you Want to add ?")){
         let addedResponse = HTTPRequestService("POST",'http://localhost:8080/reservation',JSON.stringify(newReservation));
-        if(199<addedResponse.status && addedResponse.status<300)window.alert("Add Successfully"+addedResponse.status);
+        if(199<addedResponse.status && addedResponse.status<300)alertFunction("Select Date","Reservation add Successfully","success");
         else if(399<addedResponse.status && addedResponse.status<500) DynamicvalidationFunctioion(addedResponse.errorMessage,valdationFeildList,inputForm);
         else window.alert("Add Failure "+addedResponse.status);
     }
 });
+
+UpdateButton.addEventListener('click', ()=>{
+    window.alert("Update Button is clicked");
+    var newReservation = new Object();
+    var newReservationpayment = new Object();
+    newReservation.reservation_id = window['oldReservation'].id;
+    newReservationpayment.paidamount = "1000.00"
+    newReservationpayment.discription = "pay for thing"
+    newReservationpayment.payment_method_id = {
+        id : 1,
+        method : 'Card Payment'
+    };
+
+    newReservation.reservationtotalpayment = 10000;
+    newReservation.totalpaidamount = "1200";
+    newReservation.discount = 100;
+    newReservation.customer_id = selectedCustomer;
+    newReservation.headcount = (parseInt(headcount));
+    newReservation.services_id = addedServiceDataObject.data;
+    newReservation.rooms = addedRoomObjectArray;
+    newReservation.roomPackages = addedPackageDataObject.data;
+    newReservation.reservationpayment = newReservationpayment;
+
+    if(confirm("Do you Want to add ?")){
+        let addedResponse = HTTPRequestService("PUT",'http://localhost:8080/reservation',JSON.stringify(newReservation));
+        if(199<addedResponse.status && addedResponse.status<300)alertFunction("Select Date","Reservation add Successfully","success");
+        else if(399<addedResponse.status && addedResponse.status<500) DynamicvalidationFunctioion(addedResponse.errorMessage,valdationFeildList,inputForm);
+        else window.alert("Add Failure "+addedResponse.status);
+    }
+})
 
 const dataListMatchingCheck = (event,targetButton,datalist,regPattern) =>{
     var inputText = event.target.value.toLowerCase();
@@ -589,14 +661,14 @@ var calculateTotalPrice = () => {
     });
 
     // Calculate Total Package Price
-    addedPackageObjectArray.forEach(package => {
+    addedPackageDataObject.data.forEach(package => {
         if (package && package.price) {
             totalPackagePrice += (package.price*package.packageCount);
         }
     });
 
     // Calculate Total Service Price
-    addedServiceObjectArray.forEach(service => {
+    addedServiceDataObject.data.forEach(service => {
         if (service && service.peramount) {
             totalServicePrice += (service.peramount * service.serviceCount);;
         }
@@ -631,10 +703,35 @@ var updateNeededHeadCount = () =>{
         headcount-AddedRoomHeadCount>=0 ? document.getElementById("HeadCountLeft").innerHTML = headcount-AddedRoomHeadCount : document.getElementById("HeadCountLeft").innerHTML = 0;
     }
 }
-
+reservationFormInputList = [
+    { id: 'nicDtlTxt', type: 'text', validationStategy: 'nothing'},
+    { id: 'mobileDtlTxt', type: 'text', validationStategy: 'nothing'},
+    { id: 'passportDtlTxt', type: 'text', validationStategy: 'nothing'},
+    { id: 'headCountTxt', type: 'text', validationStategy: 'nothing'},
+    { id: 'packageFormSelect', type: 'dropdown', validationStategy: 'nothing'},
+    { id: 'packageCountTxt', type: 'text', validationStategy: 'nothing'},
+    { id: 'serviceDtlTxt', type: 'text', validationStategy: 'nothing'},
+    { id: 'serviceCountTxt', type: 'text', validationStategy: 'nothing'}
+];
 const formCloser = ()=>{
     $('#reservationForm').modal('hide');
-    //formClear(valdationFeildList,inputForm,defaulTextError);
-    inputForm.classList.remove('try-validated');
+    this.isEdit = false;
+    formClear(reservationFormInputList,inputForm);
+    document.getElementById('customerName').innerHTML = "";
+    selectedCustomer = "";
+    addedPackageObjectArray.length = 0;
+    addedServiceObjectArray.length = 0;
+    addedRoomObjectArray.length = 0;
+    addedServiceDataObject.data.length = 0;
+    addedPackageDataObject.data.length = 0;
+    addedRoomDataObject.data.length = 0;
     refreshReservationTable(HTTPRequestService("GET",'http://localhost:8080/reservation'));
+    refreshPackageDetailsTable(addedPackageDataObject);
+    refreshServiceDetailsTable(addedServiceDataObject);
+    refreshRoomDetailsTable(addedRoomDataObject);
+    var headcount = 0;
+    totalPackagePrice.innerHTML = "0.00";
+    totalRoomPrice.innerHTML = "0.00";
+    totalServicePrice.innerHTML = "0.00";
+    totalPrice.innerHTML = "0.00";
 }

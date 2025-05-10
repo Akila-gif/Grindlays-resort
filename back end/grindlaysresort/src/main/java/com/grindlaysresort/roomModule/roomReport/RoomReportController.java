@@ -75,7 +75,7 @@ public class RoomReportController {
         }
         if (checkinDate != null && checkoutDate != null) {
             queryString.append(whereAdded ? " AND" : " WHERE");
-            queryString.append(" r.id NOT IN (SELECT re.room_id FROM reservation_has_room re WHERE re.checkingdate BETWEEN :checkinDate AND :checkoutDate OR re.checkoutdate BETWEEN :checkinDate AND :checkoutDate OR :checkinDate  between re.checkingdate and re.checkoutdate)");
+            queryString.append(" r.id NOT IN (SELECT re.room_id FROM reservation_has_room re WHERE re.checkingdate BETWEEN :checkinDate AND :checkoutDate OR re.checkoutdate BETWEEN :checkinDate AND :checkoutDate OR :checkinDate  between re.checkingdate and re.checkoutdate AND re.reservation_room_status_id !=4 )");
         }
         if (orderbytype != null) {
             queryString.append(" ORDER by "+orderbytype);
