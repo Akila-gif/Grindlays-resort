@@ -14,6 +14,7 @@ import com.grindlaysresort.service.ServiceDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -68,6 +69,7 @@ public class ReservationController {
             map.put("reservation_number", reservation.getReservation_number());
             map.put("headcount", reservation.getHeadcount());
             map.put("state_id", reservation.getState_id());
+            map.put("addedDate", reservation.getAddedDate());
 
             //Build customer temporary object
             HashMap<String, Object> customerMap = new HashMap<>();
@@ -191,6 +193,7 @@ public class ReservationController {
         reservation.setTotalpaidamount(totalpaidamount);
         reservation.setPaymentstatus(reservationtotalpayment.subtract(totalpaidamount.add(discount)).equals(new BigDecimal(0)));
         reservation.setDiscount(discount);
+        reservation.setAddedDate(LocalDateTime.now());
 
         HashMap<String,Object> reservationpayment = (HashMap<String, Object>) reservationData.get("reservationpayment");
         ReservationPayment reservationPayment = new ReservationPayment();
@@ -343,8 +346,58 @@ public class ReservationController {
         return reservationData;
     }
 
+    @DeleteMapping("/reservatidelete/{reservation_id}")
+    public void deleteReservation(@PathVariable("reservation_id") int reservationId){
+        Optional<Reservation> OptionalReservation = reservationDao.findById(reservationId);
+        if (OptionalReservation.isPresent() && OptionalReservation.get().getAddedDate().isBefore(LocalDateTime.now().minusDays(7))) {
+            reservationDao.UpdateDeletedReservation(reservationId);
+        }
+    }
+
     @DeleteMapping("/reservationhasroom")
     public void deleteReservationRoom(@RequestParam("reservation_id") int reservationId,@RequestParam("room_id") int roomId){
         reservationDao.updateRoomReservationDetails(4,reservationId,roomId);
+    }
+
+    @DeleteMapping("/reservationhasservice")
+    public void deleteReservationService(@RequestParam("reservation_id") int reservationId,@RequestParam("service_id") int service_id,@RequestParam("service_count") int service_count){
+        Service service = serviceDao.getReferenceById(service_id);
+        Optional<Reservation> reservation = reservationDao.findById(reservationId);
+        BigDecimal totalPaymentAmount = reservation.get().getTotalpaidamount();
+
+        totalPaymentAmount = totalPaymentAmount.subtract(service.getPeramount().multiply(new BigDecimal(service_count)));
+        reservationDao.UpdateReservationPaymentDetails(reservationId, reservation.get().isPaymentstatus(), totalPaymentAmount, reservation.get().getReservationtotalpayment(), reservation.get().getDiscount());
+    }
+
+    @DeleteMapping("/reservationhaspackage")
+    public void deleteReservationPackage(@RequestParam("reservation_id") int reservationId,@RequestParam("package_id") int package_id,@RequestParam("package_count") int package_count){
+        RoomPackage roomPackage = roomPackageDao.getReferenceById(package_id);
+        Optional<Reservation> reservation = reservationDao.findById(reservationId);
+        BigDecimal totalPaymentAmount = reservation.get().getTotalpaidamount();
+
+        totalPaymentAmount = totalPaymentAmount.subtract(roomPackage.getPrice().multiply(new BigDecimal(package_count)));
+        reservationDao.UpdateReservationPaymentDetails(reservationId, reservation.get().isPaymentstatus(), totalPaymentAmount, reservation.get().getReservationtotalpayment(), reservation.get().getDiscount());
+    }
+
+    @PutMapping("/reservationhasservice")
+    public void addReservationService(@RequestParam("reservation_id") int reservationId,@RequestParam("service_id") int service_id,@RequestParam("service_count") int service_count){
+        Optional<Service> service = serviceDao.findById(service_id);
+        Optional<Reservation> reservation = reservationDao.findById(reservationId);
+        BigDecimal totalPaymentAmount = reservation.get().getTotalpaidamount();
+
+        totalPaymentAmount = totalPaymentAmount.add(service.get().getPeramount().multiply(new BigDecimal(service_count)));
+        System.out.println("totalPaymentAmount" + totalPaymentAmount);
+        reservationDao.UpdateReservationPaymentDetails(reservationId, reservation.get().isPaymentstatus(), totalPaymentAmount, reservation.get().getReservationtotalpayment(), reservation.get().getDiscount());
+
+    }
+
+    @PutMapping("/reservationhaspackage")
+    public void addReservationPackage(@RequestParam("reservation_id") int reservationId,@RequestParam("package_id") int package_id,@RequestParam("package_count") int package_count){
+        Optional<RoomPackage> roomPackage = roomPackageDao.findById(package_id);
+        Optional<Reservation> reservation = reservationDao.findById(reservationId);
+        BigDecimal totalPaymentAmount = reservation.get().getTotalpaidamount();
+
+        totalPaymentAmount = totalPaymentAmount.add(roomPackage.get().getPrice().multiply(new BigDecimal(package_count)));
+        reservationDao.UpdateReservationPaymentDetails(reservationId, reservation.get().isPaymentstatus(), totalPaymentAmount, reservation.get().getReservationtotalpayment(), reservation.get().getDiscount());
     }
 }

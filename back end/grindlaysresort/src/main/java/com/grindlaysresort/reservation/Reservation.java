@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -53,6 +54,9 @@ public class Reservation {
 
     @Column(name = "discount")
     BigDecimal discount;
+
+    @Column(name = "addeddate")
+    LocalDateTime addedDate;
 
     @OneToMany(mappedBy = "reservation", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<ReservationPayment> paymentList;
@@ -97,4 +101,6 @@ public class Reservation {
 
     public Reservation(Integer integer) {
     }
+
+
 }

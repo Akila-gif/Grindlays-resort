@@ -13,6 +13,11 @@ var headcount = 0;
 var domaiurl = 'http://localhost:8080/report/roomreport/roomlist?';
 var checkinCheckoutSet = false;
 var isEdit = false;
+var isChange = false;
+
+//2D array count [Service ID,count,operation]
+var updateServiceDetails = [];
+var updatePackageDetails = [];
 
 userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/Employee?user=admin').data;
 selectCustomerList = HTTPRequestService("GET",'http://localhost:8080/customers/getallnicmobilepassport');
@@ -217,7 +222,7 @@ const EditfunctionName = (elements, index) => {
 
 //Main Table Delete Function
 const DeleteFunctionName = (element, index, tableBody) => {
-
+    window.alert("Delete");
     let deleteConform = window.confirm("Are you sure ?\n"
         + "\nRoom Name " + element.full_name
         + "\nNIC " + element.nic_number
@@ -225,10 +230,10 @@ const DeleteFunctionName = (element, index, tableBody) => {
     if (deleteConform) {
         const deleteServerResponse = 'OK';
         if (deleteServerResponse === 'OK') {
-            let deleteResponse = HTTPRequestService("DELETE",'http://localhost:8080/room/'+element.id);
+            let deleteResponse = HTTPRequestService("DELETE",'http://localhost:8080/reservation/reservatidelete/'+element.id);
             if (199<deleteResponse.status && deleteResponse.status<300) {
                 window.alert("Delete Successfull...");
-                refreshRoomTable(HTTPRequestService("GET",'http://localhost:8080/room'));
+                refreshRoomTable(HTTPRequestService("GET",'http://localhost:8080/reservation'));
             } else {
                 window.alert("Delete not compleate error "+deleteResponse.message);
             }
@@ -246,9 +251,22 @@ const DeleteServiceFunctionName = (element, index, tableBody) => {
         + "\nNIC " + element.nic_number
     );
     if (deleteConform) {
-        addedServiceDataObject.data.splice(index, 1);
-        //addedServiceDataObject.data = addedServiceObjectArray;
-        refreshServiceDetailsTable(addedServiceDataObject);
+        if (isEdit){
+            let deleteResponse = HTTPRequestService("DELETE",'http://localhost:8080/reservation/reservationhasservice?reservation_id='+ window['oldReservation'].id+'&service_id='+element.id+'&service_count='+element.serviceCount);
+            if (199<deleteResponse.status && deleteResponse.status<300) {
+                addedPackageDataObject.data.splice(index, 1);
+                refreshPackageDetailsTable(addedPackageDataObject);
+                updateServiceDetails.push([element.id,element.serviceCount,"DELETE"]);
+                isChange = true;
+                alertFunction("Delete","Delete Successfully","success");
+            }else {
+                alertFunction("Error","Not Delete Room","error");
+            }
+        }else {
+            addedServiceDataObject.data.splice(index, 1);
+            refreshServiceDetailsTable(addedServiceDataObject);
+            alertFunction("Delete","Delete Successfully","success");
+        }
     }
 }
 //Service Table Delete Function
@@ -259,11 +277,25 @@ const DeletePackageFunctionName = (element, index, tableBody) => {
         + "\nNIC " + element.nic_number
     );
     if (deleteConform) {
-        addedPackageDataObject.data.splice(index, 1);
-        //addedPackageDataObject.data = addedPackageObjectArray;
-        refreshPackageDetailsTable(addedPackageDataObject);
+        if (isEdit){
+            let deleteResponse = HTTPRequestService("DELETE",'http://localhost:8080/reservation/reservationhaspackage?reservation_id='+ window['oldReservation'].id+'&package_id='+element.id+'&package_count='+element.packageCount);
+            if (199<deleteResponse.status && deleteResponse.status<300) {
+                addedPackageDataObject.data.splice(index, 1);
+                refreshPackageDetailsTable(addedPackageDataObject);
+                updatePackageDetails.push([element.id,element.packageCount,"DELETE"]);
+                isChange = true;
+                alertFunction("Delete","Delete Successfully","success");
+            }else {
+                alertFunction("Error","Not Delete Room","error");
+            }
+        }else {
+            addedPackageDataObject.data.splice(index, 1);
+            refreshPackageDetailsTable(addedPackageDataObject);
+            alertFunction("Delete","Delete Successfully","success");
+        }
     }
 }
+
 //Inner Room Display Table Delete Function
 const DeleteInnerRoomTableFunctionName = (element, index, tableBody) => {
     let deleteConform = window.confirm("Are you sure ?\n"
@@ -273,20 +305,24 @@ const DeleteInnerRoomTableFunctionName = (element, index, tableBody) => {
     if (deleteConform) {
         if(this.isEdit){
             let deleteResponse = HTTPRequestService("DELETE",'http://localhost:8080/reservation/reservationhasroom?reservation_id='+ window['oldReservation'].id+'&room_id='+element.id);
-            console.log('http://localhost:8080/reservation/reservationhasroom?reservation_id='+ window['oldReservation'].id+'&room_id'+element.id);
             if (199<deleteResponse.status && deleteResponse.status<300) {
-                alertFunction("Delete","Added Succusfully","success");
                 addedRoomObjectArray.splice(index, 1);
                 addedRoomDataObject.data = addedRoomObjectArray;
                 refreshRoomDetailsTable(addedRoomDataObject);
+                isChange = true;
+                alertFunction("Delete","Delete Successfully","success");
+
             } else {
-                window.alert("Delete not complete error "+deleteResponse.message);
+                alertFunction("Error","Not Delete Room","error");
             }
         }else {
             addedRoomObjectArray.splice(index, 1);
             addedRoomDataObject.data = addedRoomObjectArray;
             refreshRoomDetailsTable(addedRoomDataObject);
+            alertFunction("Delete","Delete Successfully","success");
         }
+    }else {
+        alertFunction("Delete","Not Delete Room","error");
     }
 }
 
@@ -361,31 +397,94 @@ packageaddBtn.addEventListener('click', (event) => {
     findPackageObjectIndex = addedPackageDataObject.data.findIndex((element) => element.id === tempPackageObj.id);
     if (findPackageObjectIndex !== -1) {
         alertFunction("All ready add","Do you want to Update count ? <br><p type=\"button\" class=\"btn btn-outline-dark btn-sm mt-2\">Yes</p>","warning",()=>{
-            addedPackageDataObject.data[findPackageObjectIndex].packageCount += parseInt(packageCountTxt.value);
-            refreshPackageDetailsTable(addedPackageDataObject);
+            if (isEdit){
+                let deleteResponse = HTTPRequestService("PUT",'http://localhost:8080/reservation/reservationhaspackage?reservation_id='+ window['oldReservation'].id+'&package_id='+addedPackageDataObject.data[findPackageObjectIndex].id+'&package_count='+addedPackageDataObject.data[findPackageObjectIndex].packageCount);
+
+                if (199<deleteResponse.status && deleteResponse.status<300) {
+                    addedPackageDataObject.data[findPackageObjectIndex].packageCount += parseInt(packageCountTxt.value);
+                    refreshPackageDetailsTable(addedPackageDataObject);
+                    isChange = true;
+                    updatePackageDetails.push([addedPackageDataObject.data[findPackageObjectIndex].id,addedPackageDataObject.data[findPackageObjectIndex].packageCount,"ADD"]);
+                    alertFunction("Update","Added Successfully","success");
+                } else {
+                    alertFunction("Error","Not Update Package","error");
+                }
+            }else {
+                addedPackageDataObject.data[findPackageObjectIndex].packageCount += parseInt(packageCountTxt.value);
+                refreshPackageDetailsTable(addedPackageDataObject);
+                alertFunction("Update","Added Successfully","success");
+            }
         });
     }else{
-        tempPackageObj.packageCount = parseInt(packageCountTxt.value);
-        addedPackageDataObject.data.push(tempPackageObj);
+        if (isEdit){
+            let deleteResponse = HTTPRequestService("PUT",'http://localhost:8080/reservation/reservationhaspackage?reservation_id='+ window['oldReservation'].id+'&package_id='+tempPackageObj.id+'&package_count='+packageCountTxt.value);
+            if (199<deleteResponse.status && deleteResponse.status<300) {
+                tempPackageObj.packageCount = parseInt(packageCountTxt.value);
+                addedPackageDataObject.data.push(tempPackageObj);
+                isChange = true;
+                updatePackageDetails.push([tempPackageObj.id,packageCountTxt.value,"ADD"])
+                alertFunction("Update","Added Successfully","success");
+            } else {
+                alertFunction("Error","Not Update Package","error");
+            }
+
+        }else {
+            tempPackageObj.packageCount = parseInt(packageCountTxt.value);
+            addedPackageDataObject.data.push(tempPackageObj);
+        }
+
     }
     refreshPackageDetailsTable(addedPackageDataObject);
 })
+
 featureaddBtn.addEventListener('click', (event) => {
     HTTPRequestService("GET",'http://localhost:8080/services/servicegetid/'+serviceDtlTxt.value);
     tempServiceObj = HTTPRequestService("GET",'http://localhost:8080/services/servicegetid/'+serviceDtlTxt.value).data;
 
     findServiceObjectIndex = addedServiceDataObject.data.findIndex((element) => element.id === tempServiceObj.id);
     if (findServiceObjectIndex !== -1) {
-        alertFunction("All ready add","Do you want to Update count ? <br><p type=\"button\" class=\"btn btn-outline-dark btn-sm mt-2\">Yes</p>","warning",()=>{
-            addedServiceDataObject.data[findServiceObjectIndex].serviceCount += parseInt(serviceCountTxt.value);
-            refreshServiceDetailsTable(addedServiceDataObject);
-        });
+        if (isEdit){
+            let deleteResponse = HTTPRequestService("PUT",'http://localhost:8080/reservation/reservationhasservice?reservation_id='+ window['oldReservation'].id+'&service_id='+addedServiceDataObject.data[findServiceObjectIndex].id+'&service_count='+addedServiceDataObject.data[findServiceObjectIndex].serviceCount);
+            if (199<deleteResponse.status && deleteResponse.status<300) {
+                alertFunction("All ready add","Do you want to Update count ? <br><p type=\"button\" class=\"btn btn-outline-dark btn-sm mt-2\">Yes</p>","warning",()=>{
+                    addedServiceDataObject.data[findServiceObjectIndex].serviceCount += parseInt(serviceCountTxt.value);
+                    refreshServiceDetailsTable(addedServiceDataObject);
+                    updateServiceDetails.push([addedServiceDataObject.data[findServiceObjectIndex].id,addedServiceDataObject.data[findServiceObjectIndex].serviceCount,"ADD"]);
+                    isChange = true;
+                    alertFunction("Update","Added Successfully","success");
+                });
+            }
+            else {
+                alertFunction("Error","Not Update Service","error");
+            }
+        }else {
+            alertFunction("All ready add","Do you want to Update count ? <br><p type=\"button\" class=\"btn btn-outline-dark btn-sm mt-2\">Yes</p>","warning",()=>{
+                addedServiceDataObject.data[findServiceObjectIndex].serviceCount += parseInt(serviceCountTxt.value);
+                refreshServiceDetailsTable(addedServiceDataObject);
+                alertFunction("Update","Added Successfully","success");
+            });
+        }
+
     }else{
-        tempServiceObj.serviceCount = parseInt(serviceCountTxt.value);
-        addedServiceDataObject.data.push(tempServiceObj);
+        if (isEdit){
+            let deleteResponse = HTTPRequestService("PUT",'http://localhost:8080/reservation/reservationhasservice?reservation_id='+ window['oldReservation'].id+'&service_id='+tempServiceObj.id+'&service_count='+serviceCountTxt.value);
+            if (199<deleteResponse.status && deleteResponse.status<300) {
+                tempServiceObj.serviceCount = parseInt(serviceCountTxt.value);
+                addedServiceDataObject.data.push(tempServiceObj);
+                updateServiceDetails.push([tempServiceObj.id,serviceCountTxt.value,"ADD"]);
+                isChange = true;
+                alertFunction("Update","Added Successfully","success");
+            } else {
+                alertFunction("Error","Not Update Service","error");
+            }
+        }else {
+            tempServiceObj.serviceCount = parseInt(serviceCountTxt.value);
+            addedServiceDataObject.data.push(tempServiceObj);
+            alertFunction("Update","Added Successfully","success");
+        }
     }
     refreshServiceDetailsTable(addedServiceDataObject);
-})
+});
 
 BtnAddByNic.addEventListener('click',()=>{
     selectedCustomer = selectCustomerList.data.find((element) => element.nic == nicDtlTxt.value);
@@ -428,6 +527,50 @@ backtoRoomAddedPrimary.addEventListener('click',()=>{
 });
 reservationFormClose.addEventListener('click', (e) => {
     if (confirm("Are you sure ?")){
+        if (isChange){
+            if (confirm("Do you want to save changes ?")){
+                fullReservationUpdateFunction();
+            }else{
+
+                //Update package rallback function
+                updatePackageDetails.forEach((element) => {
+                    if (element[2] === "ADD"){
+                        let deleteResponse = HTTPRequestService("DELETE",'http://localhost:8080/reservation/reservationhaspackage?reservation_id='+ window['oldReservation'].id+'&package_id='+element[0]+'&package_count='+element[1]);
+                        if (199<deleteResponse.status && deleteResponse.status<300) {
+                            alertFunction("Update","Added Successfully","success");
+                        } else {
+                            alertFunction("Error","Not Update Package","error");
+                        }
+                    }else if (element[2] === "DELETE"){
+                        let deleteResponse = HTTPRequestService("PUT",'http://localhost:8080/reservation/reservationhaspackage?reservation_id='+ window['oldReservation'].id+'&package_id='+element[0]+'&package_count='+element[1]);
+                        if (199<deleteResponse.status && deleteResponse.status<300) {
+                            alertFunction("Update","Added Successfully","success");
+                        } else {
+                            alertFunction("Error","Not Update Package","error");
+                        }
+                    }
+                });
+                //Update service rallback function
+                updateServiceDetails.forEach((element) => {
+                    if (element[2] === "ADD"){
+                        let deleteResponse = HTTPRequestService("DELETE",'http://localhost:8080/reservation/reservationhasservice?reservation_id='+ window['oldReservation'].id+'&service_id='+element[0]+'&service_count='+element[1]);
+                        if (199<deleteResponse.status && deleteResponse.status<300) {
+                            alertFunction("Update","Added Successfully","success");
+                        } else {
+                            alertFunction("Error","Not Update Service","error");
+                        }
+                    }else if (element[2] === "DELETE"){
+                        let deleteResponse = HTTPRequestService("PUT",'http://localhost:8080/reservation/reservationhasservice?reservation_id='+ window['oldReservation'].id+'&service_id='+element[0]+'&service_count='+element[1]);
+                        if (199<deleteResponse.status && deleteResponse.status<300) {
+                            alertFunction("Update","Added Successfully","success");
+                        } else {
+                            alertFunction("Error","Not Update Service","error");
+                        }
+                    }
+                });
+            }
+
+        }
         formCloser();
     }
 });
@@ -446,7 +589,7 @@ preRoomCheckinDateTxt.addEventListener('change', ()=>{
 });
 
 preRoomCheckedoutDateTxt.addEventListener('change', ()=>{
-    preRoomCheckedoutDateTxt.value != "" && preRoomCheckedoutDateTxt.value != "" ? domainUrlCreateFunction(domaiurl,preRoomCheckedoutDateTxt.value,preRoomCheckedoutDateTxt.value) : null;
+    checkinCheckoutSet.value != "" && preRoomCheckedoutDateTxt.value != "" ? domainUrlCreateFunction(domaiurl,preRoomCheckinDateTxt.value,preRoomCheckedoutDateTxt.value) : null;
     refreshRoomTable(HTTPRequestService("GET",urlcreatefunction(domaiurl,valdationFeildList,validationStrategyList)+'&roomstates_id=1'),roomTablePrivilage);
 });
 
@@ -542,7 +685,7 @@ ValidationButton.addEventListener('click', ()=>{
     }
 });
 
-UpdateButton.addEventListener('click', ()=>{
+const fullReservationUpdateFunction = () => {
     window.alert("Update Button is clicked");
     var newReservation = new Object();
     var newReservationpayment = new Object();
@@ -570,6 +713,10 @@ UpdateButton.addEventListener('click', ()=>{
         else if(399<addedResponse.status && addedResponse.status<500) DynamicvalidationFunctioion(addedResponse.errorMessage,valdationFeildList,inputForm);
         else window.alert("Add Failure "+addedResponse.status);
     }
+}
+
+UpdateButton.addEventListener('click', ()=>{
+    fullReservationUpdateFunction();
 })
 
 const dataListMatchingCheck = (event,targetButton,datalist,regPattern) =>{
@@ -716,6 +863,7 @@ reservationFormInputList = [
 const formCloser = ()=>{
     $('#reservationForm').modal('hide');
     this.isEdit = false;
+    this.isChange = false;
     formClear(reservationFormInputList,inputForm);
     document.getElementById('customerName').innerHTML = "";
     selectedCustomer = "";
