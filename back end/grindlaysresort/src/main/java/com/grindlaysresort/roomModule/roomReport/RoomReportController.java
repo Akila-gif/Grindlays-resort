@@ -34,7 +34,7 @@ public class RoomReportController {
     }
 
     @GetMapping("/roomlist")
-    public List<Employee> findCustomerByDynamicCriteria(@RequestParam(required = false)Integer roomstates_id, @RequestParam(required = false) Integer viewtype_id, @RequestParam(required = false)Integer roomtype_id, @RequestParam(required = false) Integer maxheadcount, @RequestParam(required = false) BigDecimal min_price, @RequestParam(required = false) BigDecimal max_price  , @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkinDate, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  checkoutDate, @RequestParam(required = false) String orderbytype, @RequestParam(required = false) String asendordesend ) {
+    public List<Employee> findCustomerByDynamicCriteria(@RequestParam(required = false)Integer roomstates_id, @RequestParam(required = false) Integer viewtype_id, @RequestParam(required = false)Integer roomtype_id, @RequestParam(required = false) Integer maxheadcount, @RequestParam(required = false) BigDecimal min_price, @RequestParam(required = false) BigDecimal max_price  ,  @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkinDate, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkoutDate, @RequestParam(required = false) String orderbytype, @RequestParam(required = false) String asendordesend ) {
         // Start building the query string
         StringBuilder queryString = new StringBuilder("SELECT * FROM room r");
 

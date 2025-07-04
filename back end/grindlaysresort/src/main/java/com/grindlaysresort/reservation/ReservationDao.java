@@ -100,4 +100,13 @@ public interface ReservationDao extends JpaRepository<Reservation,Integer> {
     @Query(value = "DELETE FROM reservation_has_roompackage WHERE reservation_id = : reservation_id",nativeQuery = true)
     void deleteRoomPackageReservationDetails(@Param("reservation_id") int reservation_id);
 
+    @Modifying
+    @Query(value = "update Reservation r set r.reservationtotalpayment = :reservationtotalpayment, r.totalpaidamount = :totalpaidamount, r.paymentstatus = :paymentstatus, r.discount = :discount where r.id = :reservation_id")
+    @Transactional
+    void UpdateReservationPaymentDetails(@Param("reservation_id") int reservation_id, @Param("paymentstatus") boolean paymentstatus, @Param("totalpaidamount") BigDecimal totalpaidamount, @Param("reservationtotalpayment") BigDecimal reservationtotalpayment, @Param("discount") BigDecimal discount);
+
+    @Modifying
+    @Transactional
+    @Query(value = "update Reservation r set r.state_id = 4 where r.id = :reservation_id", nativeQuery = true)
+    void UpdateDeletedReservation(@Param("reservation_id") int reservation_id);
 }
