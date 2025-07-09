@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Data
@@ -26,5 +27,13 @@ public class Menu {
 
     @Column(name = "per_amount_price")
     BigDecimal per_amount_price;
+
+
+    @OneToMany(mappedBy = "menu")
+    List<MenuHasMenuItem> menuHasMenuItems;
+
+    @ManyToOne
+    @JoinColumn(name = "menu_category_id", referencedColumnName = "id")
+    MenuCategory menuCategory;
 
 }
