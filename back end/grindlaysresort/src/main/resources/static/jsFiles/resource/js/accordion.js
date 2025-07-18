@@ -1,4 +1,4 @@
-
+ 
 const crateAccordion = (parentsID,elementId,accordionItemDataList,accordionBodyDataList,clickingEventfuntion=null) =>{
     parentsID.innerHTML = '';
     let accordionDiv = document.createElement('div');

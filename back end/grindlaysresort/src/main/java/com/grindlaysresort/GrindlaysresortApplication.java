@@ -213,17 +213,24 @@ public class GrindlaysresortApplication {
 		userDao.save(adminUser);
 	}
 
-	@RequestMapping(value = "/createmealview")
+	@RequestMapping(value = "/createmenuview")
 	public ModelAndView DisplayMealAdded(){
 		ModelAndView mealView = new ModelAndView();
-		mealView.setViewName("service.html");
+		mealView.setViewName("addmenu.html");
 		return mealView;
 	}
 
-	@RequestMapping(value = "/createmealitemview")
+	@RequestMapping(value = "/createmenuitemview")
 	public ModelAndView DisplayMealItemAdded(){
 		ModelAndView mealView = new ModelAndView();
-		mealView.setViewName("addmealitem.html");
+		mealView.setViewName("addmenuitem.html");
+		return mealView;
+	}
+
+	@RequestMapping(value = "/createingredientsview")
+	public ModelAndView DisplayIngredientsAdded(){
+		ModelAndView mealView = new ModelAndView();
+		mealView.setViewName("addingredients.html");
 		return mealView;
 	}
 

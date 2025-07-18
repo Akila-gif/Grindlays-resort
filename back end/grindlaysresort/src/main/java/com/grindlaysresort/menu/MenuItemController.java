@@ -20,7 +20,11 @@ public class MenuItemController {
     public MenuItem getAllMenuItem(@PathVariable("id") int id) {
 
         Optional<MenuItem> optionalMenuItem = menuItemDao.findById(1);
-        System.out.println("findByID: " + id);
         return optionalMenuItem.get();
+    }
+
+    @GetMapping()
+    public List<MenuItem> getAllMenuItems() {
+        return menuItemDao.findAll();
     }
 }
