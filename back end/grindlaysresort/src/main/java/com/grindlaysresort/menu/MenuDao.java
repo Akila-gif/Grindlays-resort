@@ -1,6 +1,5 @@
-package com.grindlaysresort.menu.ingredient;
+package com.grindlaysresort.menu;
 
-import com.grindlaysresort.menu.Menu;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
