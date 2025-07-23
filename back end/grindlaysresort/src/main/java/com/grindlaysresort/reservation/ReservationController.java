@@ -4,6 +4,7 @@ import com.grindlaysresort.customerModule.CustomerDao;
 import com.grindlaysresort.hotelpackages.RoomPackage;
 import com.grindlaysresort.hotelpackages.RoomPackageDao;
 import com.grindlaysresort.menu.Menu;
+import com.grindlaysresort.menu.ReservationHasMenu;
 import com.grindlaysresort.payment.PaymentMethodDao;
 import com.grindlaysresort.payment.ReservationPayment;
 import com.grindlaysresort.payment.ReservationPaymentDao;
@@ -399,5 +400,12 @@ public class ReservationController {
 
         totalPaymentAmount = totalPaymentAmount.add(roomPackage.get().getPrice().multiply(new BigDecimal(package_count)));
         reservationDao.UpdateReservationPaymentDetails(reservationId, reservation.get().isPaymentstatus(), totalPaymentAmount, reservation.get().getReservationtotalpayment(), reservation.get().getDiscount());
+    }
+
+    @GetMapping("/getbyid/{reservation_number}")
+    public Reservation getReservationHasMEnuById(@PathVariable("reservation_number") String reservationNumber) {
+        Reservation optionalReservation = reservationDao.findByReservationNumber(reservationNumber);
+        System.out.println("Reservation found: " + optionalReservation.getReservation_number());
+        return optionalReservation;
     }
 }

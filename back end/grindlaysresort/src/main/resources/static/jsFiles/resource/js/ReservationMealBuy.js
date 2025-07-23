@@ -1,4 +1,4 @@
-var MenuItem = new Object();
+var reservationMealBuy = new Object();
 var bedDetails = [];
 var featuresDetails = [];
 var bedDetailsObject = new Object();
@@ -303,7 +303,7 @@ bedTypeAdd.addEventListener('click', () => {
     if (menuFormSelect.value!=="" && menuCountTxt.value!==""){
         let menuDeatailsDropDown = JSON.parse(menuFormSelect.value);
 
-        let menuHasBuyerViewDetails = {menu: menuDeatailsDropDown, itemquentity: parseFloat(menuCountTxt.value)};
+        let menuHasBuyerViewDetails = {menu: menuDeatailsDropDown, itemquentity: parseFloat(menuCountTxt.value),totalprice: parseFloat(menuDeatailsDropDown.per_amount_price) * parseFloat(menuCountTxt.value)};
         if (menuHasBuyerViewDetails.menu.id === bedDetails.map(element => element.menu.id).find(element => element === menuHasBuyerViewDetails.menu.id)){
             alertFunction("Ingredient Added","Do you want to add again ? <br><p type=\"button\" class=\"btn btn-outline-dark btn-sm mt-2\">Yes</p>","warning",()=>{
                 //get index of the element
@@ -333,16 +333,17 @@ MenuItemViewPriceTxt.addEventListener('keyup',()=>{
 });
 */
 const valdationFeildList = [
-    { id: 'menuNameTxt', type: 'text', validationStategy: 'nothing', requird: true},
-    { id: 'availableCountTxt', type: 'text', validationStategy: 'nothing', requird: true },
-    { id: 'MenuCategoryFormSelect', type: 'dropdown', validationStategy: 'selected', requird: true },
+    { id: 'ReservationDtlTxt', type: 'text', validationStategy: 'nothing', requird: true}
 ];
 const valdationDetailsList = {
-    'MenuItemViewPriceTxt': { pattern: '^[1-9][0-9]*(\\.[0-9]{1,2})?$'},
+    'ReservationDtlTxt': { pattern: '^[1-9][0-9]*(\\.[0-9]{1,2})?$'},
 };
 
+
 ValidationButton.addEventListener('click', () => {
-    /* have 4 parameters the 4th one is inputID the defalt value is set as feildID=null . if you need a validat specify input you should enter FeildID */
+    /*
+        have 4 parameters the 4th one is inputID the defalt value is set as feildID=null . if you need a validat specify input you should enter FeildID
+    */
     //return true of false result of validation
     validationResult = validationFunction(valdationFeildList, valdationDetailsList, inputForm);
     if (validationResult) {
@@ -366,6 +367,22 @@ ValidationButton.addEventListener('click', () => {
         and return employee Object
     */
 });
+
+const formDataAddingFunction = () =>{
+    reservationMealBuy = bedDetails;
+    //reservationMealBuy.maxheadcount = maxMenuItemViewHeadCount;
+    reservationMealBuy.featuresList = featuresDetails;
+    //let MenuItemViewObject = formObjectCreate(valdationFeildList, MenuItemView);
+    console.log(reservationMealBuy);
+    console.log(JSON.stringify(reservationMealBuy));
+    let addedResponse = HTTPRequestService("POST", 'http://localhost:8080/reservationhasmenu/adduserbuymenu/'+ReservationDtlTxt.value, JSON.stringify(reservationMealBuy));
+    if (199 < addedResponse.status && addedResponse.status < 300) {
+        window.alert("Add Successfully" + addedResponse.status);
+        reservationDetails = HTTPRequestService("GET",'http://localhost:8080/reservation');
+    } else if (399 < addedResponse.status && addedResponse.status < 500) {
+        DynamicvalidationFunctioion(addedResponse.errorMessage, valdationFeildList, inputForm);
+    } else window.alert("Add Failure " + addedResponse.status);
+}
 
 UpdateButton.addEventListener('click', () => {
     /* have 4 parameters the 4th one is inputID the defalt value is set as feildID=null . if you need a validat specify input you should enter FeildID */
@@ -503,14 +520,15 @@ MenuItemViewFormClose.addEventListener('click',(event)=>{
     }
 });
 
+/*
 const formDataAddingFunction = () =>{
     MenuItemView.bedTypes = bedDetails;
     MenuItemView.maxheadcount = maxMenuItemViewHeadCount;
     MenuItemView.featuresList = featuresDetails;
     let MenuItemViewObject = formObjectCreate(valdationFeildList, MenuItemView);
-    console.log(MenuItemViewObject);
+    console.log(MenuItemView);
     console.log(JSON.stringify(MenuItemViewObject));
-    let addedResponse = HTTPRequestService("POST", 'http://localhost:8080/MenuItemView', JSON.stringify(MenuItemViewObject));
+    let addedResponse = HTTPRequestService("POST", 'http://localhost:8080/MenuItemViewww', JSON.stringify(MenuItemViewObject));
     if (199 < addedResponse.status && addedResponse.status < 300) {
         window.alert("Add Successfully" + addedResponse.status);
         refreshMenuItemViewTable(HTTPRequestService("GET", 'http://localhost:8080/MenuItemView'));
@@ -518,6 +536,7 @@ const formDataAddingFunction = () =>{
         DynamicvalidationFunctioion(addedResponse.errorMessage, valdationFeildList, inputForm);
     } else window.alert("Add Failure " + addedResponse.status);
 }
+*/
 
 const formDataUpdateFunction = () =>{
     MenuItemView.bedTypes = bedDetails;

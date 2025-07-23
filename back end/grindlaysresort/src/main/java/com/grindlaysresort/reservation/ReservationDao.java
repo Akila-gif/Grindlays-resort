@@ -20,6 +20,9 @@ public interface ReservationDao extends JpaRepository<Reservation,Integer> {
     @Query("SELECT new Reservation (r.id,r.reservation_number,r.state_id) FROM Reservation r")
     List<Reservation> findAllLegasyLord();
 
+    @Query("SELECT r FROM Reservation r WHERE r.reservation_number = :reservationNumber")
+    Reservation findByReservationNumber(@Param("reservationNumber") String reservationNumber);
+
 //    @Query(value = "select * from reservation_has_service rhs where rhs.reservation_id=1 and rhs.service_id=6", nativeQuery = true)
 //    ReservationHasService findByUsingREservationandService();
     @org.springframework.transaction.annotation.Transactional

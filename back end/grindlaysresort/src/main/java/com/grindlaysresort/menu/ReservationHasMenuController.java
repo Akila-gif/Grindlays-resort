@@ -44,25 +44,22 @@ public class ReservationHasMenuController {
     }
 
 
-    @PostMapping("adduserbuymenu/{reservationId}")
-    public ResponseEntity<?> addMenusToReservation(
-            @PathVariable Integer reservationId,
-            @RequestBody List<Map<String, Object>> menuItemsRequest) {
+    @PostMapping("adduserbuymenu/{reservationNumber}")
+    public ResponseEntity<?> addMenusToReservation(@PathVariable String reservationNumber,@RequestBody List<Map<String, Object>> menuItemsRequest) {
 
         // Find the reservation
-        Optional<Reservation> optionalReservation = reservationDao.findById(reservationId);
-        if (!optionalReservation.isPresent()) {
+        Reservation reservation = reservationDao.findByReservationNumber(reservationNumber);
+        if (reservation==null) {
             return new ResponseEntity<>("Reservation not found", HttpStatus.NOT_FOUND);
         }
 
-        Reservation reservation = optionalReservation.get();
         List<ReservationHasMenu> savedMenuItems = new ArrayList<>();
 
         for (Map<String, Object> menuItemRequest : menuItemsRequest) {
             ReservationHasMenu reservationHasMenu = new ReservationHasMenu();
 
             // Set quantity
-            reservationHasMenu.setQuentity((Integer) menuItemRequest.get("quentity"));
+            reservationHasMenu.setQuentity((Integer) menuItemRequest.get("itemquentity"));
 
             // Set total price
             String totalPriceStr = menuItemRequest.get("totalprice").toString();
@@ -89,7 +86,6 @@ public class ReservationHasMenuController {
             // Save the menu item
             savedMenuItems.add(reservationHasMenuDao.save(reservationHasMenu));
         }
-
         return new ResponseEntity<>(savedMenuItems, HttpStatus.CREATED);
     }
 
