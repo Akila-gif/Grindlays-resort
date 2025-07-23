@@ -23,6 +23,12 @@ public class MenuItem {
     @Column(name = "itemname")
     String ItemName;
 
+    @Column(name = "count")
+    String count;
+
+    @Column(name = "unitprice")
+    String UnitPrice;
+
     @OneToMany(mappedBy = "menuItem")
     List<MenuItemHasIngredient> menuItemHasIngredients;
 

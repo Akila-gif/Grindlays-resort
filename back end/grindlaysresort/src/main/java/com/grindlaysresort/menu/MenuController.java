@@ -1,6 +1,5 @@
 package com.grindlaysresort.menu;
 
-import com.grindlaysresort.menu.ingredient.MenuDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +16,9 @@ public class MenuController {
     @Autowired
     MenuDao menuDao;
 
+    @Autowired
+    MenuCategoryDao menuCategoryDao;
+
     @GetMapping(value = "/{id}")
     public Menu getMenuById(@PathVariable("id") int id){
         Optional<Menu> optionalMenu = menuDao.findById(id);
@@ -26,5 +28,10 @@ public class MenuController {
     @GetMapping()
     public List<Menu> getAllMenu(){
         return menuDao.findAll();
+    }
+
+    @GetMapping("/category")
+    public List<MenuCategory> getAllMenuCategories() {
+        return menuCategoryDao.findAll();
     }
 }

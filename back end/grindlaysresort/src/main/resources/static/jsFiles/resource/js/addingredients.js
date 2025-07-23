@@ -1,36 +1,39 @@
-var service = new Object();
+var ingredientsForm = new Object();
 
 userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/Employee?user=admin').data;
 window.addEventListener("load", () => {
-    ServiceFormPrivilageHandeling(userPrivilage);
-    refreshServicetable(HTTPRequestService("GET",'http://localhost:8080/services'),userPrivilage);
-    CategoryDropDownCreate(HTTPRequestService("GET",'http://localhost:8080/services/categories'));
-    AvailabilityDropDownCreate(HTTPRequestService("GET",'http://localhost:8080/services/availability'));
+    IngredientsFormFormPrivilageHandeling(userPrivilage);
+    refreshIngredientsFormtable(HTTPRequestService("GET",'http://localhost:8080/ingredients'),userPrivilage);
+    CategoryDropDownCreate(HTTPRequestService("GET",'http://localhost:8080/ingradientfoodcategory'));
 });
-refreshServicetable = (dataList) => {
+refreshIngredientsFormtable = (dataList) => {
+
+    console.log(dataList);
     //displaying data list for employee table
     const displayProperty = [
+        { dataType: 'text', propertyName: "ingredientscode" },
         { dataType: 'text', propertyName: "name" },
-        { dataType: 'text', propertyName: "peramount" },
+        { dataType: 'text', propertyName: "price" },
+        { dataType: 'text', propertyName: "count" },
         { dataType: 'function', propertyName: cagegoryFunction },
-        { dataType: 'function', propertyName: serviceAvaliabilityFunction },
+        { dataType: 'function', propertyName: ingredientsFormAvaliabilityStateFunction },
     ];
-    fillDataIntoTable(EmployeeView, dataList, displayProperty, EditfunctionName, DeleteFunctionName, MoreFunctionName,deleteStatusFunction, true,userPrivilage);
+    fillDataIntoTable(ingredientsView, dataList, displayProperty, EditfunctionName, DeleteFunctionName, MoreFunctionName,deleteStatusFunction, true,userPrivilage);
     // fillDataIntoTable(tableod,datalist,editfunctionName,DeleteFunctionName,MoreFunctionName,button visibility);
     //fillDataIntoTable02(EmployeeView,employees,displayProperty,EditfunctionName,DeleteFunctionName,MoreFunctionName);
     //fillDataIntoTable03(EmployeeView,employees,displayProperty,EditfunctionName,DeleteFunctionName,MoreFunctionName);
     //fillDataIntoTable04(EmployeeView,employees,displayProperty,EditfunctionName,DeleteFunctionName,MoreFunctionName);
     $(document).ready(function () {
-        $('#EmployeeView').DataTable();
+        $('#ingredientsView').DataTable();
         $('.dataTables_length').addClass('bs-select');
 
-        EmployeeView_filter.classList.add('mb-3', 'pt-2');
-        let searchInputDiv = EmployeeView_filter.children[0].children[0];
+        ingredientsView_filter.classList.add('mb-3', 'pt-2');
+        let searchInputDiv = ingredientsView_filter.children[0].children[0];
         searchInputDiv.classList.add('form-control');
     });
 }
 //form Privilage handeling
-const ServiceFormPrivilageHandeling = (userPrivilage) =>{
+const IngredientsFormFormPrivilageHandeling = (userPrivilage) =>{
     if(userPrivilage.insert){
         $("#formOpenButton").css("visibility","visible");
     }
@@ -38,49 +41,50 @@ const ServiceFormPrivilageHandeling = (userPrivilage) =>{
 
 // Shoud pass as parameters (datalist,Id,nameof the field that display as the innre html)
 const CategoryDropDownCreate = (CategoriesDataList) =>{
-    dropDownCreate(CategoriesDataList,serviceCategoryFormSelect,'category_name');
+    dropDownCreate(CategoriesDataList,ingredientsCategoryFormSelect,'type');
 }
 
 const AvailabilityDropDownCreate = (AvailabilityDataList) =>{
-    dropDownCreate(AvailabilityDataList,serviceAvaliabilityFormSelect,'status');
+    dropDownCreate(AvailabilityDataList,ingredientsFormAvaliabilityFormSelect,'status');
 }
 
 /* table related Function */
 
 const cagegoryFunction = (element) => {
-    return element.servicecategory_id.category_name;
+    return element.foodcategory_id.type;
 }
 
-const serviceAvaliabilityFunction = (element) => {
-    return element.serviceAvaliability_id.status;
+const ingredientsFormAvaliabilityStateFunction = (element) => {
+    return element.ingredientsstatus_id.quentityStatus;
 }
 
 const EditfunctionName = (element, index) => {
-    $('#serviceForm').modal('show');
+    $('#ingredientsFormForm').modal('show');
     console.log(    element);
-    window['oldService'] = element;
+    window['oldIngredientsForm'] = element;
     FormFill(element,valdationFeildList);
 }
 
 const deleteStatusFunction = (element) => {
-    if (element.serviceAvaliability_id.status=="Available") return true;
-    else return false;
+/*    if (element.ingredientsFormAvaliability_id.status=="Available") return true;
+    else return false;*/
+    return true;
 }
 
 const DeleteFunctionName = (element, index, tableBody) => {
 
     let deleteConform = window.confirm("Are you sure ?\n"
-        + "Service name " + element.name
+        + "IngredientsForm name " + element.name
         + "\nFull Name " + element.full_name
         + "\nNIC " + element.nic_number
     );
     if (deleteConform) {
         const deleteServerResponse = 'OK';
         if (deleteServerResponse === 'OK') {
-            let deleteResponse = HTTPRequestService("DELETE",'http://localhost:8080/services/'+element.id);
+            let deleteResponse = HTTPRequestIngredientsForm("DELETE",'http://localhost:8080/ingredientsForms/'+element.id);
             if (199<deleteResponse.status && deleteResponse.status<300) {
                 window.alert("Delete Successfull...");
-                refreshServicetable(HTTPRequestService("GET",'http://localhost:8080/services'));
+                refreshIngredientsFormtable(HTTPRequestIngredientsForm("GET",'http://localhost:8080/ingredientsForms'));
             } else {
                 window.alert("Delete not compleate error "+deleteResponse.message);
             }
@@ -108,9 +112,9 @@ ValidationButton.addEventListener('click', () => {
         and return employee Object
      */
     if(validationResult) {
-        serviceObject = formObjectCreate(valdationFeildList,service);
-        if(confirm("Do you Want to add "+serviceObject.name+"?")){
-            let addedResponse = HTTPRequestService("POST",'http://localhost:8080/services',JSON.stringify(serviceObject));
+        ingredientsFormObject = formObjectCreate(valdationFeildList,ingredientsForm);
+        if(confirm("Do you Want to add "+ingredientsFormObject.name+"?")){
+            let addedResponse = HTTPRequestIngredientsForm("POST",'http://localhost:8080/ingredientsForms',JSON.stringify(ingredientsFormObject));
             if(199<addedResponse.status && addedResponse.status<300)window.alert("Add Successfully"+addedResponse.status);
             else if(399<addedResponse.status && addedResponse.status<500) DynamicvalidationFunctioion(addedResponse.errorMessage,valdationFeildList,inputForm);
             else window.alert("Add Failure "+addedResponse.status);
@@ -126,8 +130,8 @@ UpdateButton.addEventListener('click',()=>{
         and return employee Object
      */
     if(validationResult) {
-        ServiceObject = formObjectCreate(valdationFeildList,service);
-        let changes = objectCompairFunction(window['oldService'],ServiceObject,valdationFeildList,comparisonStaregy);
+        IngredientsFormObject = formObjectCreate(valdationFeildList,ingredientsForm);
+        let changes = objectCompairFunction(window['oldIngredientsForm'],IngredientsFormObject,valdationFeildList,comparisonStaregy);
 
         let empdtl ="\n";
 
@@ -137,12 +141,12 @@ UpdateButton.addEventListener('click',()=>{
                 empdtl+=keyName+" : "+ changes[keyName]+"\n";
             }
         });
-        if(confirm("Do you Want update "+window['oldService'].firt_name+"?"+empdtl)){
-            console.log(window['oldService']);
-            serverResponseData = HTTPRequestService("PUT",'http://localhost:8080/services/'+window['oldService'].id,JSON.stringify(ServiceObject));
+        if(confirm("Do you Want update "+window['oldIngredientsForm'].firt_name+"?"+empdtl)){
+            console.log(window['oldIngredientsForm']);
+            serverResponseData = HTTPRequestIngredientsForm("PUT",'http://localhost:8080/ingredientsForms/'+window['oldIngredientsForm'].id,JSON.stringify(IngredientsFormObject));
             if(199<serverResponseData.status && serverResponseData.status<300){
                 formCloser();
-                alertFunction("Update Successfully","More.......","success",displayUpdateServiceDetail(ServiceObject,changes));
+                alertFunction("Update Successfully","More.......","success",displayUpdateIngredientsFormDetail(IngredientsFormObject,changes));
             }else if(399<serverResponseData.status && serverResponseData.status<500) alertFunction("Update Successfully","More.......","error",displayUpdateEmpDetail(EmployeeObject,changes));
             else window.alert("Add Failure "+addedResponse.status);
         }else {
@@ -153,37 +157,37 @@ UpdateButton.addEventListener('click',()=>{
 
 });
 $("#formOpenButton").click(() => {
-    serviceAvaliabilityFormSelect.selectedIndex = 1;
-    serviceAvaliabilityFormSelect.disabled = true;
+    ingredientsCategoryFormSelect.selectedIndex = 1;
+    ingredientsCategoryFormSelect.disabled = false;
 });
 
 /* main form validation related Function */
-ServiceCategoryFormSelectFunction = (compairValueObj) =>{return compairValueObj.name}
+IngredientsFormCategoryFormSelectFunction = (compairValueObj) =>{return compairValueObj.name}
 
 const comparisonStaregy = {
-    'serviceCategoryFormSelect':{functions:ServiceCategoryFormSelectFunction}
+    'ingredientsFormCategoryFormSelect':{functions:IngredientsFormCategoryFormSelectFunction}
 };
-let displayUpdateServiceDetail = (empObj,chan) => {
+let displayUpdateIngredientsFormDetail = (empObj,chan) => {
     console.log(empObj);
     console.log(chan);
 }
 
 
 /* Event Calling Functions */
-serviceCategoryFormSelect.addEventListener('change',()=>{
-    validationFunction(valdationFeildList, valdationDetailsListt, inputForm, serviceCategoryFormSelect);
+ingredientsCategoryFormSelect.addEventListener('change',()=>{
+    validationFunction(valdationFeildList, valdationDetailsListt, inputForm, ingredientsCategoryFormSelect);
 });
 
-NameTxt.addEventListener('keyup',()=>{
-    validationFunction(valdationFeildList, valdationDetailsListt, inputForm, NameTxt);
+IngredientsNameTxt.addEventListener('keyup',()=>{
+    validationFunction(valdationFeildList, valdationDetailsListt, inputForm, IngredientsNameTxt);
 });
 
-priceTxt.addEventListener('keyup',()=>{
-    validationFunction(valdationFeildList, valdationDetailsListt, inputForm, priceTxt);
+unitPriceTxt.addEventListener('keyup',()=>{
+    validationFunction(valdationFeildList, valdationDetailsListt, inputForm, unitPriceTxt);
 });
 
-serviceAvaliabilityFormSelect.addEventListener('change',()=>{
-    validationFunction(valdationFeildList, valdationDetailsListt, inputForm, serviceAvaliabilityFormSelect);
+AvailableQuantityTxt.addEventListener('keyup',()=>{
+    validationFunction(valdationFeildList, valdationDetailsListt, inputForm, AvailableQuantityTxt);
 });
 
 
@@ -192,36 +196,36 @@ serviceAvaliabilityFormSelect.addEventListener('change',()=>{
 
 /* main form validation data */
 const valdationFeildList = [
-    { id: 'serviceCategoryFormSelect', type: 'dropdown', validationStategy: 'selected', requird: true },
-    { id: 'NameTxt', type: 'text', validationStategy: 'regexp', requird: true },
-    { id: 'priceTxt', type: 'text', validationStategy: 'regexp', requird: true },
-    { id: 'serviceAvaliabilityFormSelect', type: 'dropdown', validationStategy: 'selected', requird: true },
+    { id: 'ingredientsCategoryFormSelect', type: 'dropdown', validationStategy: 'selected', requird: true },
+    { id: 'IngredientsNameTxt', type: 'text', validationStategy: 'regexp', requird: true },
+    { id: 'unitPriceTxt', type: 'text', validationStategy: 'regexp', requird: true },
+    { id: 'AvailableQuantityTxt', type: 'text', validationStategy: 'nothing', requird: true },
 ];
 
 const valdationDetailsListt = {
-    'NameTxt': { pattern: /^[A-Za-z]+(?: [A-Za-z]+)*$/},
-    'priceTxt': { pattern: '^[1-9][0-9]*(\\.[0-9]{1,2})?$' },
+    'IngredientsNameTxt': { pattern: /^[A-Za-z]+(?: [A-Za-z]+)*$/},
+    'unitPriceTxt': { pattern: '^[1-9][0-9]*(\\.[0-9]{1,2})?$' },
 };
 
 const defaulTextError = {
-    'serviceCategoryFormSelect': { pattern: "please select your designation!"},
-    'NameTxt': {  pattern: "please enter valid full name!"},
-    'priceTxt': { pattern: "please enter resident!"},
-    'serviceAvaliabilityFormSelect': { pattern: "please enter resident!"},
+    'ingredientsCategoryFormSelect': { pattern: "please select your designation!"},
+    'IngredientsNameTxt': {  pattern: "please enter valid full name!"},
+    'unitPriceTxt': { pattern: "please enter resident!"},
+    'AvailableQuantityTxt': { pattern: "please enter resident!"},
 };
 
 //Modal close confermation
-serviceFormClose.addEventListener('click', (e) => {
+ingredientsFormClose.addEventListener('click', (e) => {
     if (confirm("Are you sure ?")){
         formCloser();
     }
 });
 
 const formCloser = ()=>{
-    $('#serviceForm').modal('hide');
+    $('#ingredientsForm').modal('hide');
     formClear(valdationFeildList,inputForm,defaulTextError);
     inputForm.classList.remove('try-validated');
-    refreshServicetable(HTTPRequestService("GET",'http://localhost:8080/services'));
+    refreshIngredientsFormtable(HTTPRequestService("GET",'http://localhost:8080/ingredients'));
 }
 
 const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="jsFiles/resource/bootstrap-5.3.1-dist/css/bootstrap.min.css" />
+    <script src="jsFiles/resource/bootstrap-5.3.1-dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="jsFiles/resource/fontawesome-free-6.4.2-web/css/all.css" />
+    <script src="jsFiles/resource/fontawesome-free-6.4.2-web/js/all.min.js"></script>
+    <script src="jsFiles/resource/js/jquery-3.7.1.js"></script>
+    <script src="jsFiles/resource/js/toastr.js"></script>
+    <script src="jsFiles/resource/js/objectCompair.js"></script>
+    <script src="jsFiles/resource/js/agecalculate.js"></script>
+    <script src="jsFiles/resource/js/notification.js"></script>
+    <script src="jsFiles/resource/js/serviceRequest.js"></script>
+    <link href="jsFiles/resource/js/DataTables/datatables.min.css" rel="stylesheet" />
+    <script src="jsFiles/resource/js/DataTables/datatables.min.js"></script>
+
+    <!--     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>-->
+    <link rel="stylesheet" href="cssFile/animated/animate.css" />
+
+    <link rel="stylesheet" href="cssFile/employee.css" />
+    <link rel="stylesheet" href="cssFile/toastr.css" />
+
+    <title>Menu</title>
+</head>
+
+<body style="overflow: scroll">
+<div class="d-flex justify-content-around bg-black">
+    <h1 class="text-center p-4 bg-black text-light fs-1">Menu</h1>
+</div>
+
+<!--     form modal-->
+<div class="modal modal-xl fade " id="roomForm" aria-labelledby="roomForm" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1>Menu<i class="fa-solid fa-user-plus"></i></h1>
+                <button type="button" class="btn-close" id="roomFormClose"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" class="form-control" id="inputForm">
+                    <div class="row m-2">
+                        <div class="col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><i class="fa-solid fa-phone-volume"></i></span>
+                                <div class="form-floating">
+                                    <input type="text" class="form-control disabled" id="menuNameTxt" placeholder="Menu Name" name="menu name" value=""/>
+                                    <label for="menuNameTxt">Menu Name</label>
+                                </div>
+                                <button
+                                        disabled
+                                        class="input-group-text"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Enter your Passport you use"
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div class="text-danger input-group fst-italic hide Error" id="menuNameTxtError" style="font-size: 12px">
+                                    please enter your menu name!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><i class="fa-solid fa-bed"></i></span>
+                                <div class="form-floating">
+                                    <input
+                                            type="number"
+                                            class="form-control"
+                                            id="availableCountTxt"
+                                            placeholder="EPF Number"
+                                            name="available_quantity"
+                                    />
+                                    <label for="availableCountTxt">Available Quantity</label>
+                                </div>
+                                <button
+                                        disabled
+                                        class="input-group-text"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Please enter Bed Count of the room.The bed details add button is available when the bed type is selected. and the bed count is entered more than 0."
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div
+                                        class="text-danger input-group fst-italic hide Error"
+                                        id="bedCountTxtError"
+                                        style="font-size: 12px"
+                                >
+                                    please enter your EPF Number!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-2 border">
+                        <h2 class="my-4">Add Integration Details</h2>
+                        <div class="col-md-6">
+                            <div class="input-group mb-3">
+                                <span class=""></span>
+                                <div class="form-floating">
+                                    <select class="form-select" name="ingredients" id="menuItemFormSelect">
+                                        <option selected value="" disabled>select bed type</option>
+                                    </select>
+                                    <label for="menuItemFormSelect">Menu Item</label>
+                                </div>
+                                <button
+                                        disabled
+                                        class="input-group-text"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Please select Bed type of the room. The bed details add button is available when the bed type is selected. and the bed count is entered more than 0."
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div class="text-danger input-group fst-italic hide" id="ingredientsTxtError" style="font-size: 12px">
+                                    please select your designation!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><i class="fa-solid fa-bed"></i></span>
+                                <div class="form-floating">
+                                    <input
+                                            type="number"
+                                            class="form-control"
+                                            id="menuItemCountTxt"
+                                            placeholder="EPF Number"
+                                            name="bed_count"
+                                    />
+                                    <label for="menuItemCountTxt">Menu Item Count</label>
+                                </div>
+                                <button
+                                        disabled
+                                        class="input-group-text"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Please enter Bed Count of the room.The bed details add button is available when the bed type is selected. and the bed count is entered more than 0."
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div
+                                        class="text-danger input-group fst-italic hide Error"
+                                        id="ingredientsCountTxtError"
+                                        style="font-size: 12px"
+                                >
+                                    please enter Ingredient Count!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 d-flex justify-content-end">
+                            <button type="button" class="btn btn-primary mb-3 " id="bedTypeAdd">Primary</button>
+                        </div>
+                        <hr />
+                        <div class="col-md-12">
+                            <table class="table table-secondary" id="IngredientsView" style="visibility: hidden">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Menu Item Name</th>
+                                    <th scope="col">Ingredient Price</th>
+                                    <th scope="col">Needed Quantity</th>
+                                    <th scope="col">Total Price</th>
+                                    <th>Modify</th>
+                                </tr>
+                                </thead>
+                                <tbody name="bedTypes" >
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row m-2 pb-4">
+                        <div class="col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><i class="fa-solid fa-phone-volume"></i></span>
+                                <div class="form-floating">
+                                    <input type="text" class="form-control disabled" id="roomNameTxt" placeholder="EPF Number" name="roomname" disabled value=""/>
+                                    <label for="roomNameTxt">Suggestion Price</label>
+                                </div>
+                                <button
+                                        disabled
+                                        class="input-group-text"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Enter your Passport you use"
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div class="text-danger input-group fst-italic hide Error" id="roomNameTxtError" style="font-size: 12px">
+                                    please enter your room name!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><i class="fa-solid fa-phone-volume"></i></span>
+                                <div class="form-floating">
+                                    <input type="number" class="form-control" id="roomPriceTxt" placeholder="EPF Number" name="roomprice" />
+                                    <label for="roomPriceTxt">Actual Menu Price</label>
+                                </div>
+                                <button
+                                        disabled
+                                        class="input-group-text"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Enter your Passport you use"
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div class="text-danger input-group fst-italic hide Error" id="roomPriceTxtError" style="font-size: 12px">
+                                    please enter your room price!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-2 pb-4">
+                        <div class="col-md-6">
+                            <div class="input-group mb-3">
+                                <span class=""></span>
+                                <div class="form-floating">
+                                    <select class="form-select" name="menucategory_id" id="MenuCategoryFormSelect">
+                                        <option selected value="" disabled>Select Menu Category</option>
+                                    </select>
+                                    <label for="MenuCategoryFormSelect">Menu Category</label>
+                                </div>
+                                <button
+                                        disabled
+                                        class="input-group-text"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Please select your Designation."
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div class="text-danger input-group fst-italic hide" id="menuCategoryTxtError" style="font-size: 12px">
+                                    please select your Ingradients!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <br /><br />
+                <button class="btn btn-primary mx-3" id="ValidationButton">Add</button>
+                <button class="btn btn-primary mx-3" id="UpdateButton">Update button</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="CountryForm" aria-hidden="true" data-bs-backdrop="static" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="CountryLabel2">Add new Country</h1>
+            </div>
+            <div class="modal-body">
+                <form action="" class="form-control" id="countryInputForm">
+                    <div class="row pb-4">
+                        <div class="col-md-12">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-people-group"></i></span>
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="countryNameTxt" placeholder="Country" name="countryName" />
+                                    <label for="countryNameTxt">Country</label>
+                                </div>
+                                <button
+                                        disabled
+                                        class="input-group-text"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Enter your National identicard number"
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div class="text-danger input-group fst-italic hide" id="countryNameTxtError" style="font-size: 12px">
+                                    plese eneter your Country
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row pb-12">
+                        <div class="col-md-12">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><i class="fa-solid fa-people-group" id="fffff">fdfsfs</i></span>
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="countryCodeTxt" placeholder="Country code" name="countryCode" />
+                                    <label for="countryCodeTxt">Country code</label>
+                                </div>
+                                <button
+                                        disabled
+                                        class="input-group-text"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-custom-class="custom-tooltip"
+                                        data-bs-title="Enter your National identicard number"
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div class="text-danger input-group fst-italic hide" id="countryCodeTxtError" style="font-size: 12px">
+                                    plese eneter your CountryCode
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary mx-3" id="countryAddButton">Add</button>
+                <button class="btn btn-primary" id="backtoPrimary">Back to first</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--     room table-->
+
+<div class="container-fluid d-flex justify-content-end">
+    <button class="btn btn-primary mx-5 mt-3 px-4" data-bs-target="#roomForm" data-bs-toggle="modal" id="formOpenButton" style="visibility: hidden;">
+        <i class="fa-solid fa-user-plus" style="color: #ffffff"></i>
+    </button>
+</div>
+<div class="container-fluid mt-4 table-responsive px-lg-5 animate__animated animate__fadeInDown">
+    <table class="table table-dark table-striped my-4 mt-lg-5" id="MenuView">
+        <thead class="mt-3">
+        <tr>
+            <th>#</th>
+            <th>Menu Name</th>
+            <th>Menu Category</th>
+            <th>Menu Item</th>
+            <th>Menu Price</th>
+            <th>Modify</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+<script src="jsFiles/resource/js/employeeCommonfunction.js"></script>
+<script src="jsFiles/resource/js/addmenu.js"></script>
+<script src="jsFiles/resource/js/moreViewRefill.js"></script>
+<script src="jsFiles/resource/js/validationCommonfunction.js"></script>
+<script src="jsFiles/resource/js/formObjectCreateCommonFunction.js"></script>
+<script src="jsFiles/resource/js/dropDuwnCreateCommonFunction.js"></script>
+<script src="jsFiles/resource/js/formClear.js"></script>
+<script src="jsFiles/resource/js/formFill.js"></script>
+<script src="jsFiles/resource/js/errorDisplay.js"></script>
+</body>
+</html>

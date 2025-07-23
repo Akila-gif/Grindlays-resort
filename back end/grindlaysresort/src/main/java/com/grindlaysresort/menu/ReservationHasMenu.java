@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Data
+@IdClass(ReservationHasMenuId.class)
 public class ReservationHasMenu {
 
     @Column(name = "quentity")
