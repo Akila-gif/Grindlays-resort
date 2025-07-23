@@ -234,4 +234,11 @@ public class GrindlaysresortApplication {
 		return mealView;
 	}
 
+	@RequestMapping(value = "/mealbuyingview")
+	public ModelAndView DisplayReservationMealBuy(){
+		ModelAndView mealView = new ModelAndView();
+		mealView.setViewName("ReservationMealBuy.html");
+		return mealView;
+	}
+
 }
