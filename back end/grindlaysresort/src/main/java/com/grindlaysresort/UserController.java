@@ -2,6 +2,7 @@ package com.grindlaysresort;
 
 import com.grindlaysresort.exception.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -17,6 +18,9 @@ public class UserController {
 
     @Autowired
     RoleDao roleDao;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @GetMapping
     public List<User> getAllUser(){
@@ -57,6 +61,7 @@ public class UserController {
     @PostMapping
     public User addNewUser(@RequestBody User user){
         user.setAddeddate(LocalDateTime.now());
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         List<Role> managedRoles = new ArrayList<>();
         for (Role role : user.getRoleList()) {
             Role managedRole = roleDao.findById(role.getId())

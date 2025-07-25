@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="jsFiles/resource/bootstrap-5.3.1-dist/css/bootstrap.min.css" />
+  <script src="jsFiles/resource/bootstrap-5.3.1-dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="jsFiles/resource/fontawesome-free-6.4.2-web/css/all.css" />
+  <script src="jsFiles/resource/fontawesome-free-6.4.2-web/js/all.min.js"></script>
+  <script src="jsFiles/resource/js/jquery-3.7.1.js"></script>
+  <script src="jsFiles/resource/js/toastr.js"></script>
+  <script src="jsFiles/resource/js/objectCompair.js"></script>
+  <script src="jsFiles/resource/js/agecalculate.js"></script>
+  <script src="jsFiles/resource/js/notification.js"></script>
+  <script src="jsFiles/resource/js/serviceRequest.js"></script>
+  <link href="jsFiles/resource/js/DataTables/datatables.min.css" rel="stylesheet" />
+  <script src="jsFiles/resource/js/DataTables/datatables.min.js"></script>
+
+  <!--     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>-->
+  <link rel="stylesheet" href="cssFile/animated/animate.css" />
+
+  <link rel="stylesheet" href="cssFile/employee.css" />
+  <link rel="stylesheet" href="cssFile/toastr.css" />
+
+  <title>Payment Management view</title>
+</head>
+
+<body style="overflow: scroll">
+<div class="d-flex justify-content-around bg-black">
+  <h1 class="text-center p-4 bg-black text-light fs-1">Payment Details View</h1>
+</div>
+
+<!--     form modal-->
+<div class="modal modal-xl fade " id="roomForm" aria-labelledby="roomForm" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1>Reservation Payment <i class="fa-solid fa-user-plus"></i></h1>
+        <button type="button" class="btn-close" id="roomFormClose"></button>
+      </div>
+      <div class="modal-body">
+        <form action="" class="form-control" id="inputForm">
+          <div class="row m-2">
+            <div class="col-lg-4 col-md-3">
+              <div class="input-group mb-3">
+                <span class=""></span>
+                <div class="form-floating">
+                  <input list="ReservationDatalistOptions" class="form-control" id="ReservationDtlTxt" placeholder="ReservationDtlTxt" name="Reservation Numner"/>
+                  <datalist id="ReservationDatalistOptions">
+                  </datalist>
+                  <label for="ReservationDtlTxt">Reservation Number</label>
+                </div>
+                <button
+                        disabled
+                        class="input-group-text"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        data-bs-custom-class="custom-tooltip"
+                        data-bs-title="Please select your Country."
+                >
+                  <i class="fas fa-info-circle"></i>
+                </button>
+                <div class="text-danger input-group fst-italic hide" id="ReservationDtlTxtError"
+                     style="font-size: 12px">
+                  If you are not resident please select enter your country!
+                </div>
+                <div>
+                  <span id="BtnAddByNic" class="btn btn-primary disabled">Add By Nic</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row m-2">
+            <div class="col-md-6">
+              <div class="input-group mb-3">
+                <span class="input-group-text"><i class="fa-solid fa-phone-volume"></i></span>
+                <div class="form-floating">
+                  <input type="number" class="form-control" id="paidAmountTxt" placeholder="EPF Number" name="paidamount" />
+                  <label for="paidAmountTxt">Pay Amount</label>
+                </div>
+                <button
+                        disabled
+                        class="input-group-text"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        data-bs-custom-class="custom-tooltip"
+                        data-bs-title="Enter your Passport you use"
+                >
+                  <i class="fas fa-info-circle"></i>
+                </button>
+                <div class="text-danger input-group fst-italic hide Error" id="paidAmountTxtError" style="font-size: 12px">
+                  please enter your room price!
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="input-group mb-3">
+                <span class="input-group-text"><i class="fa-solid fa-phone-volume"></i></span>
+                <div class="form-floating">
+                  <select class="form-select" name="payment_method_id" id="paymentMethodFormSelect">
+                    <option value="" selected disabled>Selecte payment Method</option>
+                    <option value="1" >Card Payment</option>
+                    <option value="2" >Cash Payment</option>
+                    <option value="3" >Bank Transaction</option>
+                  </select>
+                  <label for="paymentMethodFormSelect">Payment Method</label>
+                </div>
+                <button
+                        disabled
+                        class="input-group-text"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        data-bs-custom-class="custom-tooltip"
+                        data-bs-title="Enter your Passport you use"
+                >
+                  <i class="fas fa-info-circle"></i>
+                </button>
+                <div class="text-danger input-group fst-italic hide Error" id="paymentMethodTxtError" style="font-size: 12px">
+                  please enter your room price!
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row m-2">
+            <div class="col-md-6">
+              <div class="input-group mb-3">
+                <span class="input-group-text"><i class="fa-solid fa-phone-volume"></i></span>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="discriptionTxt" placeholder="EPF Number" name="discription" />
+                  <label for="discriptionTxt">Description</label>
+                </div>
+                <button
+                        disabled
+                        class="input-group-text"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        data-bs-custom-class="custom-tooltip"
+                        data-bs-title="Enter your Passport you use"
+                >
+                  <i class="fas fa-info-circle"></i>
+                </button>
+                <div class="text-danger input-group fst-italic hide Error" id="discriptionTxtError" style="font-size: 12px">
+                  please enter your room price!
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="input-group mb-3">
+                <span class="input-group-text"><i class="fa-solid fa-phone-volume"></i></span>
+                <div class="form-floating">
+                  <input type="number" class="form-control" id="discountPriceTxt" placeholder="EPF Number" name="discount" />
+                  <label for="discountPriceTxt">Discount amount</label>
+                </div>
+                <button
+                        disabled
+                        class="input-group-text"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        data-bs-custom-class="custom-tooltip"
+                        data-bs-title="Enter your Passport you use"
+                >
+                  <i class="fas fa-info-circle"></i>
+                </button>
+                <div class="text-danger input-group fst-italic hide Error" id="roomPriceTxtError" style="font-size: 12px">
+                  please enter your room price!
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <br /><br />
+        <button class="btn btn-primary mx-3" id="ValidationButton">Add</button>
+        <button class="btn btn-primary mx-3" id="UpdateButton">Update button</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="CountryForm" aria-hidden="true" data-bs-backdrop="static" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+  <div class="modal-dialog ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="CountryLabel2">Add new Country</h1>
+      </div>
+      <div class="modal-body">
+        <form action="" class="form-control" id="countryInputForm">
+          <div class="row pb-4">
+            <div class="col-md-12">
+              <div class="input-group">
+                <span class="input-group-text"><i class="fa-solid fa-people-group"></i></span>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="countryNameTxt" placeholder="Country" name="countryName" />
+                  <label for="countryNameTxt">Country</label>
+                </div>
+                <button
+                        disabled
+                        class="input-group-text"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        data-bs-custom-class="custom-tooltip"
+                        data-bs-title="Enter your National identicard number"
+                >
+                  <i class="fas fa-info-circle"></i>
+                </button>
+                <div class="text-danger input-group fst-italic hide" id="countryNameTxtError" style="font-size: 12px">
+                  plese eneter your Country
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row pb-12">
+            <div class="col-md-12">
+              <div class="input-group mb-3">
+                <span class="input-group-text"><i class="fa-solid fa-people-group" id="fffff">fdfsfs</i></span>
+                <div class="form-floating">
+                  <input type="text" class="form-control" id="countryCodeTxt" placeholder="Country code" name="countryCode" />
+                  <label for="countryCodeTxt">Country code</label>
+                </div>
+                <button
+                        disabled
+                        class="input-group-text"
+                        data-bs-toggle="tooltip"
+                        data-bs-custom-class="custom-tooltip"
+                        data-bs-title="Enter your National identicard number"
+                >
+                  <i class="fas fa-info-circle"></i>
+                </button>
+                <div class="text-danger input-group fst-italic hide" id="countryCodeTxtError" style="font-size: 12px">
+                  plese eneter your CountryCode
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary mx-3" id="countryAddButton">Add</button>
+        <button class="btn btn-primary" id="backtoPrimary">Back to first</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--     room table-->
+
+<div class="container-fluid d-flex justify-content-end">
+  <button class="btn btn-primary mx-5 mt-3 px-4" data-bs-target="#roomForm" data-bs-toggle="modal" id="formOpenButton" style="visibility: hidden;">
+    <i class="fa-solid fa-user-plus" style="color: #ffffff"></i>
+  </button>
+</div>
+<div class="container-fluid mt-4 table-responsive px-lg-5 animate__animated animate__fadeInDown">
+  <table class="table table-dark table-striped my-4 mt-lg-5" id="MenuView">
+    <thead class="mt-3">
+    <tr>
+      <th>#</th>
+      <th scope="col">Reservation Number</th>
+      <th scope="col">Customer Name</th>
+      <th scope="col">Total service price</th>
+      <th scope="col">Total room price</th>
+      <th scope="col">Total Package price</th>
+      <th scope="col">Total Menu price</th>
+      <th scope="col">Total Price</th>
+      <th scope="col">Total Discount</th>
+      <th scope="col">Total Payment Status</th>
+      <th scope="col">Total Paid Amount</th>
+      <th>Modify</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+<script src="jsFiles/resource/js/employeeCommonfunction.js"></script>
+<script src="jsFiles/resource/js/paymentManagement.js"></script>
+<script src="jsFiles/resource/js/moreViewRefill.js"></script>
+<script src="jsFiles/resource/js/validationCommonfunction.js"></script>
+<script src="jsFiles/resource/js/formObjectCreateCommonFunction.js"></script>
+<script src="jsFiles/resource/js/dataListCreateFunction.js"></script>
+<script src="jsFiles/resource/js/dropDuwnCreateCommonFunction.js"></script>
+<script src="jsFiles/resource/js/formClear.js"></script>
+<script src="jsFiles/resource/js/formFill.js"></script>
+<script src="jsFiles/resource/js/errorDisplay.js"></script>
+</body>
+</html>

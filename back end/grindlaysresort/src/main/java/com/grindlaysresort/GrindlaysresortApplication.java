@@ -241,4 +241,18 @@ public class GrindlaysresortApplication {
 		return mealView;
 	}
 
+	@RequestMapping(value = "/paymentmanagementview")
+	public ModelAndView DisplayPaymentManagement(){
+		ModelAndView mealView = new ModelAndView();
+		mealView.setViewName("paymentManagement.html");
+		return mealView;
+	}
+
+	@RequestMapping(value = "/landingpageview")
+	public ModelAndView DisplayLandingPage(){
+		ModelAndView mealView = new ModelAndView();
+		mealView.setViewName("landingpage.html");
+		return mealView;
+	}
+
 }
