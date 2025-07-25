@@ -143,7 +143,28 @@ public class ReservationController {
             map.put("rooms",roomListListMap);
 
             //create a list of payment
-            map.put("payment_id", reservation.getReservationtotalpayment());
+            HashMap<String,Object> paymentMethodMap = new HashMap<>();
+
+            paymentMethodMap.put("payment_id", reservation.getReservationtotalpayment());
+            paymentMethodMap.put("discount", reservation.getDiscount());
+            paymentMethodMap.put("totalpaidamount", reservation.getTotalpaidamount());
+
+            List<HashMap<String,Object>> paymentList = new ArrayList<>();
+            for (ReservationPayment reservationPayment : reservation.getPaymentList()) {
+                HashMap<String,Object> paymentMap = new HashMap<>();
+                paymentMap.put("id",reservationPayment.getId());
+                paymentMap.put("paidamount",reservationPayment.getPaidamount());
+                paymentMap.put("discription",reservationPayment.getDiscription());
+                paymentMap.put("dateandtime",reservationPayment.getDateandtime());
+                HashMap<String,Object> paymentMethod = new HashMap<>();
+                paymentMethod.put("id",reservationPayment.getPayment_method_id().getId());
+                paymentMethod.put("name",reservationPayment.getPayment_method_id().getMethod());
+                paymentMap.put("payment_method_id",paymentMethod);
+                paymentList.add(paymentMap);
+            }
+            paymentMethodMap.put("reservationpayment", paymentList);
+            paymentMethodMap.put("paymentstatus", reservation.isPaymentstatus());
+            map.put("reservationpaymentdetails", paymentMethodMap);
             reservationList.add(map);
         }
         return reservationList;
@@ -407,5 +428,33 @@ public class ReservationController {
         Reservation optionalReservation = reservationDao.findByReservationNumber(reservationNumber);
         System.out.println("Reservation found: " + optionalReservation.getReservation_number());
         return optionalReservation;
+    }
+
+
+    @PutMapping("/reservationpayment/{reservation_number}")
+    public void updateReservationPayment(@PathVariable("reservation_number") String reservationNumber, @RequestBody HashMap<String,Object> reservationPaymentData){
+
+        Reservation reservation = reservationDao.findByReservationNumber(reservationNumber);
+        if (reservation != null) {
+
+            BigDecimal paidAmount = new BigDecimal(String.valueOf(reservationPaymentData.get("paidamount")));
+            BigDecimal discount = new BigDecimal(String.valueOf(reservationPaymentData.get("discount")));
+            //BigDecimal totalPaidAmount = reservation.getTotalpaidamount().add(paidAmount).subtract(discount);
+
+            reservation.setTotalpaidamount(paidAmount.add(reservation.totalpaidamount));
+            reservation.setPaymentstatus(reservation.getReservationtotalpayment().subtract(paidAmount).add(discount).compareTo(BigDecimal.ZERO)<0);
+            reservation.setDiscount(discount);
+            reservationDao.save(reservation);
+
+            ReservationPayment reservationPayment = new ReservationPayment();
+            reservationPayment.setPaidamount(paidAmount);
+            reservationPayment.setDiscription(String.valueOf(reservationPaymentData.get("discription")));
+            reservationPayment.setDateandtime(LocalDateTime.now());
+            reservationPayment.setReservation(reservation);
+            reservationPayment.setPayment_method_id(paymentMethodDao.getReferenceById((Integer) reservationPaymentData.get("payment_method_id")));
+
+            reservationPaymentDao.save(reservationPayment);
+        }
+
     }
 }

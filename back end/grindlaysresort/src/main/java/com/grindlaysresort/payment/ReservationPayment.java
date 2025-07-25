@@ -18,7 +18,8 @@ import java.util.List;
 @Table(
         name = "reservationpayment"
 )
-public class ReservationPayment {
+public class
+ReservationPayment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

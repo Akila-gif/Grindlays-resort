@@ -24,13 +24,13 @@
 
     <ul class="nav-list">
         <li>
-            <a href="http://localhost:8080/emp">
-                <i class="fab fa-microsoft"></i>
+            <a onclick="loademployee('http://localhost:8080/landingpageview')">
+                <i class="fa-solid fa-gauge-high"></i>
                 <span class="link-name">Home</span>
             </a>
 
             <ul class="sub-menu blank">
-                <li><a href="http://localhost:8080/emp" class="link-name">Home</a></li>
+                <li><a onclick="loademployee('http://localhost:8080/landingpageview')" class="link-name">Home</a></li>
             </ul>
         </li>
 
@@ -107,6 +107,44 @@
         </li>
 
         <li>
+            <a onclick="loademployee('http://localhost:8080/paymentmanagementview')">
+                <i class="fa-brands fa-servicestack"></i>
+                <span class="link-name">Payment</span>
+            </a>
+
+            <ul class="sub-menu blank">
+                <li><a onclick="loademployee('http://localhost:8080/paymentmanagementview')" class="link-name">Payment</a></li>
+            </ul>
+        </li>
+
+        <li>
+            <a onclick="loademployee('http://localhost:8080/mealbuyingview')">
+                <i class="fa-solid fa-utensils"></i>
+                <span class="link-name">Meal</span>
+            </a>
+
+            <ul class="sub-menu blank">
+                <li><a onclick="loademployee('http://localhost:8080/mealbuyingview')" class="link-name">Meal buy</a></li>
+            </ul>
+        </li>
+
+        <li>
+            <div class="icon-link">
+                <a href="#">
+                    <i class="fa-solid fa-kitchen-set"></i>
+                    <span class="link-name">Kitchen</span>
+                </a>
+                <i class="fas fa-caret-down arrow"></i>
+            </div>
+            <ul class="sub-menu">
+                <li><a href="#" class="link-name">Kitchen</a></li>
+                <li><a onclick="loademployee('http://localhost:8080/createmenuview')">Meal</a></li>
+                <li><a onclick="loademployee('http://localhost:8080/createmenuitemview')">Menu Item</a></li>
+                <li><a onclick="loademployee('http://localhost:8080/createingredientsview')">Ingredient</a></li>
+            </ul>
+        </li>
+
+        <li>
             <div class="icon-link">
                 <a href="#">
                     <i class="fas fa-laptop-code"></i>
@@ -136,7 +174,7 @@
 </div>
 <div class="home-section home-section-view" style="border: none;overflow: hidden;">
     <iframe style="width: 100%; height: calc(100vh - 70px); border: none;overflow: hidden;"
-            src="https://www.google.lk/" frameborder="0" id="viewIframId">
+            src="http://localhost:8080/landingpageview" frameborder="0" id="viewIframId">
     </iframe>
 </div>
 

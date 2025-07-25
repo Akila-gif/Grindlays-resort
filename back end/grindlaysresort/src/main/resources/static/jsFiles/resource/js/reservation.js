@@ -123,8 +123,8 @@ const reservationStatusFunction =  (element) => {
     return ('<p class="text">'+element.state_id.name+'</p>');
 }
 
-const reservationPaymentStatusFunction =  (element) => {
-    if (element.payment_id.paymentstatus) return ('<p class="text-success"><i class="fa-solid fa-circle"></i> Paid</p>');
+const reservationPaymentStatusFunction =  (element) => {;
+    if (element.reservationpaymentdetails.paymentstatus) return ('<p class="text-success"><i class="fa-solid fa-circle"></i> Paid</p>');
     else return ('<p class="text-danger"><i class="fa-solid fa-circle"></i> not Total Paid</p>');
 }
 
