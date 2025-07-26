@@ -19,7 +19,7 @@ var isChange = false;
 var updateServiceDetails = [];
 var updatePackageDetails = [];
 
-userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/Employee?user=admin').data;
+userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/Reservation?user='+parent.window['logedUser']).data;
 selectCustomerList = HTTPRequestService("GET",'http://localhost:8080/customers/getallnicmobilepassport');
 roomTablePrivilage = {select: true, insert: false, update: true, delete: false};
 roomViewTablePrivilage = {select: false, insert: false, update: false, delete: true};

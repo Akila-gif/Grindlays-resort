@@ -1,7 +1,11 @@
 var privilege = new Object();
-userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/Employee?user=admin').data;
+console.log(parent.window['logedUser']);
+userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/Privilage?user='+parent.window['logedUser']).data;
 userPrivilage.update = false;
 window.addEventListener("load", () => {
+     if(!userPrivilage.insert){
+          formOpenButton.style.visibility = "hidden";
+     }
      refreshPrivilage(HTTPRequestService("GET", "http://localhost:8080/privilege"),userPrivilage);
      RoleSelectecterCreate(HTTPRequestService("GET", "http://localhost:8080/roles"));
      ModuleSelectecterCreate(HTTPRequestService("GET", "http://localhost:8080/module"));

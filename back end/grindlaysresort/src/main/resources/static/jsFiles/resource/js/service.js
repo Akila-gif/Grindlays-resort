@@ -1,6 +1,6 @@
 var service = new Object();
 
-userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/Employee?user=admin').data;
+userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/Service?user='+parent.window['logedUser']).data;
 window.addEventListener("load", () => {
     ServiceFormPrivilageHandeling(userPrivilage);
     refreshServicetable(HTTPRequestService("GET",'http://localhost:8080/services'),userPrivilage);

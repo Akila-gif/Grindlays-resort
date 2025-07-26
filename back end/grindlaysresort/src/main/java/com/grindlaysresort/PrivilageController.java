@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/privilege")
@@ -17,9 +18,28 @@ public class PrivilageController {
     @Autowired
     RoleDao roleDao;
 
+    @Autowired
+    ModuleController moduleController;
+
     @GetMapping
     public List<Privilage> getAllPrivilage(){
         return privilageDao.findAll();
+    }
+
+    @GetMapping("/gettingAllPrivilageOfLogedUser/{userName}")
+    public List <HashMap<String,Object>> getAllPrivilageOfLogedUser(@PathVariable("userName") String userName){
+        List<Module> moduleList = moduleController.getAllModule();
+
+        List <HashMap<String,Object>> previlagelist = new java.util.ArrayList<>();
+
+        moduleList.forEach(module -> {
+
+            HashMap<String,Object> module1 =new HashMap<>();
+            module1.put("moduleName", module.getName());
+            module1.put("privilage", getPrivilageOfUserForModule(module.getName(), userName));
+            previlagelist.add(module1);
+        });
+        return previlagelist;
     }
 
     @PostMapping

@@ -2,7 +2,7 @@ var serviceDetails = [];
 let totalPriceTxt = 0;
 var serviceDetailsObject = new Object();
 var roomPackage = new Object();
-userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/Employee?user=admin').data;
+userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/Package?user='+parent.window['logedUser']).data;
 servicedetailsPrivilage = {select: false, insert: false, update: false, delete: true};
 window.addEventListener("load", () => {
     addingFormPrivilageHandeling(userPrivilage);

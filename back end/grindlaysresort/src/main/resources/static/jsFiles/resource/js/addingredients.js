@@ -1,7 +1,8 @@
 var ingredientsForm = new Object();
 
-userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/Employee?user=admin').data;
+userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/Ingredient?user='+parent.window['logedUser']).data;
 window.addEventListener("load", () => {
+
     IngredientsFormFormPrivilageHandeling(userPrivilage);
     refreshIngredientsFormtable(HTTPRequestService("GET",'http://localhost:8080/ingredients'),userPrivilage);
     CategoryDropDownCreate(HTTPRequestService("GET",'http://localhost:8080/ingradientfoodcategory'));

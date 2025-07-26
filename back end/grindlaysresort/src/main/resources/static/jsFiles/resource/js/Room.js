@@ -5,7 +5,7 @@ var bedDetailsObject = new Object();
 var featuresDetailsObject = new Object();
 let headCountTxt = 0;
 var maxRoomHeadCount = 0;
-userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/Employee?user=admin').data;
+userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/Room?user='+parent.window['logedUser']).data;
 roomdetailsPrivilage = {select: false, insert: false, update: false, delete: true};
 window.addEventListener("load", () => {
     addingFormPrivilageHandeling(userPrivilage);
