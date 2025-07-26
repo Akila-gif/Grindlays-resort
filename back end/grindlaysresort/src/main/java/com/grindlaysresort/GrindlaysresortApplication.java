@@ -106,6 +106,7 @@ public class GrindlaysresortApplication {
 		String [] nameArray = user.getEmployee_id().getFull_name().split(" ");
 		dashboardView.addObject("logEmployee", nameArray[0]+" "+ nameArray[nameArray.length-1]);
 		dashboardView.addObject("logEmployeeDesignation", user.getEmployee_id().getDesignation_id().getDesignation_name());
+		dashboardView.addObject("logeduserid", user.getId());
 		dashboardView.setViewName("index.html");
 		return dashboardView;
 	}

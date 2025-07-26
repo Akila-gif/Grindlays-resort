@@ -4,7 +4,7 @@ var featuresDetails = [];
 var bedDetailsObject = new Object();
 var featuresDetailsObject = new Object();
 let ItemSuggestionPrice = 0;
-userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/Employee?user=admin').data;
+userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/Menu?user='+parent.window['logedUser']).data;
 MenuItemdetailsPrivilage = {select: false, insert: false, update: false, delete: true};
 window.addEventListener("load", () => {
     addingFormPrivilageHandeling(userPrivilage);

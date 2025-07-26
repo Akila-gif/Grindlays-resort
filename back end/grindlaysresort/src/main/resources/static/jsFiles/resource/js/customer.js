@@ -1,7 +1,7 @@
 var customer = new Object();
 var country = new Object();
 
-userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/Employee?user=admin').data;
+userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/Customer?user='+parent.window['logedUser']).data;
 window.addEventListener("load", () => {
     employeeFormPrivilageHandeling(userPrivilage);
     refreshCustomertable(HTTPRequestService("GET",'http://localhost:8080/customers'),userPrivilage);

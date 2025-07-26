@@ -34,8 +34,8 @@
             </ul>
         </li>
 
-        <li>
-            <div class="icon-link">
+        <li id="AdministrateMenu" style="display: none;">
+            <div class="icon-link" >
                 <a href="#">
                     <i class="fa-solid fa-gear"></i>
                     <span class="link-name">Administrate</span>
@@ -45,13 +45,13 @@
 
             <ul class="sub-menu">
                 <li><a class="link-name">Administrate</a></li>
-                <li><a onclick="loademployee('http://localhost:8080/emp')">Employee</a></li>
-                <li><a onclick="loademployee('http://localhost:8080/usersview')">User</a></li>
-                <li><a onclick="loademployee('http://localhost:8080/privilegeview')">Privilege</a></li>
+                <li><a id="EmployeeMenu" onclick="loademployee('http://localhost:8080/emp')" style="display: block">Employee</a></li>
+                <li><a id="UserMenu" onclick="loademployee('http://localhost:8080/usersview')">User</a></li>
+                <li><a id="PrivilageMenu" onclick="loademployee('http://localhost:8080/privilegeview')">Privilege</a></li>
             </ul>
         </li>
 
-        <li>
+        <li id="CustomerMenu">
             <a onclick="loademployee('http://localhost:8080/customerview')">
                 <i class="fa-solid fa-users"></i>
                 <span class="link-name">Customer</span>
@@ -62,7 +62,7 @@
             </ul>
         </li>
 
-        <li>
+        <li id="RoomMenu">
             <a onclick="loademployee('http://localhost:8080/roomview')">
                 <i class="fa-solid fa-door-open"></i>
                 <span class="link-name">Room</span>
@@ -73,7 +73,7 @@
             </ul>
         </li>
 
-        <li>
+        <li id="PackageMenu">
             <a onclick="loademployee('http://localhost:8080/packageview')">
                 <i class="fa-regular fa-window-restore"></i>
                 <span class="link-name">Package</span>
@@ -84,7 +84,7 @@
             </ul>
         </li>
 
-        <li>
+        <li id="ReservationMenu">
             <a onclick="loademployee('http://localhost:8080/reservationview')">
                 <i class="fas fa-heart"></i>
                 <span class="link-name">Reservation</span>
@@ -95,7 +95,7 @@
             </ul>
         </li>
 
-        <li>
+        <li id="ServiceMenu">
             <a onclick="loademployee('http://localhost:8080/serviceview')">
                 <i class="fa-brands fa-servicestack"></i>
                 <span class="link-name">Service</span>
@@ -106,7 +106,7 @@
             </ul>
         </li>
 
-        <li>
+        <li id="PaymentMenu">
             <a onclick="loademployee('http://localhost:8080/paymentmanagementview')">
                 <i class="fa-brands fa-servicestack"></i>
                 <span class="link-name">Payment</span>
@@ -117,7 +117,7 @@
             </ul>
         </li>
 
-        <li>
+        <li id="MealBuyingMenu">
             <a onclick="loademployee('http://localhost:8080/mealbuyingview')">
                 <i class="fa-solid fa-utensils"></i>
                 <span class="link-name">Meal</span>
@@ -128,7 +128,7 @@
             </ul>
         </li>
 
-        <li>
+        <li id="KitchenMenu" style="display: none;">
             <div class="icon-link">
                 <a href="#">
                     <i class="fa-solid fa-kitchen-set"></i>
@@ -138,13 +138,13 @@
             </div>
             <ul class="sub-menu">
                 <li><a href="#" class="link-name">Kitchen</a></li>
-                <li><a onclick="loademployee('http://localhost:8080/createmenuview')">Meal</a></li>
-                <li><a onclick="loademployee('http://localhost:8080/createmenuitemview')">Menu Item</a></li>
-                <li><a onclick="loademployee('http://localhost:8080/createingredientsview')">Ingredient</a></li>
+                <li><a id="MenuMenu" onclick="loademployee('http://localhost:8080/createmenuview')">Menu</a></li>
+                <li><a id="MenuItemMenu" onclick="loademployee('http://localhost:8080/createmenuitemview')">Menu Item</a></li>
+                <li><a id="IngredientMenu" onclick="loademployee('http://localhost:8080/createingredientsview')">Ingredient</a></li>
             </ul>
         </li>
 
-        <li>
+        <li id="ReportMenu">
             <div class="icon-link">
                 <a href="#">
                     <i class="fas fa-laptop-code"></i>
@@ -169,6 +169,8 @@
         <div class="name-job home-content "  style="color: #ffffff; font-size: 24px; padding-right: 20px;">
             <div class="name" style="padding-left: 30px;" th:text="${logusername}"></div>
             <i class="fa-solid fa-power-off logout-button" style="color: #ffffff; font-size: 22px;transition: all 0.2s ease;" id="logoutBtn"></i>
+            <input type="hidden" id="userIdField" th:value="${logeduserid}">
+            <input type="hidden" id="userNameField" th:value="${logusername}">
         </div>
     </div>
 </div>

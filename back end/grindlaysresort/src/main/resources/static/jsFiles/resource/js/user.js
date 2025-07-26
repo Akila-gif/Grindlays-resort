@@ -1,9 +1,12 @@
 var employee = new Object();
 var user = new Object();
 var EmployeeWithOutUserAccoutFoundStatus = false;
-userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/Employee?user=admin').data;
-
+userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/User?user='+parent.window['logedUser']).data;
+console.log(userPrivilage);
 window.addEventListener("load", () => {
+    if(!userPrivilage.insert){
+        formOpenButton.style.visibility = "hidden";
+    }
     refreshUserTable(HTTPRequestService("GET",'http://localhost:8080/user/withoutpassword'),userPrivilage);
     NoUserAccountEmployeedropDownCreate(HTTPRequestService("GET",'http://localhost:8080/employees/getemployeewithoutaccount'));
     RoleTransferObject(HTTPRequestService("GET",'http://localhost:8080/roles'));
@@ -233,8 +236,8 @@ const valdationFeildList = [
 const valdationDetailsList = {
     'userDtlTxt': { pattern: '^[A-Z][A-z]{2,}$', functions: employeeSelectionsFunction},
     'usernameTxt': { pattern: '^[A-Z][A-z]{2,}$' },
-    'PasswordPwd': { pattern: '^[A-Z][A-z]{2,}$',functions: PasswordFunctionNames },
-    'RePasswordPwd': { pattern: /^[A-Za-z'-]+(?:\s+[A-Za-z'-]+)+$/,functions: RepasswordFunctionNames },
+    'PasswordPwd': { pattern: '^.{3,}$',functions: PasswordFunctionNames },
+    'RePasswordPwd': { pattern: /^.{3,}$/,functions: RepasswordFunctionNames },
 };
 
 const dataListMatchingCheck = (event,targetButton) =>{

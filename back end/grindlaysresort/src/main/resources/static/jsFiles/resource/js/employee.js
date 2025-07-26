@@ -1,7 +1,7 @@
 var employee = new Object();
 const country = new Object();
-userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/Employee?user=admin').data;
-
+userPrivilage = HTTPRequestService("GET",'http://localhost:8080/privilege/Employee?user='+parent.window['logedUser']).data;
+console.log(parent.window['logedUser']);
 window.addEventListener("load", () => {
     employeeFormPrivilageHandeling(userPrivilage);
     refreshEmployeetable(HTTPRequestService("GET",'http://localhost:8080/employees'),userPrivilage);
